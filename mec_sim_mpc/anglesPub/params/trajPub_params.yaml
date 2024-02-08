@@ -1,0 +1,5 @@
+delay_mode: false
+mpc_steps: 10.0
+map_frame: "odom"
+#csvfile_path: "/home/diamondlee/mec-arm-ws/mec_mpc_sim/src/anglesPub/csv/retimed_traj_pick_segment.csv"
+csvfile_path: "/home/diamondlee/mec-arm-ws/mec_mpc_sim/src/anglesPub/csv/retimed_traj.csv"

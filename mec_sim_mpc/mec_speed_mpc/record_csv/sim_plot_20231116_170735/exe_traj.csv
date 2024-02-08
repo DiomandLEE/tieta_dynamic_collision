@@ -1,0 +1,1 @@
+loop_cont , time_coordinate , robot_x_ , robot_y_ , robot_yaw , pre_bot speed_x , pre_bot speed_y , Pre_bot angvel , real_bot speed_x , real_bot speed_y , real_bot angvel , world speed_x , world speed_y , world angvel , loop_time_cost , loop_x_Tcost , loop_y_Tcost , loop_theta_Tcost , loop_acc_x_Tcost , loop_acc_y_Tcost , loop_acc_theta_Tcost

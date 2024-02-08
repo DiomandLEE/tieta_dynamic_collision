@@ -1,0 +1,18 @@
+mpc_w_distx: 15000.0
+mpc_w_disty: 15000.0
+mpc_w_etheta: 10000.0
+
+mpc_w_vel: 200.0
+mpc_w_angvel: 200.0
+
+mpc_w_angacc: 200.0
+mpc_w_acc: 200.0
+
+mpc_max_vel: 0.2 # unit: m/s
+max_speed: 0.1
+
+mpc_max_angvel: 0.5 #先看一遍CSV,theta之间的最大的差是0.03,最大的角速度是就是0.3
+mpc_max_acc: 0.5 # Maximal accel
+
+10
+false

@@ -1,0 +1,27 @@
+<launch>
+
+    <!-- Robot namespace -->
+    <arg name="robot_name" default="my_gen3"/>
+    <arg name="start_delay_seconds_wheeltec_vicon" default="10.0"/>
+    <arg name="start_delay_seconds_parseCSV" default="2.0"/>
+
+    <!-- load anglePub parameter -->
+    <rosparam file="$(find anglesPub)/params/trajPub_params.yaml" command="load" ns="trajPub"/>
+
+    <!-- start wheeltec mec_base cmd_vel control -->
+    <!-- <include file="$(find turn_on_wheeltec_robot)/launch/turn_on_wheeltec_robot.launch">
+    </include> -->
+
+    <!-- wait some seconds & start vicon bridge -->
+    <!-- <include file="$(find vicon_bridge)/launch/vicon.launch">
+    </include> -->
+
+    <!-- wait some seconds & start kinova driver -->
+    <!-- <include file="$(find kortex_driver)/launch/kortex_driver.launch">
+    </include> -->
+
+    <!-- wait some seconds & parse CSV to pub Traj and AnglesList -->
+    <node name="parseCSV_pubTrajAngles" pkg="anglesPub" type="anglesPub_Node" output="screen" launch-prefix="bash -c 'sleep $(arg start_delay_seconds_wheeltec_vicon); $0 $@' " >
+    </node>
+
+</launch>

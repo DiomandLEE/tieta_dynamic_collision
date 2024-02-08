@@ -1,0 +1,15 @@
+<launch>
+    <!-- load mec&kinova parameters -->
+    <rosparam file="$(find mec_speed_mpc)/params/mec_mpc_track_params.yaml" command="load" ns="mec_mpc" />
+    <rosparam file="$(find kinova_speed_mpc)/params/kinova_mpc_track_params.yaml" command="load" ns="kinova_mpc" />
+    
+    <!-- wait some seconds & start mec mpc controller node -->
+    <node name="mec_mpc_controller" pkg="mec_speed_mpc" type="mec_speed_mpc_node" output="screen" launch-prefix="bash -c 'sleep $(arg start_delay_seconds_parseCSV); $0 $@' " >
+    </node>
+
+    <!-- start kinova mpc controller node -->
+    <node name="kinova_mpc_controller" pkg="kinova_speed_mpc" type="kinova_speed_mpc_node" output="screen" >
+        <param name="robot_name" value="$(arg robot_name)"/>
+    </node>
+
+</launch>
