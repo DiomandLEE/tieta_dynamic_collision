@@ -1,164 +1,172 @@
 #include "tieta_mpc_sim_demo/MPC_Node.h"
+using namespace std;
 
 MPCNode::MPCNode()
 {
     // Private parameters handler  私有的参数处理器，走的是mpc_node应该
     ros::NodeHandle pn("~");
 
-    // ros::Duration(2.0).sleep(); // 延时1.0s，等待gazebo和rviz的初始化
-
     // Parameters for control loop
-    pn.param("/mec_mpc/thread_numbers", _thread_numbers, 2);   // 多线程的数量 number of threads for this ROS node
-    pn.param("/mec_mpc/pub_twist_cmd", _pub_twist_flag, true); // 发布转向的cmd
-    pn.param("/mec_mpc/debug_info", _debug_info, true);
-    pn.param("/mec_mpc/delay_mode", _delay_mode, true); //? 延迟模式？
-    pn.param("/mec_mpc/max_speed", _max_speed, 0.50);   // unit: m/s
-    // pn.param("/mec_mpc/waypoints_dist", _waypointsDist, -1.0); // unit: m //-1的意思是由节点计算
-    // pn.param("/mec_mpc/path_length", _pathLength, 2.0); // unit: m
-    // pn.param("/mec_mpc/goal_radius", _goalRadius, 0.5); // unit: m
-    pn.param("/mec_mpc/controller_freq", _controller_freq, 100); // 控制器的频率
-    pn.param("/mec_mpc/pid_freq", _pid_freq, 10);
-    // pn.param("/mec_mpc/vehicle_Lf", _Lf, 0.290); // distance between the front of the vehicle and its center of gravity
+    pn.param("/dynamic_collision_mpc/thread_numbers", _thread_numbers, 2);   // 多线程的数量 number of threads for this ROS node
+    pn.param("/dynamic_collision_mpc/debug_info", _debug_info, true);
+    pn.param("/dynamic_collision_mpc/delay_mode", _delay_mode, true); //? 延迟模式？
+    pn.param("/dynamic_collision_mpc/max_speed", _max_speed, 0.50);   // unit: m/s
+    pn.param("/dynamic_collision_mpc/controller_freq", _controller_freq, 100); // 控制器的频率
+    pn.param("/dynamic_collision_mpc/pid_freq", _pid_freq, 10);
     _dt = double(1.0 / _controller_freq); // time step duration dt in s 时间步长，0.1s
+    pn.param<std::string>("/dynamic_collision_mpc/robot_description", _robot_description,
+        "/home/diamondlee/VKConTieta_ws/src/urdf_description/robot_description/ridgeback_dual_arm_description/urdf/vkc_big_task.urdf.urdf");
 
-    // Parameter for MPC solver
-    pn.param("/mec_mpc/mpc_steps", _mpc_steps, 21); // MPC的步长
-    // pn.param("/mec_mpc/mpc_ref_distx", _ref_distx, 0.0);  //cte 与道路中心的偏差，横向误差
-    // pn.param("/mec_mpc/mpc_ref_vel", _ref_vel, 1.0);  //速度
-    // pn.param("/mec_mpc/mpc_ref_etheta", _ref_etheta, 0.0); //与道路的theta偏差，角度误差
-    pn.param("/mec_mpc/mpc_w_distx", _w_distx, 5000.0);
-    pn.param("/mec_mpc/mpc_w_disty", _w_disty, 5000.0);
-    pn.param("/mec_mpc/mpc_w_etheta", _w_etheta, 5000.0);
-    pn.param("/mec_mpc/mpc_w_vel", _w_vel, 1.0);
-    pn.param("/mec_mpc/mpc_w_angvel", _w_angvel, 100.0);
-    pn.param("/mec_mpc/mpc_w_angacc", _w_angacc, 10.0);
-    pn.param("/mec_mpc/mpc_w_acc", _w_acc, 50.0);
-    // pn.param("/mec_mpc/mpc_w_jerk", _w_jerk, 10.0);
-    pn.param("/mec_mpc/mpc_max_angvel", _max_angvel, 3.0);     // Maximal angvel radian (~30 deg)
-    pn.param("/mec_mpc/mpc_max_vel", _max_speed, 1.0);         // Maximal accel
-    pn.param("/mec_mpc/mpc_bound_value", _bound_value, 1.0e3); // Bound value for other variables
-    pn.param("/mec_mpc/angel_upper_bound", _angel_upper, M_PI);
-    pn.param("/mec_mpc/angle_lower_bound", _angel_lower, -M_PI);
-    pn.param("/mec_mpc/tolerence_position", _tolerence_xy, 0.01);
-    pn.param("/mec_mpc/tolerence_angle", _tolerence_theta, 0.005);
+    _collision_check = Collision_Check(_robot_description);
+    _mpc = MPC(_collision_check);
 
-    pn.param("/mec_mpc/x_kp", _kp_vx, 0.2);
-    pn.param("/mec_mpc/x_ki", _ki_vx, 0.01);
-    pn.param("/mec_mpc/x_kd", _kd_vx, 0.005);
+    // Parameter for MPC solver 目标函数各项的惩罚系数
+    pn.param("/dynamic_collision_mpc/mpc_steps", _mpc_steps, 21); // MPC的步长
+    pn.param("/dynamic_collision_mpc/mpc_w_distx", _w_distx, 5000.0);
+    pn.param("/dynamic_collision_mpc/mpc_w_disty", _w_disty, 5000.0);
+    pn.param("/dynamic_collision_mpc/mpc_w_etheta", _w_etheta, 5000.0);
+    pn.param("/dynamic_collision_mpc/mpc_w_vel", _w_vel, 1.0); //底盘的速度
+    pn.param("/dynamic_collision_mpc/mpc_w_angvel", _w_angvel, 100.0); //底盘的角速度
+    pn.param("/dynamic_collision_mpc/mpc_w_jnt", _w_jnt, 5000.0); //关节角的位置差，权重系数
+    pn.param("/dynamic_collision_mpc/mpc_w_jntvel", _w_jntvel, 100.0); //关节角的速度，惩罚系数
+    pn.param("/dynamic_collision_mpc/collision_base_weight", _w_base_collision, 1000.0);
+    pn.param("/dynamic_collision_mpc/collision_shoulder_weight", _w_shoulder_collision, 1000.0);
+    pn.param("/dynamic_collision_mpc/collision_elbow_weight", _w_elbow_collision, 1000.0);
+    pn.param("/dynamic_collision_mpc/collision_wrist_weight", _w_wrist_collision, 1000.0);
+    pn.param("/dynamic_collision_mpc/collision_gripper_weight", _w_gripper_collision, 1000.0);
 
-    pn.param("/mec_mpc/y_kp", _kp_vy, 0.2);
-    pn.param("/mec_mpc/y_ki", _ki_vy, 0.01);
-    pn.param("/mec_mpc/y_kd", _kd_vy, 0.005);
+    //目标函数的参数
+    pn.param("/dynamic_collision_mpc/base_threshold", _base_threshold, 0.05);
+    pn.param("/dynamic_collision_mpc/shoulder_threshold", _shoulder_threshold, 0.05);
+    pn.param("/dynamic_collision_mpc/elbow_threshold", _elbow_threshold, 0.05);
+    pn.param("/dynamic_collision_mpc/wrist_threshold", _wrist_threshold, 0.05);
+    pn.param("/dynamic_collision_mpc/gripper_threshold", _gripper_threshold, 0.05);
+    pn.param("/dynamic_collision_mpc/pedestrian_threshold", _pedestrian_threshold, 0.05);
+    pn.param("/dynamic_collision_mpc/pedestrain_velocity", _pedestrian_vel, 0.05);
 
-    pn.param("/mec_mpc/yaw_kp", _kp_omega, 0.3);
-    pn.param("/mec_mpc/yaw_ki", _ki_omega, 0.02);
-    pn.param("/mec_mpc/yaw_kd", _kd_omega, 0.01);
+    pn.param("/dynamic_collision_mpc/mpc_max_vel", _max_speed, 1.0);
+    pn.param("/dynamic_collision_mpc/mpc_max_angvel", _max_angvel, 3.0);
+    pn.param("/dynamic_collision_mpc/mpc_max_jntvel", _max_jntvel, 3.0);
+    pn.param("/dynamic_collision_mpc/mpc_bound_value", _bound_value, 1.0e3); // Bound value for other variables
+    pn.param("/dynamic_collision_mpc/angel_upper_bound", _angel_upper, M_PI);
+    pn.param("/dynamic_collision_mpc/angle_lower_bound", _angel_lower, -M_PI);//底盘的theta
+
+    // 机械臂的角度限制
+    pn.param("/dynamic_collision_mpc/joint1_upper_bound", _joint1_upper, M_PI);
+    pn.param("/dynamic_collision_mpc/joint1_lower_bound", _joint1_lower, -M_PI);
+    pn.param("/dynamic_collision_mpc/joint2_upper_bound", _joint2_upper, M_PI);
+    pn.param("/dynamic_collision_mpc/joint2_lower_bound", _joint2_lower, -M_PI);
+    pn.param("/dynamic_collision_mpc/joint3_upper_bound", _joint3_upper, M_PI);
+    pn.param("/dynamic_collision_mpc/joint3_lower_bound", _joint3_lower, -M_PI);
+    pn.param("/dynamic_collision_mpc/joint4_upper_bound", _joint4_upper, M_PI);
+    pn.param("/dynamic_collision_mpc/joint4_lower_bound", _joint4_lower, -M_PI);
+    pn.param("/dynamic_collision_mpc/joint5_upper_bound", _joint5_upper, M_PI);
+    pn.param("/dynamic_collision_mpc/joint5_lower_bound", _joint5_lower, -M_PI);
+    pn.param("/dynamic_collision_mpc/joint6_upper_bound", _joint6_upper, M_PI);
+    pn.param("/dynamic_collision_mpc/joint6_lower_bound", _joint6_lower, -M_PI);
+
+    //到达初始位置的tolerence
+    pn.param("/dynamic_collision_mpc/tolerence_position", _tolerence_xy, 0.01);
+    pn.param("/dynamic_collision_mpc/tolerence_theta", _tolerence_theta, 0.005);
+    pn.param("/dynamic_collision_mpc/tolerence_joint", _tolerence_joint, 0.005);
+
+    // PID参数 omega就是所有和角度相关的pid
+    pn.param("/dynamic_collision_mpc/x_kp", _kp_vx, 0.2);
+    pn.param("/dynamic_collision_mpc/x_ki", _ki_vx, 0.01);
+    pn.param("/dynamic_collision_mpc/x_kd", _kd_vx, 0.005);
+
+    pn.param("/dynamic_collision_mpc/y_kp", _kp_vy, 0.2);
+    pn.param("/dynamic_collision_mpc/y_ki", _ki_vy, 0.01);
+    pn.param("/dynamic_collision_mpc/y_kd", _kd_vy, 0.005);
+
+    pn.param("/dynamic_collision_mpc/yaw_kp", _kp_omega, 0.3);
+    pn.param("/dynamic_collision_mpc/yaw_ki", _ki_omega, 0.02);
+    pn.param("/dynamic_collision_mpc/yaw_kd", _kd_omega, 0.01);
 
     //#####用于获取数据,存放的文件夹的path
-    pn.param<std::string>("/mec_mpc/savefolder_path", save_folder_path, " ");
-    pn.param<std::string>("/mec_mpc/save_Debugfolder_path", save_Debugfolder_path, " ");
+    pn.param<std::string>("/dynamic_collision_mpc/savefolder_path", save_folder_path, " ");
+    pn.param<std::string>("/dynamic_collision_mpc/save_Debugfolder_path", save_Debugfolder_path, " ");
 
-    // pn.param<std::string>("/mec_mpc/save_Debugfile_path_Class_MPC", save_Debugfile_path_MPC, " ");
-    // pn.param<std::string>("/mec_mpc/save_Debugfile_path_Class_FG_eval", save_Debugfile_path_FG_eval, " ");
-
-    // Parameter for topics & Frame name
-    // pn.param<std::string>("/mec_mpc/global_path_topic", _globalPath_topic, "/move_base/TrajectoryPlannerROS/global_plan" );
-    // pn.param<std::string>("/mec_mpc/goal_topic", _goal_topic, "/move_base_simple/goal" );
-    pn.param<std::string>("/mec_mpc/map_frame", _map_frame, "world"); //*****for mpc, "odom"
-    // pn.param<std::string>("/mec_mpc/odom_frame", _odom_frame, "odom");
-    pn.param<std::string>("/mec_mpc/car_frame", _car_frame, "base_footprint");
-
-    //*******************************************************************************
-    // init flag mec_reach
-    pn.param("/mec_mpc/kinova_reach_init_flag",_kinova_reach_init,false);
-
+    //*****************************************************************************
     // Display the parameters
     cout << "\n===== Parameters =====" << endl;
-    cout << "/mec_mpc/pub_twist_cmd: " << _pub_twist_flag << endl;
-    cout << "/mec_mpc/debug_info: " << _debug_info << endl;
-    cout << "/mec_mpc/delay_mode: " << _delay_mode << endl;
-    // cout << "vehicle_Lf: "  << _Lf << endl;
-    cout << "/mec_mpc/frequency_dT: " << _dt << endl;
-    cout << "/mec_mpc/mpc_steps: " << _mpc_steps << endl;
-    // cout << "mpc_ref_vel: " << _ref_vel << endl;
-    cout << "/mec_mpc/mpc_w_distx: " << _w_distx << endl;
-    cout << "/mec_mpc/mpc_w_disty: " << _w_disty << endl;
-    cout << "/mec_mpc/mpc_w_etheta: " << _w_etheta << endl;
-    cout << "/mec_mpc/mpc_max_angvel: " << _max_angvel << endl;
-    cout << "/mec_mpc/mpc_max_vel: " << _max_speed << endl;
+    cout << "/dynamic_collision_mpc/debug_info: " << _debug_info << endl;
+    cout << "/dynamic_collision_mpc/delay_mode: " << _delay_mode << endl;
+    cout << "/dynamic_collision_mpc/frequency_dT: " << _dt << endl;
+    cout << "/dynamic_collision_mpc/mpc_steps: " << _mpc_steps << endl;
+    cout << "/dynamic_collision_mpc/mpc_w_distx: " << _w_distx << endl;
+    cout << "/dynamic_collision_mpc/mpc_w_disty: " << _w_disty << endl;
+    cout << "/dynamic_collision_mpc/mpc_w_etheta: " << _w_etheta << endl;
+    cout << "/dynamic_collision_mpc/mpc_max_angvel: " << _max_angvel << endl;
+    cout << "/dynamic_collision_mpc/mpc_max_vel: " << _max_speed << endl;
 
     // Publishers and Subscribers
-    //_sub_odom   = _nh.subscribe("/odom", 1, &MPCNode::odomCB, this);
-    //_sub_path   = _nh.subscribe( _globalPath_topic, 1, &MPCNode::pathCB, this);//空的
-    _sub_timed_traj = _nh.subscribe("traj_topic", 1, &MPCNode::rcvtrajCB, this); // 收到这个话题之后，发布"/mpc_reference"
-    //_sub_goal   = _nh.subscribe( _goal_topic, 1, &MPCNode::goalCB, this); //记录目标goal的位姿
-    //_sub_amcl   = _nh.subscribe("/amcl_pose", 5, &MPCNode::amclCB, this);
+    _sub_timed_traj = _nh.subscribe("/traj_topic", 1, &MPCNode::rcvJointTrajCB, this);
+    _sub_robot_state = _nh.subscribe("/joint_states", 1, &MPCNode::getRobotStateCB, this);
+    _pub_robot_velocity = _nh.advertise<std_msgs::Float64MultiArray>("/joint_velocity", 1);
 
-    //_pub_odompath  = _nh.advertise<nav_msgs::Path>("/mpc_reference", 1); // reference path for MPC ///mpc_reference
-    _pub_mpctraj = _nh.advertise<nav_msgs::Path>("/mpc_trajectory", 1); // MPC trajectory output
-    //_pub_ackermann = _nh.advertise<ackermann_msgs::AckermannDriveStamped>("/ackermann_cmd", 1);
-    if (_pub_twist_flag)
-        _pub_twist = _nh.advertise<geometry_msgs::Twist>("/cmd_vel", 1); // for stage (Ackermann msg non-supported)
-
-    _pub_totalcost = _nh.advertise<std_msgs::Float32>("/total_cost", 1);         // Global path generated from another source
-    _pub_distx_cost = _nh.advertise<std_msgs::Float32>("/distx_track_error", 1); // Global path generated from another source
-    _pub_etheta_cost = _nh.advertise<std_msgs::Float32>("/theta_error", 1);      // Global path generated from another source
-
-    // init pose
     //*******************************************************************************
     // pub mec reach init flag
-    _pub_initPose_reach = _nh.advertise<std_msgs::Float32>("mec_init_flag", 10);
-    // subscribe kinova reach init flag
-    _sub_kinova_reach_init = _nh.subscribe("kinova_init_flag", 1, &MPCNode::kinova_reach_init_callback, this);
+    _pub_initPose_reach = _nh.advertise<std_msgs::Float32>("tieta_init_flag", 10);
 
     //*******************************************************************************
-    // init reach Pose flag
-    pn.param("/mec_mpc/mec_reach_init_flag",_mec_reach_init,false);
-    //_mec_reach_init = false;
-    //_kinova_reach_init = false;
-    // Timer
-    // 定时器，定时执行
-    //_timer_mpc = _nh.createTimer(ros::Duration((1.0)/_controller_freq), &MPCNode::controlLoopCB, this); // 10Hz //*****mpc
-
     // Init variables
     _traj_received = false;
     _track_finished = false;
     _trackTraj_computed = false;
 
-    _speed_x = 0.0;
-    _speed_y = 0.0;
-    _angvel = 0.0;
-    //
     _loop_count = 0;
     _realTraj_length = 0;
     _subTraj_length = 0;
 
-    //_ackermann_msg = ackermann_msgs::AckermannDriveStamped();
-    _twist_msg = geometry_msgs::Twist();
-    _mpc_traj = nav_msgs::Path();
+    _jntvel_msg = std_msgs::Float64MultiArray();
+    _mpc_traj = JointTrajPub::AnglesList();
 
     // Init parameters for MPC object
     _mpc_params["DT"] = _dt;
-    //_mpc_params["LF"] = _Lf;
     _mpc_params["STEPS"] = _mpc_steps;
-    //_mpc_params["REF_DISTX"]  = _ref_distx;
-    //_mpc_params["REF_ETHETA"] = _ref_etheta;
-    //_mpc_params["REF_V"]    = _ref_vel;
+    //目标函数惩罚系数
     _mpc_params["W_DISTX"] = _w_distx;
     _mpc_params["W_DISTY"] = _w_disty;
     _mpc_params["W_EPSI"] = _w_etheta;
-    _mpc_params["W_V"] = _w_vel;
+    _mpc_params["W_VEL"] = _w_vel;
     _mpc_params["W_ANGVEL"] = _w_angvel;
-    _mpc_params["W_ACC"] = _w_acc;
-    _mpc_params["W_DANGVEL"] = _w_angacc;
-    //_mpc_params["W_JERK"]     = _w_jerk;
-    _mpc_params["ANGVEL"] = _max_angvel;
+    _mpc_params["W_JOINT"] = _w_jnt;
+    _mpc_params["W_JNTVEL"] = _w_jntvel;
+    _mpc_params["COLLISION_BASE_WEIGHT"] = _w_base_collision;
+    _mpc_params["COLLISION_SHOULDER_WEIGHT"] = _w_shoulder_collision;
+    _mpc_params["COLLISION_ELBOW_WEIGHT"] = _w_elbow_collision;
+    _mpc_params["COLLISION_WRIST_WEIGHT"] = _w_wrist_collision;
+    _mpc_params["COLLISION_GRIPPER_WEIGHT"] = _w_gripper_collision;
+
+    _mpc_params["BASE_THRESHOLD"] = _base_threshold;
+    _mpc_params["SHOULDER_THRESHOLD"] = _shoulder_threshold;
+    _mpc_params["ELBOW_THRESHOLD"] = _elbow_threshold;
+    _mpc_params["WRIST_THRESHOLD"] = _wrist_threshold;
+    _mpc_params["GRIPPER_THRESHOLD"] = _gripper_threshold;
+    _mpc_params["PEDESTRIAN_THRESHOLD"] = _pedestrian_threshold;
+    _mpc_params["PEDESTRIAN_VELOCITY"] = _pedestrian_vel;
+
     _mpc_params["MAXVEL"] = _max_speed;
+    _mpc_params["MAX_ANGVEL"] = _max_angvel;
+    _mpc_params["MAX_JNTVEL"] = _max_jntvel;
     _mpc_params["BOUND"] = _bound_value;
+    //底盘的theta上下界
     _mpc_params["ANGEL_UPPER"] = _angel_upper;
     _mpc_params["ANGEL_LOWER"] = _angel_lower;
-    //_mpc_params["FILE_DEBUG_PATH"] = save_Debugfile_path;
-    // 加载到刚才的系数到_mpc_params中
+    //机械臂UR的上下限
+    _mpc_params["JOINT1_UPPER"] = _joint1_upper;
+    _mpc_params["JOINT1_LOWER"] = _joint1_lower;
+    _mpc_params["JOINT2_UPPER"] = _joint2_upper;
+    _mpc_params["JOINT2_LOWER"] = _joint2_lower;
+    _mpc_params["JOINT3_UPPER"] = _joint3_upper;
+    _mpc_params["JOINT3_LOWER"] = _joint3_lower;
+    _mpc_params["JOINT4_UPPER"] = _joint4_upper;
+    _mpc_params["JOINT4_LOWER"] = _joint4_lower;
+    _mpc_params["JOINT5_UPPER"] = _joint5_upper;
+    _mpc_params["JOINT5_LOWER"] = _joint5_lower;
+    _mpc_params["JOINT6_UPPER"] = _joint6_upper;
+    _mpc_params["JOINT6_LOWER"] = _joint6_lower;
 
     //*************************************************************************
     //这里来创建文件夹 获取当前的日期和时间
@@ -207,77 +215,68 @@ MPCNode::MPCNode()
 
     //--------------- 给MPC_Controller的结果(预测结果)指定存放的文件夹路径----------
     _mpc._file_path_class_MPC = foldername;
-    // const std::string foldername_predict = foldername + "/predict_traj";
-    // //创建文件夹,并检验文件夹是否创建
-    // if(!boost::filesystem::create_directory(foldername_predict))
-    //     ROS_ERROR("can`t creat the record folder: %s", foldername_predict.c_str());
-    // else
-    //     ROS_INFO("Create the record folder: %s", foldername_predict.c_str());
-    //_mpc._file_path_class_MPC = foldername_predict;
     // debug里是包含文字说明的
     _mpc._file_debug_path_class_MPC = debugfoldername;
     //--------------- 给FG_eval的结果(预测时域内的轨迹值)指定存放的文件夹路径--------
     _mpc._file_debug_path_class_FG_eval = debugfoldername;
 
     _mpc.LoadParams(_mpc_params);
-
-    // min_idx = 0;
-    // idx = 0;
+    //todo需要新的变量来存储每一个的cost，和当前的distance。
     _mpc_etheta = 0;
     _mpc_distx = 0;
     _mpc_disty = 0;
 
-    _rcv_traj = {};
+    _rcv_traj = JointTrajPub::AnglesList();
 
     //*******************************************************************************
-    // init reach Pose flag
-    //_mec_reach_init = false;
-    //_kinova_reach_init = false;
-
-    _last_rb_x = 0.0;
-    _last_rb_y = 0.0;
-    _last_rb_theta = 0.0;
-
-    //! offset改为0.0
-    _offset_matrix << cos(0.0), -sin(0.0), 0.0,
-                        sin(0.0), cos(0.0), 0.0,
-                        0.0 ,0.0, 1.0;
-
-    //! 获取机器人的初始位姿 /tf
+    //首先，机器人和行人的速度都为0
+    for (unsigned int i = 0; i < 10; i++)
+    {
+        _jntvel_msg.data[i] = 0.0; //机器人9自由度加上行人1个自由度
+    }
+    //由于test_sim.cpp中，发布了速度信息，所以不需要last_position
+    //获取行人和各个sphere的初始位姿 /tf
     try
     {
-        //ros::Duration(0.1).sleep(); //debug 奇怪 加了这个就好了
         //debug 需要有个wait,不然一开始也会加载
-        _tfListener.waitForTransform(_map_frame, _car_frame, ros::Time(0), ros::Duration(2.0));
-        //_tfListener.lookupTransform(_car_frame, _map_frame, ros::Time(0), _tfTransform);
-        _tfListener.lookupTransform(_map_frame, _car_frame, ros::Time(0), _tfTransform);
-        // cout << "map frame " << _map_frame << endl;
-        // cout << "car_frame " << _car_frame << endl;
-        // 如果拿到了tf，将位姿赋给机器人状态
-        _vicon_tf_x = _tfTransform.getOrigin().getX();
-        _vicon_tf_y = _tfTransform.getOrigin().getY();
-        _vicon_tf_theta = range_angle_PI(tf::getYaw(_tfTransform.getRotation()));
-        ROS_INFO("VICON got the inital TF");
+        _tfListener.waitForTransform("world", "dynamic_pedestrian", ros::Time(0), ros::Duration(1.0));
+        _tfListener.lookupTransform("world", "dynamic_pedestrian", ros::Time(0), _tfTransform);
+        // 如果拿到了tf，将位姿赋给行人状态
+        dynamic_pedestrian_pos << _tfTransform.getOrigin().getX(), _tfTransform.getOrigin().getY(), _tfTransform.getOrigin().getZ();
 
-        // //开始坐标转换
-        // _vicon_tf_matrix << cos(_vicon_tf_theta), -sin(_vicon_tf_theta), _vicon_tf_x,
-        //                     sin(_vicon_tf_theta), cos(_vicon_tf_theta), _vicon_tf_y,
-        //                     0.0, 0.0, 1.0;
-        // _robot_tf_matrix = _vicon_tf_matrix * _offset_matrix;
-        //_robot_tf_matrix = _offset_matrix * _vicon_tf_matrix;
+        _tfListener.waitForTransform("world", "front_left_sphere_collision", ros::Time(0), ros::Duration(1.0));
+        _tfListener.lookupTransform("world", "front_left_sphere_collision", ros::Time(0), _tfTransform);
+        base_lf_sphere_pos << _tfTransform.getOrigin().getX(), _tfTransform.getOrigin().getY(), _tfTransform.getOrigin().getZ();
 
-        // _rb_x = _robot_tf_matrix(0,2);
-        // _rb_y = _robot_tf_matrix(1,2);
-        // _rb_theta = _vicon_tf_theta;
-        _rb_x = _vicon_tf_x;
-        _rb_y = _vicon_tf_y;
-        _rb_theta = _vicon_tf_theta;
+        _tfListener.waitForTransform("world", "front_right_sphere_collision", ros::Time(0), ros::Duration(1.0));
+        _tfListener.lookupTransform("world", "front_right_sphere_collision", ros::Time(0), _tfTransform);
+        base_rf_sphere_pos << _tfTransform.getOrigin().getX(), _tfTransform.getOrigin().getY(), _tfTransform.getOrigin().getZ();
 
-        _last_rb_x = _rb_x;
-        _last_rb_y = _rb_y;
-        _last_rb_theta = _rb_theta;
+        _tfListener.waitForTransform("world", "rear_left_sphere_collision", ros::Time(0), ros::Duration(1.0));
+        _tfListener.lookupTransform("world", "rear_left_sphere_collision", ros::Time(0), _tfTransform);
+        base_lr_sphere_pos << _tfTransform.getOrigin().getX(), _tfTransform.getOrigin().getY(), _tfTransform.getOrigin().getZ();
 
-        ROS_INFO("The mec got the inital pose");
+        _tfListener.waitForTransform("world", "rear_right_sphere_collision", ros::Time(0), ros::Duration(1.0));
+        _tfListener.lookupTransform("world", "rear_right_sphere_collision", ros::Time(0), _tfTransform);
+        base_rr_sphere_pos << _tfTransform.getOrigin().getX(), _tfTransform.getOrigin().getY(), _tfTransform.getOrigin().getZ();
+
+        _tfListener.waitForTransform("world", "right_arm_shoulder_sphere_link", ros::Time(0), ros::Duration(1.0));
+        _tfListener.lookupTransform("world", "right_arm_shoulder_sphere_link", ros::Time(0), _tfTransform);
+        shoulder_sphere_pos << _tfTransform.getOrigin().getX(), _tfTransform.getOrigin().getY(), _tfTransform.getOrigin().getZ();
+
+        _tfListener.waitForTransform("world", "right_arm_forearm_sphere_link", ros::Time(0), ros::Duration(1.0));
+        _tfListener.lookupTransform("world", "right_arm_forearm_sphere_link", ros::Time(0), _tfTransform);
+        elbow_sphere_pos << _tfTransform.getOrigin().getX(), _tfTransform.getOrigin().getY(), _tfTransform.getOrigin().getZ();
+
+        _tfListener.waitForTransform("world", "right_arm_wrist_sphere_link", ros::Time(0), ros::Duration(1.0));
+        _tfListener.lookupTransform("world", "right_arm_wrist_sphere_link", ros::Time(0), _tfTransform);
+        wrist_sphere_pos << _tfTransform.getOrigin().getX(), _tfTransform.getOrigin().getY(), _tfTransform.getOrigin().getZ();
+
+        _tfListener.waitForTransform("world", "right_arm_flange_gripper_sphere", ros::Time(0), ros::Duration(1.0));
+        _tfListener.lookupTransform("world", "right_arm_flange_gripper_sphere", ros::Time(0), _tfTransform);
+        gripper_sphere_pos << _tfTransform.getOrigin().getX(), _tfTransform.getOrigin().getY(), _tfTransform.getOrigin().getZ();
+
+        ROS_WARN("The Obstacle-Class got the inital pose!");
     }
     catch (tf::TransformException &ex)
     {
@@ -312,7 +311,20 @@ MPCNode::~MPCNode()
 {
     file.close();
 };
+void MPCNode::getRobotStateCB(const sensor_msgs::JointStateConstPtr &robotstateMsg)
+{
+    std::lock_guard<std::mutex> lock(mlock);
+    _joint_pos = robotstateMsg->position;
+    _joint_vel = robotstateMsg->velocity;
+}
 
+void MPCNode::setJointVelocity(const std::vector<double> &jointVelocity)
+{
+    for (unsigned int i = 0; i < jointVelocity.size(); i++)
+    {
+        _jntvel_msg.data[i] = jointVelocity[i];
+    }
+}
 // Public: return _thread_numbers
 int MPCNode::get_thread_numbers()
 {
@@ -323,21 +335,6 @@ int MPCNode::get_thread_numbers()
 int MPCNode::get_controll_freq()
 {
     return _controller_freq;
-}
-
-// 接收kinova reach init的flag
-void MPCNode::kinova_reach_init_callback(const std_msgs::Float32::ConstPtr &msg)
-{
-    std::unique_lock<std::mutex> my_unique(mlock);
-    _kinova_reach_init = true;
-}
-
-bool MPCNode::get_kinova_reach_flag()
-{
-    std::unique_lock<std::mutex> my_unique(mlock);
-    bool rtn = _kinova_reach_init;
-    //cout << "in mutex lock " << _kinova_reach_init << endl;
-    return rtn;
 }
 
 // 将角度规定在[-pi,pi]
@@ -374,10 +371,10 @@ double MPCNode::range_angvel_MAX(double _input_w)
     return _input_w;
 }
 
-// 先让机器人到达第一个轨迹点附近
+//todo 修改使得可以完成9自由度 先让机器人到达第一个轨迹点附近
 bool MPCNode::gotoInitState()
 {
-    // 延时以等待traj to pub
+    // 延时以等待traj to pub,并且订阅
     ros::Duration(0.5).sleep();
 
     vector<double> first_pose;
@@ -387,11 +384,19 @@ bool MPCNode::gotoInitState()
     ROS_INFO("rcvTrajCB has filled MPCNode._rcv_traj");
 
     // 得到第一个trajPoint
-    nav_msgs::Path rcvTraj_msg = _rcv_traj;
-    first_pose.push_back(rcvTraj_msg.poses[0].pose.position.x);
-    first_pose.push_back(rcvTraj_msg.poses[0].pose.position.y);
-    // z for theta
-    first_pose.push_back(rcvTraj_msg.poses[0].pose.position.z);
+    JointTrajPub::AnglesList rcvTraj_msg = _rcv_traj;
+    first_pose.push_back(rcvTraj_msg.AnglesList[0].base_x);
+    first_pose.push_back(rcvTraj_msg.AnglesList[0].base_y);
+    first_pose.push_back(rcvTraj_msg.AnglesList[0].base_theta);
+    first_pose.push_back(rcvTraj_msg.AnglesList[0].joint1);
+    first_pose.push_back(rcvTraj_msg.AnglesList[0].joint2);
+    first_pose.push_back(rcvTraj_msg.AnglesList[0].joint3);
+    first_pose.push_back(rcvTraj_msg.AnglesList[0].joint4);
+    first_pose.push_back(rcvTraj_msg.AnglesList[0].joint5);
+    first_pose.push_back(rcvTraj_msg.AnglesList[0].joint6);
+
+    std::vector<double> current_pos;
+    std::vector<double> current_vel;
 
     ros::Rate gotoRate(_pid_freq);
     double pid_dt = 1 / _pid_freq;
@@ -400,107 +405,78 @@ bool MPCNode::gotoInitState()
     {
         try
         {
-            //_tfListener.lookupTransform(_car_frame, _map_frame, ros::Time(0), _tfTransform);
-            _tfListener.lookupTransform(_map_frame, _car_frame, ros::Time(0), _tfTransform);
-            // cout << "map frame " << _map_frame << endl;
-            // cout << "car_frame " << _car_frame << endl;
-            _tf_get = true;
+            {
+                std::lock_guard<std::mutex> lock(mlock);
+                current_pos = _joint_pos;
+            }
+            _sensor_get = true;
             // 如果拿到了tf，将位姿赋给机器人状态
-            _vicon_tf_x = _tfTransform.getOrigin().getX();
-            _vicon_tf_y = _tfTransform.getOrigin().getY();
-            _vicon_tf_theta = range_angle_PI(tf::getYaw(_tfTransform.getRotation()));
-                            //开始坐标转换
-            // _vicon_tf_matrix << cos(_vicon_tf_theta), -sin(_vicon_tf_theta), _vicon_tf_x,
-            //                     sin(_vicon_tf_theta), cos(_vicon_tf_theta), _vicon_tf_y,
-            //                     0.0, 0.0, 1.0;
-            // _robot_tf_matrix = _vicon_tf_matrix * _offset_matrix;
-            // //_robot_tf_matrix = _offset_matrix * _vicon_tf_matrix;
-
-            // _rb_x = _robot_tf_matrix(0,2);
-            // _rb_y = _robot_tf_matrix(1,2);
-            // _rb_theta = _vicon_tf_theta;
-            _rb_x = _vicon_tf_x;
-            _rb_y = _vicon_tf_y;
-            _rb_theta = _vicon_tf_theta;
-            // cout << "vicon中的坐标" << _vicon_tf_x << "," << _vicon_tf_y << "," << _vicon_tf_theta << endl;
-            // cout << "机器人的坐标" << _rb_x << "," << _rb_y << "," << _rb_theta  << endl;
         }
         catch (tf::TransformException &ex)
         {
             ROS_ERROR("%s", ex.what());
-            _tf_get = false;
+            _sensor_get = false;
             continue;
         }
         // ref - current
-        double error_x = first_pose[0] - _rb_x;
-        double error_y = first_pose[1] - _rb_y;
-        double error_theta = first_pose[2] - _rb_theta;
+        double error_x = first_pose[0] - _joint_pos[0];
+        double error_y = first_pose[1] - _joint_pos[1];
+        double error_theta = first_pose[2] - _joint_pos[2];
+        double error_joint1 = first_pose[3] - _joint_pos[3];
+        double error_joint2 = first_pose[4] - _joint_pos[4];
+        double error_joint3 = first_pose[5] - _joint_pos[5];
+        double error_joint4 = first_pose[6] - _joint_pos[6];
+        double error_joint5 = first_pose[7] - _joint_pos[7];
+        double error_joint6 = first_pose[8] - _joint_pos[8];
 
         double error_distance = sqrt(pow(error_x, 2) + pow(error_y, 2));
-        //ROS_INFO("");
+        bool _flag = error_distance <= _tolerence_xy && error_theta <= _tolerence_theta && error_joint1 <= _tolerence_joint
+                        && error_joint2 <= _tolerence_joint && error_joint3 <= _tolerence_joint && error_joint4 <= _tolerence_joint
+                            && error_joint5 <= _tolerence_joint && error_joint6 <= _tolerence_joint;
 
-        if (error_distance <= _tolerence_xy && error_theta <= _tolerence_theta)
+        if (_flag)
         {
             // 如果到达期望的轨迹的初始位置，速度置为0
-            _twist_msg.linear.x = 0;
-            _twist_msg.linear.y = 0;
-            _twist_msg.angular.z = 0;
-            _pub_twist.publish(_twist_msg);
+            setJointVelocity({0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0});
+            _pub_robot_velocity.publish(_jntvel_msg);
             // 到达期望位置后，跳出循环，结束gotoInitState
             pid_loop = false;
-            _tf_get = false;
-
-            // todo 在这里加入flag
-            ros::Duration(3.0).sleep(); // 3s缓一会儿
-            _mec_reach_init = true;
-
-            std_msgs::Float32 flag_msg;
-            flag_msg.data = 1.0;
-            for(int i = 0; i< 20; i++)
-            {
-                _pub_initPose_reach.publish(flag_msg);
-                ros::Duration(0.05).sleep();
-            }
+            _sensor_get = false;
+            ros::Duration(2.0).sleep(); // 3s缓一会儿
         }
         else
         {
-            // pi control 比例积分控制
-            _speed_x = _kp_vx * error_x + _ki_vx * error_x * pid_dt;
-            _speed_y = _kp_vy * error_y + _ki_vy * error_y * pid_dt;
-            _angvel = _kp_omega * error_theta + _ki_omega * error_theta * pid_dt;
-            // normalize
-            _speed_x = range_velocity_MAX(_speed_x);
-            _speed_y = range_velocity_MAX(_speed_y);
-            _angvel = range_angvel_MAX(_angvel);
+            std::vector<double> temp_vel;
+            // pi control 比例积分控制 && normalize
+            temp_vel.push_back(range_velocity_MAX(_kp_vx * error_x + _ki_vx * error_x * pid_dt));
+            temp_vel.push_back(range_velocity_MAX(_kp_vy * error_y + _ki_vy * error_y * pid_dt));
+            temp_vel.push_back(range_angvel_MAX(_kp_omega * error_theta + _ki_omega * error_theta * pid_dt));
 
-            _twist_msg.linear.x = _speed_x;
-            _twist_msg.linear.y = _speed_y;
-            _twist_msg.angular.z = _angvel;
+            temp_vel.push_back(range_angvel_MAX(_kp_omega * error_joint1 + _ki_omega * error_joint1 * pid_dt));
+            temp_vel.push_back(range_angvel_MAX(_kp_omega * error_joint2 + _ki_omega * error_joint2 * pid_dt));
+            temp_vel.push_back(range_angvel_MAX(_kp_omega * error_joint3 + _ki_omega * error_joint3 * pid_dt));
+            temp_vel.push_back(range_angvel_MAX(_kp_omega * error_joint4 + _ki_omega * error_joint4 * pid_dt));
+            temp_vel.push_back(range_angvel_MAX(_kp_omega * error_joint5 + _ki_omega * error_joint5 * pid_dt));
+            temp_vel.push_back(range_angvel_MAX(_kp_omega * error_joint6 + _ki_omega * error_joint6 * pid_dt));
 
-            _pub_twist.publish(_twist_msg);
+            setJointVelocity(temp_vel);
+            _pub_robot_velocity.publish(_jntvel_msg);
         }
         // rate sleep 进入定时循环
         gotoRate.sleep();
     }
     return true;
 }
-// CallBack: Update odometry
-/*
-void MPCNode::odomCB(const nav_msgs::Odometry::ConstPtr& odomMsg)
-{
-    _odom = *odomMsg; //里程计的信息
 
-}
-*/
-// CallBack: Update generated path (conversion to odom frame)
 
-void MPCNode::rcvtrajCB(const nav_msgs::Path::ConstPtr &totalTrajMsg)
+//todo 消息类型修改为sensor_msgs::JointState
+void MPCNode::rcvJointTrajCB(const JointTrajPub::AnglesListConstPtr &totalTrajMsg)
 {
-    if (_rcv_traj.poses.size() == 0)
+    if (_rcv_traj.AnglesList.size() == 0)
     {
         _rcv_traj = *totalTrajMsg; // pose的消息类型的vector，有时间戳和坐标
 
-        _subTraj_length = _rcv_traj.poses.size();
+        _subTraj_length = _rcv_traj.AnglesList.size(); //订阅到的加长轨迹，末尾有重复的
         if (_subTraj_length != 0)
         {
             if (_delay_mode)
@@ -511,7 +487,7 @@ void MPCNode::rcvtrajCB(const nav_msgs::Path::ConstPtr &totalTrajMsg)
             else
             {
                 ROS_WARN("Delay mode is off");
-                _realTraj_length = _subTraj_length - (_mpc_steps - 2);
+                _realTraj_length = _subTraj_length - (_mpc_steps - 2); //订阅到，本身traj的长度
             }
             cout << "rcvTrajCB中mpcsteps为 " << _mpc_steps << endl;
             ROS_INFO("Track Traj has received !!! Track Traj real length: %d", _realTraj_length);
@@ -528,17 +504,11 @@ void MPCNode::rcvtrajCB(const nav_msgs::Path::ConstPtr &totalTrajMsg)
     return;
 }
 
-nav_msgs::Path MPCNode::getTrackTraj(const nav_msgs::Path &rcvTrajMsg)
+JointTrajPub::AnglesList MPCNode::getTrackTraj(const JointTrajPub::AnglesList &rcvJointTrajMsg)
 {
-    // todo 这个判断加到Controller——loop中，防止轨迹跟踪之后，控制器继续运行
     _track_finished = false;
-
-    // 要有一个是变量告诉是在第几次的controllLoop中
-    // todo 这个是放在类的privata中的 done
-    // int loop_count = 0;
-
     // 声明一个空的path，留给MPC，
-    nav_msgs::Path get_trackTraj = nav_msgs::Path(); // For generating mpc reference path
+    JointTrajPub::AnglesList get_trackTraj = JointTrajPub::AnglesList(); // For generating mpc reference path
     // 给一个param，在traj_pub中重复给N次最后一个的traj点，保证能以速度为0到达终点
     // 有一个判断，判断loop_count是否和_rcv_traj.size()-_mpc_steps相同
 
@@ -549,16 +519,22 @@ nav_msgs::Path MPCNode::getTrackTraj(const nav_msgs::Path &rcvTrajMsg)
         _fir_track_point = _loop_count + 1;
     else
         _fir_track_point = _loop_count;
+
     for (int i = 0; i < _mpc_steps; i++)
     {
-        geometry_msgs::PoseStamped tempPose;
-        tempPose.pose.position.x = rcvTrajMsg.poses[i + _fir_track_point].pose.position.x;
-        tempPose.pose.position.y = rcvTrajMsg.poses[i + _fir_track_point].pose.position.y;
-        // z for theta
-        tempPose.pose.position.z = rcvTrajMsg.poses[i + _fir_track_point].pose.position.z;
-        tempPose.header.stamp = ros::Time::now();
-        tempPose.header.frame_id = _map_frame;
-        get_trackTraj.poses.push_back(tempPose);
+        JointTrajPub::Angles temp_jntpos;
+        temp_jntpos.base_x = rcvJointTrajMsg.AnglesList[i + _fir_track_point].base_x;
+        temp_jntpos.base_y = rcvJointTrajMsg.AnglesList[i + _fir_track_point].base_y;
+        temp_jntpos.base_theta = rcvJointTrajMsg.AnglesList[i + _fir_track_point].base_theta;
+
+        temp_jntpos.joint1 = rcvJointTrajMsg.AnglesList[i + _fir_track_point].joint1;
+        temp_jntpos.joint2 = rcvJointTrajMsg.AnglesList[i + _fir_track_point].joint2;
+        temp_jntpos.joint3 = rcvJointTrajMsg.AnglesList[i + _fir_track_point].joint3;
+        temp_jntpos.joint4 = rcvJointTrajMsg.AnglesList[i + _fir_track_point].joint4;
+        temp_jntpos.joint5 = rcvJointTrajMsg.AnglesList[i + _fir_track_point].joint5;
+        temp_jntpos.joint6 = rcvJointTrajMsg.AnglesList[i + _fir_track_point].joint6;
+
+        get_trackTraj.AnglesList.push_back(temp_jntpos);
         // 放入第loop_count次预测过程，需要跟踪的参考轨迹
     }
     _trackTraj_computed = true;
@@ -566,115 +542,76 @@ nav_msgs::Path MPCNode::getTrackTraj(const nav_msgs::Path &rcvTrajMsg)
     return get_trackTraj;
 }
 
-// CallBack: Update path waypoints (conversion to odom frame)
-/*
-void MPCNode::pathCB(const nav_msgs::Path::ConstPtr& pathMsg)
-{
-}
-*/
-
-/*
-// CallBack: Update goal status
-void MPCNode::goalCB(const geometry_msgs::PoseStamped::ConstPtr& goalMsg)
-{
-    _goal_pos = goalMsg->pose.position;
-    _traj_received = true;
-    _track_finished = false;
-    ROS_INFO("Goal Received :goalCB!");
-    //read 记录目标goal的位姿，将flag置位
-}
-*/
-
-// Callback: Check if the car is inside the goal area or not检查汽车是否在目标区域内
-/*
-void MPCNode::amclCB(const geometry_msgs::PoseWithCovarianceStamped::ConstPtr& amclMsg)
-{
-
-    if(_goal_received)
-    {
-        double car2goal_x = _goal_pos.x - amclMsg->pose.pose.position.x;
-        double car2goal_y = _goal_pos.y - amclMsg->pose.pose.position.y;
-        double dist2goal = sqrt(car2goal_x*car2goal_x + car2goal_y*car2goal_y);
-        if(dist2goal < _goalRadius)
-        {
-            _goal_received = false;
-            _goal_reached = true;
-            _path_computed = false;
-            ROS_INFO("Goal Reached !");
-        }
-        //检查到没到goal
-    }
-
-}
-*/
 
 // Rater: Control Loop (closed loop nonlinear MPC)RATE保证周期性：控制环（闭环非线性 MPC）
 
 bool MPCNode::controlLoop()
 {
-    //_tfListener.lookupTransform(_car_frame, _map_frame, ros::Time(0), _tfTransform);
-    //double time_loop_start = ros::Time::now().toSec();
+
     double time_get_tf_start;
     double time_get_tf_end;
     time_get_tf_start = ros::Time::now().toSec();
     cout << "***********************  开始Control Loop  ************************" << endl;
+    cout << "_traj_received为" << _traj_received << endl;
+    cout << "_track_finished为" << _track_finished << endl;
+    cout << "_loop_count为" << _loop_count << endl;
+    cout << "_realTraj_length为" << _realTraj_length << endl;
+
+    //std::vector<Eigen::Vector3d> _tf_state;
+
     try
     {
-        // todo 在这里需要，利用差分运动学得到看，机器人的真实速度 20231030
-        // 保存上一时刻的用于计算当前的速度
-        _last_rb_x = _rb_x;
-        _last_rb_y = _rb_y;
-        _last_rb_theta = _rb_theta;
+        //debug 需要有个wait,不然一开始也会加载
+        _tfListener.lookupTransform("world", "dynamic_pedestrian", ros::Time(0), _tfTransform);
+        // 如果拿到了tf，将位姿赋给行人状态
+        dynamic_pedestrian_pos << _tfTransform.getOrigin().getX(), _tfTransform.getOrigin().getY(), _tfTransform.getOrigin().getZ();
 
-        //_tfListener.lookupTransform(_car_frame, _map_frame, ros::Time(0), _tfTransform);
-        _tfListener.lookupTransform(_map_frame, _car_frame, ros::Time(0), _tfTransform);
-        _tf_get = true;
-        time_get_tf_end = ros::Time::now().toSec();
-        cout << "tf_get_time_cost: " << time_get_tf_end - time_get_tf_start << endl;
-        cout << "tf_get_time_stamp: " << time_get_tf_end - time_get_tf_start << endl;
+        _tfListener.lookupTransform("world", "front_left_sphere_collision", ros::Time(0), _tfTransform);
+        base_lf_sphere_pos << _tfTransform.getOrigin().getX(), _tfTransform.getOrigin().getY(), _tfTransform.getOrigin().getZ();
 
-        // 如果拿到了tf，将位姿赋给vicon_tf状态
-        _vicon_tf_x = _tfTransform.getOrigin().getX();
-        _vicon_tf_y = _tfTransform.getOrigin().getY();
-        _vicon_tf_theta = range_angle_PI(tf::getYaw(_tfTransform.getRotation()));
+        _tfListener.lookupTransform("world", "front_right_sphere_collision", ros::Time(0), _tfTransform);
+        base_rf_sphere_pos << _tfTransform.getOrigin().getX(), _tfTransform.getOrigin().getY(), _tfTransform.getOrigin().getZ();
 
-        //todo 这里去掉坐标转换，直接拿/tf信息
-                //开始坐标转换
-        // _vicon_tf_matrix << cos(_vicon_tf_theta), -sin(_vicon_tf_theta), _vicon_tf_x,
-        //                     sin(_vicon_tf_theta), cos(_vicon_tf_theta), _vicon_tf_y,
-        //                     0.0, 0.0, 1.0;
-        // _robot_tf_matrix = _vicon_tf_matrix * _offset_matrix;
-        //_robot_tf_matrix = _offset_matrix * _vicon_tf_matrix;
+        _tfListener.lookupTransform("world", "rear_left_sphere_collision", ros::Time(0), _tfTransform);
+        base_lr_sphere_pos << _tfTransform.getOrigin().getX(), _tfTransform.getOrigin().getY(), _tfTransform.getOrigin().getZ();
 
-        // _rb_x = _robot_tf_matrix(0,2);
-        // _rb_y = _robot_tf_matrix(1,2);
-        // _rb_theta = _vicon_tf_theta;
-        _rb_x = _vicon_tf_x;
-        _rb_y = _vicon_tf_y;
-        _rb_theta = _vicon_tf_theta;
+        _tfListener.lookupTransform("world", "rear_right_sphere_collision", ros::Time(0), _tfTransform);
+        base_rr_sphere_pos << _tfTransform.getOrigin().getX(), _tfTransform.getOrigin().getY(), _tfTransform.getOrigin().getZ();
+
+        _tfListener.lookupTransform("world", "right_arm_shoulder_sphere_link", ros::Time(0), _tfTransform);
+        shoulder_sphere_pos << _tfTransform.getOrigin().getX(), _tfTransform.getOrigin().getY(), _tfTransform.getOrigin().getZ();
+
+        _tfListener.lookupTransform("world", "right_arm_forearm_sphere_link", ros::Time(0), _tfTransform);
+        elbow_sphere_pos << _tfTransform.getOrigin().getX(), _tfTransform.getOrigin().getY(), _tfTransform.getOrigin().getZ();
+
+        _tfListener.lookupTransform("world", "right_arm_wrist_sphere_link", ros::Time(0), _tfTransform);
+        wrist_sphere_pos << _tfTransform.getOrigin().getX(), _tfTransform.getOrigin().getY(), _tfTransform.getOrigin().getZ();
+
+        _tfListener.lookupTransform("world", "right_arm_flange_gripper_sphere", ros::Time(0), _tfTransform);
+        gripper_sphere_pos << _tfTransform.getOrigin().getX(), _tfTransform.getOrigin().getY(), _tfTransform.getOrigin().getZ();
+
+        _tf_state.push_back(dynamic_pedestrian_pos);
+        _tf_state.push_back(base_lf_sphere_pos);
+        _tf_state.push_back(base_rf_sphere_pos);
+        _tf_state.push_back(base_lr_sphere_pos);
+        _tf_state.push_back(base_rr_sphere_pos);
+        _tf_state.push_back(shoulder_sphere_pos);
+        _tf_state.push_back(elbow_sphere_pos);
+        _tf_state.push_back(wrist_sphere_pos);
+        _tf_state.push_back(gripper_sphere_pos);
+
+        ROS_WARN("Update the Obstacle-Class pose!");
     }
     catch (tf::TransformException &ex)
     {
         ROS_ERROR("%s", ex.what());
-        _tf_get = false;
-        //return false;  //这里不能return,否则直接推出main中的while循环了
     }
-    cout << "tf_flag为" << _tf_get << endl;
-    cout << "_mec_reach_init为" << _mec_reach_init << endl;
-    cout << "_traj_received为" << _traj_received << endl;
-    cout << "_track_finished为" << _track_finished << endl;
-    cout << "_kinova_reach_flag为" << get_kinova_reach_flag() << endl;
-    cout << "_loop_count为" << _loop_count << endl;
-    cout << "_realTraj_length为" << _realTraj_length << endl;
 
     // 收到要跟踪的轨迹，收到小车的tf位姿，轨迹还没跟踪完，control loop没有到最后一个点
-    bool _run_loop_reach = _mec_reach_init && get_kinova_reach_flag();
-    bool _run_loop_traj = _traj_received && _tf_get && !_track_finished;
+    bool _run_loop_traj = _traj_received && !_track_finished;
     bool _run_loop_count = _loop_count < _realTraj_length - 1;
-    bool _run_loop = _run_loop_reach && _run_loop_traj && _run_loop_count;
-    //< _realTraj_length - 1 received goal & goal not reached并且path已经算好了
+    bool _run_loop = _run_loop_traj && _run_loop_count;
 
-    cout << "_run_loop_reach为 " << _run_loop_reach << endl;
     cout << "_run_loop_traj为 " << _run_loop_traj << endl;
     cout << "_run_loop_count为 " << _run_loop_count << endl;
     cout << "_run_loop为 " << _run_loop << endl;
@@ -685,12 +622,12 @@ bool MPCNode::controlLoop()
     if (_run_loop)
     {
         // 里程计信息 在vicon_bridge中是tf
-        nav_msgs::Path rcvTrajmsg = _rcv_traj; // mpc_path，通过desire_path处理过的
+        JointTrajPub::AnglesList rcvTrajmsg = _rcv_traj; // mpc_path，通过desire_path处理过的
 
         time_get_TrackTraj_start = ros::Time::now().toSec();
 
         // 现在对_rcv_traj进行处理，得到用于本次loop要track的轨迹
-        nav_msgs::Path mpc_trackTraj = getTrackTraj(rcvTrajmsg);
+        JointTrajPub::AnglesList mpc_trackTraj = getTrackTraj(rcvTrajmsg);
 
         time_get_TrackTraj_end = ros::Time::now().toSec();
         cout << "getTrackTraj用时: " << time_get_TrackTraj_end - time_get_TrackTraj_start << endl;
@@ -698,7 +635,7 @@ bool MPCNode::controlLoop()
 
         // read 已经获得了机器人的位姿，以及要跟踪的轨迹信息。
         // 加上个判断_trackTraj_computed
-        bool _mpc_trackTraj_sizeFlag = (mpc_trackTraj.poses.size() == _mpc_steps);
+        bool _mpc_trackTraj_sizeFlag = (mpc_trackTraj.AnglesList.size() == _mpc_steps);
         cout << "_mpc_trackTraj_size是否正确: " << _mpc_trackTraj_sizeFlag << endl;
         cout << "_trackTraj_computed为 " << _trackTraj_computed << endl;
         bool _start_mpc_trackTraj = _mpc_trackTraj_sizeFlag && _trackTraj_computed;
@@ -709,97 +646,61 @@ bool MPCNode::controlLoop()
             cout << "===================  进入前期计算  =============================" << endl;
             double time_loop_start = ros::Time::now().toSec();
             _loop_count++;
-
-            //! Update system states: X=[x, y, theta] try&catch
-            //! Update system inputs: U=[w, vx, vy]
+            //! Update system states: X=[x, y, yaw, theta1-7]
+            //! Update system inputs: U=[vx, vy, w, w1-7]
             // 一开始这些都是0.0
             const double dt = _dt; // 0.01s
-            // todo 就是在这里需修改速度 20231030 //done 之后也许会debug，涉及到-pi, pi的问题
+            //! 这里就不用这么麻烦的计算了，就用回调函数得到的，把位置和速度都给放进去。
+            std::vector<double> current_position;
+            std::vector<double> current_velocity;
+            try{
+                std::lock_guard<std::mutex> lock(mlock);
+                current_position = _joint_pos;
+                current_velocity = _joint_vel;
+            }
+            catch (tf::TransformException &ex)
+            {
+                ROS_ERROR("%s", ex.what());
+            }
 
-            //debug 在这得到的就是robot在world系下的速度
-            _vel_map[2] = (_rb_theta - _last_rb_theta) / dt; // steering -> w
-            _vel_map[0] = (_rb_x - _last_rb_x) / dt;             // speed -> vx
-            _vel_map[1] = (_rb_y - _last_rb_y) / dt;             // speed -> vy
-            cout << "vx_map: " << _vel_map[0] << "vy_map" << _vel_map[1] << "angvel_map: " << _vel_map[2] << endl;
-
-            //debug  利用旋转矩阵得到机器人的速度
-            Eigen::Matrix3d Trans_map2bot;
-            Trans_map2bot << cos(_rb_theta), -sin(_rb_theta), 0,
-                                sin(_rb_theta), cos(_rb_theta), 0,
-                                0, 0, 1;
-            _vel_bot = Trans_map2bot.inverse() * _vel_map;
-
-            cout << "vx_bot: " << _vel_bot[0] << "vy_bot" << _vel_bot[1] << "angvel_bot: " << _vel_bot[2] << endl;
-
-            //!  state=[x, y, theta]
-            // todo 之后设计一个，更改状态数量的parm，搭配launch
-            Eigen::VectorXd state(6); // 6维的状态量
-            if (_delay_mode)
+            Eigen::VectorXd robot_state(18); //当前位置9和当前速度9，其实直接控制这9个Joint，都是线性方程
+            if (!_delay_mode)
             {
                 // Kinematic model is used to predict vehicle state at the actual moment of control (current time + delay dt)
                 // 利用运动学模型预测实际控制时刻的车辆状态（当前时间+延迟dt）
-                const double px_act = _rb_x + _vel_map[0] * dt;
-                const double py_act = _rb_y + _vel_map[1] * dt;
-                const double theta_act = _rb_theta + _vel_map[2] * dt; // theta = theta + w * dt
-
-                state << px_act, py_act, theta_act, _vel_bot[0], _vel_bot[1], _vel_bot[2];
-
-                cout << "开启delay_mode! , 机器人在世界系中的状态为: " <<
-                    "x = " << state[0] << " , y = " << state[1] << " , theta = " << state[2] << endl;
-
-                file_debug << "开启delay_mode! , 机器人在世界系中的状态为: " <<
-                    "x = " << state[0] << " , y = " << state[1] << " , theta = " << state[2] <<
-                    " , vx_bot: " << _vel_bot[0] << " , vy_bot: " << _vel_bot[1] << " , angvel_bot: " << _vel_bot[2] << endl;
+                robot_state << current_position[0], current_position[1], current_position[2], current_position[3], current_position[4],
+                                current_position[5], current_position[6], current_position[7], current_position[8],
+                                current_velocity[0], current_velocity[1], current_velocity[2], current_velocity[3], current_velocity[4],
+                                current_velocity[5], current_velocity[6], current_velocity[7], current_velocity[8];
             }
             else
             {
-                state << _rb_x, _rb_y, _rb_theta, _vel_bot[0], _vel_bot[1], _vel_bot[2];
-
-                cout << "关闭delay_mode... , 机器人在世界系中的状态为: " <<
-                    "x = " << state[0] << " , y = " << state[1] << " , theta = " << state[2] << endl;
-
-                file_debug << "关闭delay_mode... , 机器人在世界系中的状态为: " <<
-                    "x = " << state[0] << " , y = " << state[1] << " , theta = " << state[2] <<
-                    " , vx_bot: " << _vel_bot[0] << " , vy_bot" << _vel_bot[1] << " , angvel_bot: " << _vel_bot[2] << endl;
+                ROS_ERROR("Donot Open the Delay Mode ! ! !");
             }
-            // cout << "进入mpc.solve" << endl;
 
             double time_solve_start = ros::Time::now().toSec();
-            vector<double> mpc_results = _mpc.Solve(state, mpc_trackTraj);
-            //vector<double> mpc_results = _mpc.Solve(state_delay, mpc_trackTraj, _loop_count);
-            //  cout << "出来mpc.solve" << endl;
+            vector<double> mpc_results = _mpc.Solve(robot_state, mpc_trackTraj, _tf_state);
             double time_solve_end = ros::Time::now().toSec();
             cout << "MPC solve time: " << time_solve_end - time_solve_start << " s" << endl;
             cout << "MPC solve Stamp: " << time_solve_end - time_get_tf_start << endl;
-            // MPC result (all described in car frame), output = (vx, vy, w)
-            _speed_x = mpc_results[0]; // m/s, longitudinal speed
-            _speed_y = mpc_results[1]; // m/s, lateral speed
-            _angvel = mpc_results[2];  // radian/sec, angular velocity
 
             // normalize speed & angvel
-            _speed_x = range_velocity_MAX(_speed_x);
-            _speed_y = range_velocity_MAX(_speed_y);
-            _angvel = range_angvel_MAX(_angvel);
+            _speed_x = range_velocity_MAX(mpc_results[0]);
+            _speed_y = range_velocity_MAX(mpc_results[1]);
+            _angvel = range_angvel_MAX(mpc_results[2]);
+            _jntvel1 = range_angvel_MAX(mpc_results[3]);
+            _jntvel2 = range_angvel_MAX(mpc_results[4]);
+            _jntvel3 = range_angvel_MAX(mpc_results[5]);
+            _jntvel4 = range_angvel_MAX(mpc_results[6]);
+            _jntvel5 = range_angvel_MAX(mpc_results[7]);
+            _jntvel6 = range_angvel_MAX(mpc_results[8]);
+            //如果MPC求解失败，mpc_result[9] = 0
+            if(mpc_results[9] < 0.5)
+                _loop_count = _loop_count - 1;
 
             // print INFO
             if (_debug_info)
             {
-                cout << "\n\nDEBUG" << endl;
-                cout << "robot_x: " << _rb_x << endl;
-                cout << "robot_y: " << _rb_y << endl;
-                cout << "robot_theta: " << _rb_theta << endl;
-                    // cout << "V: " << v << endl;
-                    // cout << "odom_path: \n" << odom_path << endl;
-                    // cout << "x_points: \n" << x_veh << endl;
-                    // cout << "y_points: \n" << y_veh << endl;
-                    ////cout << "coeffs: \n" << coeffs << endl;
-                cout << "_speed_x: \n"
-                         << _speed_x << endl;
-                cout << "_speed_y: \n"
-                         << _speed_y << endl;
-                cout << "_angvel: \n"
-                         << _angvel << endl;
-                // cout << "_accel: \n" << _acc << endl;
 
             }
 
@@ -820,107 +721,118 @@ bool MPCNode::controlLoop()
         //_acc = 0.0;
         _speed_x = 0.0;
         _speed_y = 0.0;
-        _angvel = 0;
+        _angvel = 0.0;
+        _jntvel1 = 0.0;
+        _jntvel2 = 0.0;
+        _jntvel3 = 0.0;
+        _jntvel4 = 0.0;
+        _jntvel5 = 0.0;
+        _jntvel6 = 0.0;
         // 其实等于就够了
         if (_traj_received)
         {
-            if (_loop_count > _realTraj_length - 2 && _loop_count > 0 && _rcv_traj.poses.size() > 0)
+            if (_loop_count > _realTraj_length - 2 && _loop_count > 0 && _rcv_traj.AnglesList.size() > 0)
                 _track_finished = true;
             if (_track_finished && _traj_received)
-                ROS_WARN("Traj has Tracked: control loop OOOVER !");
+                ROS_ERROR("Traj has Tracked: control loop OOOVER !");
         }
     }
 
     // todo 在这里debug，csv文件的输出
     {
-        cout << "loop_cont time is " << _loop_count << " , "
-             << "time coordinate is " << _time_coordinate << " , "
-             << "robot_x position is " << _rb_x << " , "
-             << "robot_y position is " << _rb_y << " , "
-             << "robot_yaw is " << _rb_theta << " , "
-             << "pre_bot speed_x is " << _speed_x << " , "
-             << "pre_bot speed_y is " << _speed_y << " , "
-             << "Pre_bot angvel is " << _angvel << " , "
-             << "real_bot speed_x is " << _vel_bot[0] << " , "
-             << "real_bot speed_y is " << _vel_bot[1] << " , "
-             << "real_bot angvel is " << _vel_bot[2] << " , "
-             << "world speed_x is " << _vel_map[0] << " , "
-             << "world speed_y is " << _vel_map[1] << " , "
-             << "world angvel is " << _vel_map[2] << " , "
-             << "this loop x_direciton total cost: " << _mpc._mpc_distx_Tcost << " , "
-             << "this loop y_direciton total cost: " << _mpc._mpc_disty_Tcost << " , "
-             << "this loop theta total cost: " << _mpc._mpc_etheta_Tcost << " , "
-             << "this loop acc_x total cost: " << _mpc._mpc_acc_x_Tcost << " , "
-             << "this loop acc_y total cost: " << _mpc._mpc_acc_y_Tcost << " , "
-             << "this loop acc_theta total cost: " << _mpc._mpc_angacc_Tcost << " , "
-             << "this loop time_cost is " << loop_duration << endl;
-        cout << "\n" << endl;
-        cout << "\n" << endl;
+        // cout << "loop_cont time is " << _loop_count << " , "
+        //      << "time coordinate is " << _time_coordinate << " , "
+        //      << "robot_x position is " << _rb_x << " , "
+        //      << "robot_y position is " << _rb_y << " , "
+        //      << "robot_yaw is " << _rb_theta << " , "
+        //      << "pre_bot speed_x is " << _speed_x << " , "
+        //      << "pre_bot speed_y is " << _speed_y << " , "
+        //      << "Pre_bot angvel is " << _angvel << " , "
+        //      << "real_bot speed_x is " << _vel_bot[0] << " , "
+        //      << "real_bot speed_y is " << _vel_bot[1] << " , "
+        //      << "real_bot angvel is " << _vel_bot[2] << " , "
+        //      << "world speed_x is " << _vel_map[0] << " , "
+        //      << "world speed_y is " << _vel_map[1] << " , "
+        //      << "world angvel is " << _vel_map[2] << " , "
+        //      << "this loop x_direciton total cost: " << _mpc._mpc_distx_Tcost << " , "
+        //      << "this loop y_direciton total cost: " << _mpc._mpc_disty_Tcost << " , "
+        //      << "this loop theta total cost: " << _mpc._mpc_etheta_Tcost << " , "
+        //      << "this loop acc_x total cost: " << _mpc._mpc_acc_x_Tcost << " , "
+        //      << "this loop acc_y total cost: " << _mpc._mpc_acc_y_Tcost << " , "
+        //      << "this loop acc_theta total cost: " << _mpc._mpc_angacc_Tcost << " , "
+        //      << "this loop time_cost is " << loop_duration << endl;
+        // cout << "\n" << endl;
+        // cout << "\n" << endl;
 
-        file << std::fixed
-             << std::setprecision(std::numeric_limits<double>::max_digits10)
-             << _loop_count << ","
-             << _time_coordinate << ","
-             << _rb_x << ","
-             << _rb_y << ","
-             << _rb_theta << ","
-             << _speed_x << ","
-             << _speed_y << ","
-             << _angvel << ","
-             << _vel_bot[0] << ","
-             << _vel_bot[1] << ","
-             << _vel_bot[2] << ","
-             << _vel_map[0] << ","
-             << _vel_map[1] << ","
-             << _vel_map[2] << ","
-             << loop_duration << ","
-             << _mpc._mpc_distx_Tcost << ","
-             << _mpc._mpc_disty_Tcost << ","
-             << _mpc._mpc_etheta_Tcost << ","
-             << _mpc._mpc_acc_x_Tcost << ","
-             << _mpc._mpc_acc_y_Tcost << ","
-             << _mpc._mpc_angacc_Tcost << endl;
+        // file << std::fixed
+        //      << std::setprecision(std::numeric_limits<double>::max_digits10)
+        //      << _loop_count << ","
+        //      << _time_coordinate << ","
+        //      << _rb_x << ","
+        //      << _rb_y << ","
+        //      << _rb_theta << ","
+        //      << _speed_x << ","
+        //      << _speed_y << ","
+        //      << _angvel << ","
+        //      << _vel_bot[0] << ","
+        //      << _vel_bot[1] << ","
+        //      << _vel_bot[2] << ","
+        //      << _vel_map[0] << ","
+        //      << _vel_map[1] << ","
+        //      << _vel_map[2] << ","
+        //      << loop_duration << ","
+        //      << _mpc._mpc_distx_Tcost << ","
+        //      << _mpc._mpc_disty_Tcost << ","
+        //      << _mpc._mpc_etheta_Tcost << ","
+        //      << _mpc._mpc_acc_x_Tcost << ","
+        //      << _mpc._mpc_acc_y_Tcost << ","
+        //      << _mpc._mpc_angacc_Tcost << endl;
     }
     if(_debug_info)
     {
-        file_debug << std::fixed
-                << std::setprecision(std::numeric_limits<double>::max_digits10)
-                << "loop_cont time is " << _loop_count << " , "
-                << "time coordinate is " << _time_coordinate << " , "
-                << "robot_x position is " << _rb_x << " , "
-                << "robot_y position is " << _rb_y << " , "
-                << "robot_yaw is " << _rb_theta << " , "
-                << "robot speed_x is " << _speed_x << " , "
-                << "robot speed_y is " << _speed_y << " , "
-                << "robot angvel is " << _angvel << " , "
-                << "this loop x_direciton total cost: " << _mpc._mpc_distx_Tcost << " , "
-                << "this loop y_direciton total cost: " << _mpc._mpc_disty_Tcost << " , "
-                << "this loop theta total cost: " << _mpc._mpc_etheta_Tcost << " , "
-                << "this loop acc_x total cost: " << _mpc._mpc_acc_x_Tcost << " , "
-                << "this loop acc_y total cost: " << _mpc._mpc_acc_y_Tcost << " , "
-                << "this loop acc_theta total cost: " << _mpc._mpc_angacc_Tcost << " , "
-                << "this loop time_cost is " << loop_duration << endl;
+        // file_debug << std::fixed
+        //         << std::setprecision(std::numeric_limits<double>::max_digits10)
+        //         << "loop_cont time is " << _loop_count << " , "
+        //         << "time coordinate is " << _time_coordinate << " , "
+        //         << "robot_x position is " << _rb_x << " , "
+        //         << "robot_y position is " << _rb_y << " , "
+        //         << "robot_yaw is " << _rb_theta << " , "
+        //         << "robot speed_x is " << _speed_x << " , "
+        //         << "robot speed_y is " << _speed_y << " , "
+        //         << "robot angvel is " << _angvel << " , "
+        //         << "this loop x_direciton total cost: " << _mpc._mpc_distx_Tcost << " , "
+        //         << "this loop y_direciton total cost: " << _mpc._mpc_disty_Tcost << " , "
+        //         << "this loop theta total cost: " << _mpc._mpc_etheta_Tcost << " , "
+        //         << "this loop acc_x total cost: " << _mpc._mpc_acc_x_Tcost << " , "
+        //         << "this loop acc_y total cost: " << _mpc._mpc_acc_y_Tcost << " , "
+        //         << "this loop acc_theta total cost: " << _mpc._mpc_angacc_Tcost << " , "
+        //         << "this loop time_cost is " << loop_duration << endl;
     }
 
     // publish general cmd_vel
-    if (_pub_twist_flag && !_track_finished)
+    if (!_track_finished)
     {
-        _twist_msg.linear.x = _speed_x;
-        _twist_msg.linear.y = _speed_y;
-        _twist_msg.angular.z = _angvel;
+        _jntvel_msg.data.push_back(_speed_x);
+        _jntvel_msg.data.push_back(_speed_y);
+        _jntvel_msg.data.push_back(_angvel);
+        _jntvel_msg.data.push_back(_jntvel1);
+        _jntvel_msg.data.push_back(_jntvel2);
+        _jntvel_msg.data.push_back(_jntvel3);
+        _jntvel_msg.data.push_back(_jntvel4);
+        _jntvel_msg.data.push_back(_jntvel5);
+        _jntvel_msg.data.push_back(_jntvel6);
+        _jntvel_msg.data.push_back(_pedestrian_vel);
 
-        _pub_twist.publish(_twist_msg);
+        _pub_robot_velocity.publish(_jntvel_msg);
         double time_pub_cmd = ros::Time::now().toSec();
         cout << "pub的时间戳" << time_pub_cmd - time_get_tf_start << endl;
     }
     else
     {
         // 这个也没有必要
-        _twist_msg.linear.x = 0;
-        _twist_msg.linear.y = 0;
-        _twist_msg.angular.z = 0;
-        _pub_twist.publish(_twist_msg);
-        if(_pub_twist_flag)
+        _jntvel_msg.data = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, _pedestrian_vel};
+        _pub_robot_velocity.publish(_jntvel_msg);
+        if(true)
             ROS_WARN("track is finished");
         else
             ROS_ERROR("pub twist flag is false");

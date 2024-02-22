@@ -118,6 +118,7 @@ int main(int argc, char** argv) {
     KDL::ChainFkSolverPos_recursive fk_solver_elbow(chain_elbow);
     KDL::ChainFkSolverPos_recursive fk_solver_wrist(chain_wrist);
     KDL::ChainFkSolverPos_recursive fk_solver_gripper(chain_gripper);
+    
 
     //segment就是link
     //############################### 检查关节名称 #######################################

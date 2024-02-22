@@ -7,27 +7,63 @@
 
 // The program use fragments of code from
 // https://github.com/udacity/CarND-MPC-Quizzes
-
+using namespace std;
 using CppAD::AD;
 // ====================================
 // MPC class definition implementation.
 // ====================================
 MPC::MPC()
 {
-    // Set default value
+
+}
+
+MPC::MPC(Collision_Check &collision_check)
+    : _collision_check(collision_check)
+{
+    // Set default value 也就是在默认构造函数中，给到了一些默认参数值
     _mpc_steps = 20;
-    _max_angvel = 3.0;    // Maximal angvel radian (~30 deg)
-    _max_vel = 1.0;       // Maximal accel
+    _max_angvel = 3.0;    // Maximal angvel
+    _max_vel = 1.0;       // Maximal velocity
     _bound_value = 1.0e3; // Bound value for other variables
+    //base
     _angel_lower = -M_PI;
     _angel_upper = M_PI;
+    //UR5e
+    _joint1_lower = -M_PI;
+    _joint1_upper = M_PI;
+    _joint2_lower = -M_PI;
+    _joint2_upper = M_PI;
+    _joint3_lower = -M_PI;
+    _joint3_upper = M_PI;
+    _joint4_lower = -M_PI;
+    _joint4_upper = M_PI;
+    _joint5_lower = -M_PI;
+    _joint5_upper = M_PI;
+    _joint6_lower = -M_PI;
+    _joint6_upper = M_PI;
 
+    //9个位置变量，(9 * mpc_step) * 1
     _x_start = 0;
     _y_start = _x_start + _mpc_steps;
     _theta_start = _y_start + _mpc_steps;
-    _vx_start = _theta_start + _mpc_steps;
+    _joint1_start = _theta_start + _mpc_steps;
+    _joint2_start = _joint1_start + _mpc_steps;
+    _joint3_start = _joint2_start + _mpc_steps;
+    _joint4_start = _joint3_start + _mpc_steps;
+    _joint5_start = _joint4_start + _mpc_steps;
+    _joint6_start = _joint5_start + _mpc_steps;
+
+    //9个速度变量，(9 * (mpc_step - 1)) * 1
+    _vx_start = _joint6_start + _mpc_steps;
     _vy_start = _vx_start + _mpc_steps - 1;
     _angvel_start = _vy_start + _mpc_steps - 1;
+    _jntvel1_start = _angvel_start + _mpc_steps;
+    _jntvel2_start = _jntvel1_start + _mpc_steps - 1;
+    _jntvel3_start = _jntvel2_start + _mpc_steps - 1;
+    _jntvel4_start = _jntvel3_start + _mpc_steps - 1;
+    _jntvel5_start = _jntvel4_start + _mpc_steps - 1;
+    _jntvel6_start = _jntvel5_start + _mpc_steps - 1;
+    //! e.g.如果mpc_step是10，那么求解的所有变量维度就是 (90 + 81 = 171) * 1
 
     _file_path_class_MPC = " ";
     _file_debug_path_class_MPC = " ";
@@ -36,23 +72,51 @@ MPC::MPC()
 
 void MPC::LoadParams(const std::map<string, double> &params)
 {
+    //!这里在MPCNode的构造函数中，就把参数传进去了
     _params = params;
     // Init parameters for MPC object
     _mpc_steps = _params.find("STEPS") != _params.end() ? _params.at("STEPS") : _mpc_steps;
-    _max_angvel = _params.find("ANGVEL") != _params.end() ? _params.at("ANGVEL") : _max_angvel;
     _max_vel = _params.find("MAXVEL") != _params.end() ? _params.at("MAXVEL") : _max_vel;
+    _max_angvel = _params.find("MAX_ANGVEL") != _params.end() ? _params.at("MAX_ANGVEL") : _max_angvel;
     _bound_value = _params.find("BOUND") != _params.end() ? _params.at("BOUND") : _bound_value;
+    //底盘的theta上下界
     _angel_upper = _params.find("ANGEL_UPPER") != _params.end() ? _params.at("ANGEL_UPPER") : _angel_upper;
     _angel_lower = _params.find("ANGEL_LOWER") != _params.end() ? _params.at("ANGEL_LOWER") : _angel_lower;
+    //机械臂UR的上下限
+    _joint1_upper  = _params.find("JOINT1_UPPER") != _params.end()  ? _params.at("JOINT1_UPPER") : _joint1_upper;
+    _joint1_lower  = _params.find("JOINT1_LOWER") != _params.end()  ? _params.at("JOINT1_LOWER") : _joint1_lower;
+    _joint2_upper  = _params.find("JOINT2_UPPER") != _params.end()  ? _params.at("JOINT2_UPPER") : _joint2_upper;
+    _joint2_lower  = _params.find("JOINT2_LOWER") != _params.end()  ? _params.at("JOINT2_LOWER") : _joint2_lower;
+    _joint3_upper  = _params.find("JOINT3_UPPER") != _params.end()  ? _params.at("JOINT3_UPPER") : _joint3_upper;
+    _joint3_lower  = _params.find("JOINT3_LOWER") != _params.end()  ? _params.at("JOINT3_LOWER") : _joint3_lower;
+    _joint4_upper  = _params.find("JOINT4_UPPER") != _params.end()  ? _params.at("JOINT4_UPPER") : _joint4_upper;
+    _joint4_lower  = _params.find("JOINT4_LOWER") != _params.end()  ? _params.at("JOINT4_LOWER") : _joint4_lower;
+    _joint5_upper  = _params.find("JOINT5_UPPER") != _params.end()  ? _params.at("JOINT5_UPPER") : _joint5_upper;
+    _joint5_lower  = _params.find("JOINT5_LOWER") != _params.end()  ? _params.at("JOINT5_LOWER") : _joint5_lower;
+    _joint6_upper  = _params.find("JOINT6_UPPER") != _params.end()  ? _params.at("JOINT6_UPPER") : _joint6_upper;
+    _joint6_lower  = _params.find("JOINT6_LOWER") != _params.end()  ? _params.at("JOINT6_LOWER") : _joint6_lower;
 
-    // file_debug_path = _params.find("FILE_DEBUG_PATH") != _params.end() ? _params.at("FILE_DEBUG_PATH") : file_debug_path;
-
+    //9个位置变量，(9 * mpc_step) * 1
     _x_start = 0;
     _y_start = _x_start + _mpc_steps;
     _theta_start = _y_start + _mpc_steps;
-    _vx_start = _theta_start + _mpc_steps;
+    _joint1_start = _theta_start + _mpc_steps;
+    _joint2_start = _joint1_start + _mpc_steps;
+    _joint3_start = _joint2_start + _mpc_steps;
+    _joint4_start = _joint3_start + _mpc_steps;
+    _joint5_start = _joint4_start + _mpc_steps;
+    _joint6_start = _joint5_start + _mpc_steps;
+
+    //9个速度变量，(9 * (mpc_step - 1)) * 1
+    _vx_start = _joint6_start + _mpc_steps;
     _vy_start = _vx_start + _mpc_steps - 1;
     _angvel_start = _vy_start + _mpc_steps - 1;
+    _jntvel1_start = _angvel_start + _mpc_steps;
+    _jntvel2_start = _jntvel1_start + _mpc_steps - 1;
+    _jntvel3_start = _jntvel2_start + _mpc_steps - 1;
+    _jntvel4_start = _jntvel3_start + _mpc_steps - 1;
+    _jntvel5_start = _jntvel4_start + _mpc_steps - 1;
+    _jntvel6_start = _jntvel5_start + _mpc_steps - 1;
 
     const std::string filename = _file_path_class_MPC + "/prediction_traj.csv";
     file = std::ofstream(filename, ios::app);
@@ -74,8 +138,7 @@ void MPC::LoadParams(const std::map<string, double> &params)
     cout << "\n!! MPC Obj parameters updated !! " << endl;
 }
 
-// vector<double> MPC::Solve(Eigen::VectorXd state, nav_msgs::Path trackTraj, int loop_cnt)
-vector<double> MPC::Solve(Eigen::VectorXd state, nav_msgs::Path trackTraj)
+vector<double> MPC::Solve(Eigen::VectorXd state, JointTrajPub::AnglesList trackTraj, vector<Eigen::Vector3d> tf_state)
 {
     cout << "\n!! MPC Obj Solve Called !! " << endl;
     bool ok = true;
@@ -85,34 +148,37 @@ vector<double> MPC::Solve(Eigen::VectorXd state, nav_msgs::Path trackTraj)
     const double x = state[0];
     const double y = state[1];
     const double theta = state[2];
-    const double vx = state[3];
-    const double vy = state[4];
-    const double angvel = state[5];
+    const double jntpos1 = state[3];
+    const double jntpos2 = state[4];
+    const double jntpos3 = state[5];
+    const double jntpos4 = state[6];
+    const double jntpos5 = state[7];
+    const double jntpos6 = state[8];
+
+    const double vx = state[9];
+    const double vy = state[10];
+    const double angvel = state[11];
+    const double jntvel1 = state[12];
+    const double jntvel2 = state[13];
+    const double jntvel3 = state[14];
+    const double jntvel4 = state[15];
+    const double jntvel5 = state[16];
+    const double jntvel6 = state[17];
 
     //! Set the number of model variables (includes both states and inputs).
-    size_t state_num = 3;  // state.size(); //!就是3， 这里cppad，状态量+控制量组成决策变量
-    size_t input_num = 3;
+    size_t state_num = 9;  // state.size(); 3+6
+    size_t input_num = 9;
     // 设置优化变量
     size_t n_vars = _mpc_steps * state_num + (_mpc_steps - 1) * input_num;
 
     // Initial value of the independent variables. 自变量
     // SHOULD BE 0 besides initial state.除初始状态外，还应为 0。
-
-    // cout << "\n!! MPC Obj variables initialized 初始化 !! " << endl;
-
+    //! 这里的vars是对所有待优化计算的变量的总和，是x+u
     Dvector vars(n_vars); // 状态和输入一起放进去
     for (int i = 0; i < n_vars; i++)
     {
         vars[i] = 0;
     }
-
-    //! 这个与上面的那个都是初值赋予,可以同时保留
-    // for(int i = 0; i < _mpc_steps; i++)
-    // {
-    //     vars[_x_start + i] = trackTraj.poses[i].pose.position.x;
-    //     vars[_y_start + i] = trackTraj.poses[i].pose.position.y;
-    //     vars[_theta_start + i] = trackTraj.poses[i].pose.position.z;
-    // }
 
     // Set the initial state variable values
     //! 赋初值，有初值就为初值，没有的话默认为0，反正都是要优化的
@@ -120,14 +186,25 @@ vector<double> MPC::Solve(Eigen::VectorXd state, nav_msgs::Path trackTraj)
     vars[_y_start] = y;
     vars[_theta_start] = theta;
 
+    vars[_joint1_start] = jntpos1;
+    vars[_joint2_start] = jntpos2;
+    vars[_joint3_start] = jntpos3;
+    vars[_joint4_start] = jntpos4;
+    vars[_joint5_start] = jntpos5;
+    vars[_joint6_start] = jntpos6;
+
     //debug 一定要限制vel_start，不然mpc计算的时候，就相当于0，0，x1，x2 ...
     vars[_vx_start] = vx;
     vars[_vy_start] = vy;
     vars[_angvel_start] = angvel;
-    // cout << _x_start << "," <<  _y_start << "," <<  _theta_start << endl;
-    // cout << _vx_start << "," << _vy_start << "," << _angvel_start << endl;
 
-    // cout << 1 << endl;
+    vars[_jntvel1_start] = jntvel1;
+    vars[_jntvel2_start] = jntvel2;
+    vars[_jntvel3_start] = jntvel3;
+    vars[_jntvel4_start] = jntvel4;
+    vars[_jntvel5_start] = jntvel5;
+    vars[_jntvel6_start] = jntvel6;
+
     //?####################### 至此赋予初值完毕 ###############################
 
     // Set lower and upper limits for variables.
@@ -142,34 +219,56 @@ vector<double> MPC::Solve(Eigen::VectorXd state, nav_msgs::Path trackTraj)
         vars_upperbound[i] = _bound_value;
     } // x,y
 
-    // cout << "边界值1 " << "_bound_value"  << _bound_value << " , " << "-bound_value" << -_bound_value << endl;
-
-    // cout << 2 << endl;
-
-    // The upper and lower limits of theta are set to -pi and pi
-    for (int i = _theta_start; i < _vx_start; i++)
+    //!位置边界值约束 The upper and lower limits of theta are set to -pi and pi
+    for (int i = _theta_start; i < _joint1_start; i++)
     {
-        //! 这里是限制theta,但是个人觉得,不需要因为小车本身就没有theta限制
         vars_lowerbound[i] = _angel_lower;
         vars_upperbound[i] = _angel_upper;
-        // vars_lowerbound[i] = -_bound_value;
-        // vars_upperbound[i] = _bound_value;
     } // theta
+        for (int i = _joint1_start; i < _joint2_start; i++)
+    {
+        vars_lowerbound[i] = _joint1_lower;
+        vars_upperbound[i] = _joint1_upper;
+    }//joint1
 
-    // cout << "边界值2 " << "_angvel_upper" << _angel_upper << " , " << "_angvel_lower" << _angel_lower << endl;
+    // The upper and lower limits
+    for (int i = _joint2_start; i < _joint3_start; i++)
+    {
+        vars_lowerbound[i] = _joint2_lower;
+        vars_upperbound[i] = _joint2_upper;
+    }//joint2
 
-    // cout << 3 << endl;
+    for (int i = _joint3_start; i < _joint4_start; i++)
+    {
+        vars_lowerbound[i] = _joint3_lower;
+        vars_upperbound[i] = _joint3_upper;
+    }//joint3
 
-    // Acceleration/decceleration upper and lower limits
+    for (int i = _joint4_start; i < _joint5_start; i++)
+    {
+        vars_lowerbound[i] = _joint4_lower;
+        vars_upperbound[i] = _joint4_upper;
+    }//joint4
+
+    for (int i = _joint5_start; i < _joint6_start; i++)
+    {
+        vars_lowerbound[i] = _joint5_lower;
+        vars_upperbound[i] = _joint5_upper;
+    }//joint5
+
+    for (int i = _joint6_start; i < _vx_start; i++)
+    {
+        vars_lowerbound[i] = _joint6_lower;
+        vars_upperbound[i] = _joint6_upper;
+    }//joint6
+
+
+    //!速度边界值约束 Acceleration/decceleration upper and lower limits
     for (int i = _vx_start; i < _angvel_start; i++)
     {
         vars_lowerbound[i] = -_max_vel;
         vars_upperbound[i] = _max_vel;
     } // vx,vy
-
-    // cout << "边界值3 " << "_max_vel" << _max_vel << " , " << "-max_vel" << -_max_vel << endl;
-
-    // cout << 4 << endl;
 
     // The upper and lower limits of angvel
     for (int i = _angvel_start; i < n_vars; i++)
@@ -177,8 +276,9 @@ vector<double> MPC::Solve(Eigen::VectorXd state, nav_msgs::Path trackTraj)
         vars_lowerbound[i] = -_max_angvel;
         vars_upperbound[i] = _max_angvel;
     }
-    // cout << "边界值4 " << "_max_angvel" << _max_angvel << " , " << "-max_angvel" << -_max_angvel << endl;
+
     //! 决策变量设置约束：只对初始值设置约束
+    //! 位置强制初值
     vars_lowerbound[_x_start] = x;
     vars_upperbound[_x_start] = x;
 
@@ -188,6 +288,25 @@ vector<double> MPC::Solve(Eigen::VectorXd state, nav_msgs::Path trackTraj)
     vars_lowerbound[_theta_start] = theta;
     vars_upperbound[_theta_start] = theta;
 
+    vars_lowerbound[_joint1_start] = jntpos1;
+    vars_upperbound[_joint1_start] = jntpos1;
+
+    vars_lowerbound[_joint2_start] = jntpos2;
+    vars_upperbound[_joint2_start] = jntpos2;
+
+    vars_lowerbound[_joint3_start] = jntpos3;
+    vars_upperbound[_joint3_start] = jntpos3;
+
+    vars_lowerbound[_joint4_start] = jntpos4;
+    vars_upperbound[_joint4_start] = jntpos4;
+
+    vars_lowerbound[_joint5_start] = jntpos5;
+    vars_upperbound[_joint5_start] = jntpos5;
+
+    vars_lowerbound[_joint6_start] = jntpos6;
+    vars_upperbound[_joint6_start] = jntpos6;
+
+    //!速度强制初值
     vars_lowerbound[_vx_start] = vx;
     vars_upperbound[_vx_start] = vx;
 
@@ -196,10 +315,28 @@ vector<double> MPC::Solve(Eigen::VectorXd state, nav_msgs::Path trackTraj)
 
     vars_lowerbound[_angvel_start] = angvel;
     vars_upperbound[_angvel_start] = angvel;
-    // cout << 5 << endl;
+
+    vars_lowerbound[_jntvel1_start] = jntvel1;
+    vars_upperbound[_jntvel1_start] = jntvel1;
+
+    vars_lowerbound[_jntvel2_start] = jntvel2;
+    vars_upperbound[_jntvel2_start] = jntvel2;
+
+    vars_lowerbound[_jntvel3_start] = jntvel3;
+    vars_upperbound[_jntvel3_start] = jntvel3;
+
+    vars_lowerbound[_jntvel4_start] = jntvel4;
+    vars_upperbound[_jntvel4_start] = jntvel4;
+
+    vars_lowerbound[_jntvel5_start] = jntvel5;
+    vars_upperbound[_jntvel5_start] = jntvel5;
+
+    vars_lowerbound[_jntvel6_start] = jntvel6;
+    vars_upperbound[_jntvel6_start] = jntvel6;
     //?####################### 至此决策变量的约束设置完毕 ###########################################
 
     //! Set the number of constraints
+    //! 这里的约束是对状态量x的约束，只是对x本身的
     size_t n_constraints = _mpc_steps * state_num;
     // Lower and upper limits for the constraints
     // Should be 0 besides initial state.
@@ -216,16 +353,28 @@ vector<double> MPC::Solve(Eigen::VectorXd state, nav_msgs::Path trackTraj)
     constraints_lowerbound[_x_start] = x;
     constraints_lowerbound[_y_start] = y;
     constraints_lowerbound[_theta_start] = theta;
+    constraints_lowerbound[_joint1_start] = jntpos1;
+    constraints_lowerbound[_joint2_start] = jntpos2;
+    constraints_lowerbound[_joint3_start] = jntpos3;
+    constraints_lowerbound[_joint4_start] = jntpos4;
+    constraints_lowerbound[_joint5_start] = jntpos5;
+    constraints_lowerbound[_joint6_start] = jntpos6;
 
     constraints_upperbound[_x_start] = x;
     constraints_upperbound[_y_start] = y;
     constraints_upperbound[_theta_start] = theta;
+    constraints_upperbound[_joint1_start] = jntpos1;
+    constraints_upperbound[_joint2_start] = jntpos2;
+    constraints_upperbound[_joint3_start] = jntpos3;
+    constraints_upperbound[_joint4_start] = jntpos4;
+    constraints_upperbound[_joint5_start] = jntpos5;
+    constraints_upperbound[_joint6_start] = jntpos6;
 
     //? ################### 至此，硬约束函数构建完毕，没有不等式约束，都是等式约束 #####################
     //? ### x0 = map_x_0 && 0 = x1 - (x0 + vx_0 * dt) && 这个运动学方程有mpc_steps - 1个，加上第一个初始约束，一维上就有mpc_Steps个约束 ###
 
     //! 计算目标和约束 object that computes objective and constraints： f[0]代表object function，f[1]开始代表g(x)约束
-    FG_eval fg_eval(trackTraj);
+    FG_eval fg_eval(trackTraj, _collision_check, tf_state); //实例化 一个FG_eval的类
 
     //------ 文件夹的命名 ------
     fg_eval._file_debug_path = _file_debug_path_class_FG_eval + "/fg_evalue_segTraj.csv";
@@ -235,6 +384,7 @@ vector<double> MPC::Solve(Eigen::VectorXd state, nav_msgs::Path trackTraj)
         ROS_INFO("Class FG_eval : debug_csv/csv file has been open ! : %s", fg_eval._file_debug_path.c_str());
     else
         ROS_ERROR("Class FG_eval : Cannot open debug file: %s", fg_eval._file_debug_path.c_str());
+
     fg_eval.LoadParams(_params); // MPC类中的_params
     // 就是加载个系数...
 
@@ -283,6 +433,7 @@ vector<double> MPC::Solve(Eigen::VectorXd state, nav_msgs::Path trackTraj)
     fg_eval.file_debug.close();
 
     //-------  这里是想每一个预测文件都保存一个文件 -------------
+    /*
     // todo //done
     // _loop_cnt = loop_cnt;
     // const std::string filename_temp = _file_path_class_MPC + "/prediction_traj_loop_" + to_string(_loop_cnt) + ".csv";
@@ -293,6 +444,7 @@ vector<double> MPC::Solve(Eigen::VectorXd state, nav_msgs::Path trackTraj)
     // else
     //     ROS_ERROR("Class mpc : Cannot open record file %s", filename_temp.c_str());
     //-------------------------------------------------------
+    */
 
     cout << "+++++++++++++++++  结束求解  ++++++++++++++++" << endl;
     file_debug << "+++++++++++++++++  结束求解  ++++++++++++++++" << endl;
@@ -307,24 +459,25 @@ vector<double> MPC::Solve(Eigen::VectorXd state, nav_msgs::Path trackTraj)
     cout << "$$$$$$$$$ 结果展示 $$$$$$$$$$" << endl;
     std::cout << "------ Total Cost(solution): " << cost << "-----" << std::endl;
     // fg_value类的只有x_cost的变量
-    _mpc_distx_Tcost = CppAD::Value(fg_eval.cost_distx);
-    _mpc_disty_Tcost = CppAD::Value(fg_eval.cost_disty);
-    _mpc_etheta_Tcost = CppAD::Value(fg_eval.cost_etheta);
+    // _mpc_distx_Tcost = CppAD::Value(fg_eval.cost_distx);
+    // _mpc_disty_Tcost = CppAD::Value(fg_eval.cost_disty);
+    // _mpc_etheta_Tcost = CppAD::Value(fg_eval.cost_etheta);
 
-    // todo h文件中加上，并在这里赋值 ，MPC。NOde中cout  // done
-    _mpc_acc_x_Tcost = CppAD::Value(fg_eval.cost_acc_x);
-    _mpc_acc_y_Tcost = CppAD::Value(fg_eval.cost_acc_y);
-    _mpc_angacc_Tcost = CppAD::Value(fg_eval.cost_angacc);
-    // cout << "-----------------------------------------------" << endl;
 
     this->mpc_x = {};
     this->mpc_y = {};
     this->mpc_theta = {};
+    this->mpc_joint1 = {};
+    this->mpc_joint2 = {};
+    this->mpc_joint3 = {};
+    this->mpc_joint4 = {};
+    this->mpc_joint5 = {};
+    this->mpc_joint6 = {};
 
     cout << "------ solution结果: " << ok << "------" << endl;
 
-    file_debug << "------ solution结果: " << ok << "------" << endl;
-    file << "0,0,0" << endl; //for predicition position solution
+    // file_debug << "------ solution结果: " << ok << "------" << endl;
+    // file << "0,0,0" << endl; //for predicition position solution
 
     cout << "------ solution,size(): " << solution.x.size() << "-----" << endl;
 
@@ -332,27 +485,34 @@ vector<double> MPC::Solve(Eigen::VectorXd state, nav_msgs::Path trackTraj)
     for (int i = 0; i < _mpc_steps - 1; i++)
     {
         // print 执行前一时刻的速度和加速度 得到的当前时刻的位姿
-        cout << "----- world系位置预测结果 "
-             << "x_" << i << ":  " << solution.x[_x_start + i] << " , "
-             << "y_" << i << ":  " << solution.x[_y_start + i] << " , "
-             << "theta_" << i << ":  " << solution.x[_theta_start + i] << " -----" << endl;
-        file << solution.x[_x_start + i] << "," << solution.x[_y_start + i] << "," << solution.x[_theta_start + i] << endl;
+        // cout << "----- world系位置预测结果 "
+        //      << "x_" << i << ":  " << solution.x[_x_start + i] << " , "
+        //      << "y_" << i << ":  " << solution.x[_y_start + i] << " , "
+        //      << "theta_" << i << ":  " << solution.x[_theta_start + i] << " -----" << endl;
+        // file << solution.x[_x_start + i] << "," << solution.x[_y_start + i] << "," << solution.x[_theta_start + i] << endl;
 
-        // print 前一时刻的速度和角速度
-        cout << "----- ROBOT系速度预测结果 "
-             << "vx_rb_" << i << ":  " << solution.x[_vx_start + i] << " , "
-             << "vy_rb_" << i << ":  " << solution.x[_vy_start + i] << " , "
-             << "omega_rb_" << i << ":  " << solution.x[_angvel_start + i] << " ----" << endl;
+        // // print 前一时刻的速度和角速度
+        // cout << "----- ROBOT系速度预测结果 "
+        //      << "vx_rb_" << i << ":  " << solution.x[_vx_start + i] << " , "
+        //      << "vy_rb_" << i << ":  " << solution.x[_vy_start + i] << " , "
+        //      << "omega_rb_" << i << ":  " << solution.x[_angvel_start + i] << " ----" << endl;
 
-        cout << "----- WORLD系速度预测结果 "
-             << "vx_" << i << ":  " << CppAD::cos(solution.x[_theta_start + i]) * solution.x[_vx_start + i] - CppAD::sin(solution.x[_theta_start + i]) * solution.x[_vy_start + i] << " , "
-             << "vy_" << i << ":  " << CppAD::sin(solution.x[_theta_start + i]) * solution.x[_vx_start + i] + CppAD::cos(solution.x[_theta_start + i]) * solution.x[_vy_start + i] << " , "
-             << "omega_" << i << ":  " << solution.x[_angvel_start + i] << " ----" << endl;
+        // cout << "----- WORLD系速度预测结果 "
+        //      << "vx_" << i << ":  " << CppAD::cos(solution.x[_theta_start + i]) * solution.x[_vx_start + i] - CppAD::sin(solution.x[_theta_start + i]) * solution.x[_vy_start + i] << " , "
+        //      << "vy_" << i << ":  " << CppAD::sin(solution.x[_theta_start + i]) * solution.x[_vx_start + i] + CppAD::cos(solution.x[_theta_start + i]) * solution.x[_vy_start + i] << " , "
+        //      << "omega_" << i << ":  " << solution.x[_angvel_start + i] << " ----" << endl;
 
-        // 预测结果装在
+        // 预测结果装在mpc_state[],
         this->mpc_x.push_back(solution.x[_x_start + i + 1]);
         this->mpc_y.push_back(solution.x[_y_start + i + 1]);
         this->mpc_theta.push_back(solution.x[_theta_start + i + 1]);
+
+        this->mpc_joint1.push_back(solution.x[_joint1_start + i + 1]);
+        this->mpc_joint2.push_back(solution.x[_joint2_start + i + 1]);
+        this->mpc_joint3.push_back(solution.x[_joint3_start + i + 1]);
+        this->mpc_joint4.push_back(solution.x[_joint4_start + i + 1]);
+        this->mpc_joint5.push_back(solution.x[_joint5_start + i + 1]);
+        this->mpc_joint6.push_back(solution.x[_joint6_start + i + 1]);
 
         // //print 执行前一时刻的速度和加速度 得到的当前时刻的位姿
         // cout << "----- 位置预测结果 " <<
@@ -362,56 +522,74 @@ vector<double> MPC::Solve(Eigen::VectorXd state, nav_msgs::Path trackTraj)
 
         // this->mpc_y.push_back(solution.x[_y_start + i]);
         // print 执行前一时刻的速度和加速度 得到的当前时刻的位姿
-        file_debug << "----- world系位置预测结果 "
-                   << "x_" << i << ":  " << solution.x[_x_start + i] << " , "
-                   << "y_" << i << ":  " << solution.x[_y_start + i] << " , "
-                   << "theta_" << i << ":  " << solution.x[_theta_start + i] << " -----" << endl;
+        // file_debug << "----- world系位置预测结果 "
+        //            << "x_" << i << ":  " << solution.x[_x_start + i] << " , "
+        //            << "y_" << i << ":  " << solution.x[_y_start + i] << " , "
+        //            << "theta_" << i << ":  " << solution.x[_theta_start + i] << " -----" << endl;
 
         // print 前一时刻的速度和角速度
-        file_debug << "----- ROBOT系速度预测结果 "
-                   << "vx_rb_" << i << ":  " << solution.x[_vx_start + i] << " , "
-                   << "vy_rb_" << i << ":  " << solution.x[_vy_start + i] << " , "
-                   << "omega_rb_" << i << ":  " << solution.x[_angvel_start + i] << " ----" << endl;
+        // file_debug << "----- ROBOT系速度预测结果 "
+        //            << "vx_rb_" << i << ":  " << solution.x[_vx_start + i] << " , "
+        //            << "vy_rb_" << i << ":  " << solution.x[_vy_start + i] << " , "
+        //            << "omega_rb_" << i << ":  " << solution.x[_angvel_start + i] << " ----" << endl;
 
-        file_debug << "----- WORLD系速度预测结果 "
-                   << "vx_" << i << ":  " << CppAD::cos(solution.x[_theta_start + i]) * solution.x[_vx_start + i] - CppAD::sin(solution.x[_theta_start + i]) * solution.x[_vy_start + i] << " , "
-                   << "vy_" << i << ":  " << CppAD::sin(solution.x[_theta_start + i]) * solution.x[_vx_start + i] + CppAD::cos(solution.x[_theta_start + i]) * solution.x[_vy_start + i] << " , "
-                   << "omega_" << i << ":  " << solution.x[_angvel_start + i] << " ----" << endl;
+        // file_debug << "----- WORLD系速度预测结果 "
+        //            << "vx_" << i << ":  " << CppAD::cos(solution.x[_theta_start + i]) * solution.x[_vx_start + i] - CppAD::sin(solution.x[_theta_start + i]) * solution.x[_vy_start + i] << " , "
+        //            << "vy_" << i << ":  " << CppAD::sin(solution.x[_theta_start + i]) * solution.x[_vx_start + i] + CppAD::cos(solution.x[_theta_start + i]) * solution.x[_vy_start + i] << " , "
+        //            << "omega_" << i << ":  " << solution.x[_angvel_start + i] << " ----" << endl;
     }
-    //file << "----------------  end  ---------------" << endl;
-    file_debug << "\n" << endl;
 
-    file << "0,0,1" << endl; //for  predicition velocity_robot solution
+    //这里是往file里面存放数据
+    /*
+    // //file << "----------------  end  ---------------" << endl;
+    // file_debug << "\n" << endl;
 
-    for (int i = 0; i < _mpc_steps - 1; i++)
-    {
-        // print 执行前一时刻的速度和加速度 得到的当前时刻的位姿
-        file << solution.x[_vx_start + i] << "," << solution.x[_vy_start + i] << ","
-                << solution.x[_angvel_start + i] << endl;
-    }
+    // file << "0,0,1" << endl; //for  predicition velocity_robot solution
+
+    // for (int i = 0; i < _mpc_steps - 1; i++)
+    // {
+    //     // print 执行前一时刻的速度和加速度 得到的当前时刻的位姿
+    //     file << solution.x[_vx_start + i] << "," << solution.x[_vy_start + i] << ","
+    //             << solution.x[_angvel_start + i] << endl;
+    // }
     // file << "----------------  end  ---------------" << endl;
     // file << "\n" << endl;
 
-    file << "0,1,1" << endl; //for predicition velocity_world solution
+    //file << "0,1,1" << endl; //for predicition velocity_world solution
 
-    for (int i = 0; i < _mpc_steps - 1; i++)
-    {
-        // print 执行前一时刻的速度和加速度 得到的当前时刻的位姿
-        file << CppAD::cos(solution.x[_theta_start + i]) * solution.x[_vx_start + i] - CppAD::sin(solution.x[_theta_start + i]) * solution.x[_vy_start + i] << ","
-                << CppAD::sin(solution.x[_theta_start + i]) * solution.x[_vx_start + i] + CppAD::cos(solution.x[_theta_start + i]) * solution.x[_vy_start + i] << ","
-                << solution.x[_angvel_start + i] << endl;
-    }
+    // for (int i = 0; i < _mpc_steps - 1; i++)
+    // {
+    //     // print 执行前一时刻的速度和加速度 得到的当前时刻的位姿
+    //     file << CppAD::cos(solution.x[_theta_start + i]) * solution.x[_vx_start + i] - CppAD::sin(solution.x[_theta_start + i]) * solution.x[_vy_start + i] << ","
+    //             << CppAD::sin(solution.x[_theta_start + i]) * solution.x[_vx_start + i] + CppAD::cos(solution.x[_theta_start + i]) * solution.x[_vy_start + i] << ","
+    //             << solution.x[_angvel_start + i] << endl;
+    // }
     // file << "----------------  end  ---------------" << endl;
     // file << "\n" << endl;
     // file.close(); //每次预测单独保存
+    */
 
-    vector<double> result;
+    vector<double> result(10); //九个自由度的速度控制 + 判断flag（如果这次没有解出来的话，就停在原地，并且下次的跟踪目标，仍然为这次loop的目标）
 
-    // velocity & omaga -> return variables
-    //! 更改代码后，第一个解变成了初始的机器人状态，所以给cmd_vel第二个速度指令
-    result.push_back(solution.x[_vx_start + 1]);
-    result.push_back(solution.x[_vy_start + 1]);
-    result.push_back(solution.x[_angvel_start + 1]);
+    if(ok)
+    {
+        //read 如果MPC求解出来了结果，那么机器人执行这个结果
+        // velocity & omaga -> return variables
+        //! 更改代码后，第一个解变成了初始的机器人状态，所以给cmd_vel第二个速度指令
+        result.push_back(solution.x[_vx_start + 1]);
+        result.push_back(solution.x[_vy_start + 1]);
+        result.push_back(solution.x[_angvel_start + 1]);
+
+        result.push_back(solution.x[_jntvel1_start + 1]);
+        result.push_back(solution.x[_jntvel2_start + 1]);
+        result.push_back(solution.x[_jntvel3_start + 1]);
+        result.push_back(solution.x[_jntvel4_start + 1]);
+        result.push_back(solution.x[_jntvel5_start + 1]);
+        result.push_back(solution.x[_jntvel6_start + 1]);
+        result.push_back(1.0); //判断flag
+    }
+    else
+        result = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 
     return result;
 }

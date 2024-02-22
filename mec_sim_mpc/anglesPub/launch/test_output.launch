@@ -1,7 +1,0 @@
-<launch>
-    <rosparam file="$(find anglesPub)/params/trajPub_params.yaml" command="load" ns="trajPub"/>
-    <rosparam file="$(find mec_speed_mpc)/params/mec_mpc_track_params.yaml" command="load" />
-    <!-- wait some seconds & parse CSV to pub Traj and AnglesList -->
-    <node name="parseCSV_pubTrajAngles" pkg="anglesPub" type="anglesPub_Node" output="screen" >
-    </node>
-</launch>
