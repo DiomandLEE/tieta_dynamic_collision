@@ -1,0 +1,1 @@
+/usr/bin/c++  -std=c++11 -O3 -DNDEBUG  -rdynamic CMakeFiles/test_track.dir/cppad_test_track.cpp.o  -o test_track   -L/usr/local/lib  -Wl,-rpath,/usr/local/lib -lipopt 

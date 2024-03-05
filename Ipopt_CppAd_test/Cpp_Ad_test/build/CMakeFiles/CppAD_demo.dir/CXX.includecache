@@ -1,0 +1,16 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/diamondlee/Controll_mac_test/Ipopt_CppAd_test/Cpp_Ad_test/CppAD_demo.cpp
+iostream
+-
+vector
+-
+cppad/cppad.hpp
+-
+
