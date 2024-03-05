@@ -1,0 +1,33 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "${workspaceFolder}/.vscode/browse.vc.db",
+        "limitSymbolsToIncludedHeaders": false
+      },
+      "includePath": [
+        "/home/ridgeback/catkin_ws/devel/include/**",
+        "/opt/ros/melodic/include/**",
+        "/home/ridgeback/catkin_ws/src/other/azure_kinect_ros_driver/include/**",
+        "/home/ridgeback/catkin_ws/src/other/ur5e_ros_driver/Universal_Robots_ROS_Driver/controller_stopper/include/**",
+        "/home/ridgeback/catkin_ws/src/other/pan_tilt_ros/pan_tilt_driver/include/**",
+        "/home/ridgeback/catkin_ws/src/other/robotiq/robotiq_2f_gripper_action_server/include/**",
+        "/home/ridgeback/catkin_ws/src/other/robotiq/robotiq_2f_gripper_control/include/**",
+        "/home/ridgeback/catkin_ws/src/other/robotiq/robotiq_3f_gripper_articulated_gazebo_plugins/include/**",
+        "/home/ridgeback/catkin_ws/src/other/robotiq/robotiq_3f_gripper_control/include/**",
+        "/home/ridgeback/catkin_ws/src/other/robotiq/robotiq_ethercat/include/**",
+        "/home/ridgeback/catkin_ws/src/other/robotiq/robotiq_ft_sensor/include/**",
+        "/home/ridgeback/catkin_ws/src/other/ur5e_ros_driver/Universal_Robots_ROS_Driver/ur_calibration/include/**",
+        "/home/ridgeback/catkin_ws/src/other/ur5e_ros_driver/fmauch_universal_robot/ur_kinematics/include/**",
+        "/home/ridgeback/catkin_ws/src/other/ur5e_ros_driver/Universal_Robots_ROS_Driver/ur_robot_driver/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS",
+      "intelliSenseMode": "gcc-x64",
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "gnu11",
+      "cppStandard": "c++14"
+    }
+  ],
+  "version": 4
+}

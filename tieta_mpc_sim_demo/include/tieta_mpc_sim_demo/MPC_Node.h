@@ -105,10 +105,12 @@ private:
     double _base_threshold, _shoulder_threshold, _elbow_threshold, _wrist_threshold, _gripper_threshold;
     //动态障碍物阈值
     double _pedestrian_threshold, _pedestrian_vel;
+    //对于EE的姿态限制
+    double _tool_x,_tool_y,_tool_z,_tool_roll,_tool_pitch,_tool_yaw;
 
     double _w_distx, _w_disty, _w_etheta, _w_vel,_w_angvel,
             _w_jnt, _w_jntvel,
-            _w_base_collision,_w_shoulder_collision, _w_elbow_collision, _w_wrist_collision, _w_gripper_collision,
+            _w_base_collision,_w_shoulder_collision, _w_elbow_collision, _w_wrist_collision, _w_gripper_collision, _w_hard_EE_tool,
             _bound_value, _angel_upper, _angel_lower;
 
     double _joint1_upper, _joint1_lower, _joint2_upper, _joint2_lower, _joint3_upper, _joint3_lower, _joint4_upper, _joint4_lower,
@@ -140,6 +142,7 @@ private:
     double range_angle_PI(double angle);
     double range_velocity_MAX(double _input_v);
     double range_angvel_MAX(double _input_w);
+    double range_jntvel_MAX(double _input_w);
 
     JointTrajPub::AnglesList getTrackTraj(const JointTrajPub::AnglesList &rcvJointTrajMsg);
 

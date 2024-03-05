@@ -13,68 +13,44 @@ int main(int argc, char** argv)
     int _loop_Hz;
     string _map_frame;
     string _csv_file;
-    pnh.param("delay_mode", _delay_mode, true);
-    pnh.param("mpc_steps", _expand_num, 10);
+    pnh.param("/JointTrajPub/dynamic_collision_mpc/delay_mode", _delay_mode, false);
+    pnh.param("/JointTrajPub/dynamic_collision_mpc/mpc_steps", _expand_num, 10);
     pnh.param("controller_freq", _loop_Hz, 100);
-    pnh.param<std::string>("map_frame", _map_frame, "world");
-    pnh.param<std::string>("csvfile_path", _csv_file, "");
 
+    pnh.param<std::string>("/JointTrajPub/dynamic_collision_mpc/csvfile_path", _csv_file, "/home/diamondlee/VKConTieta_ws/src/tieta_mpc_sim_demo/tieta_track_traj/pick/retimed_pickTraj_15_36_51.csv");
+    std::cout << "csvfile_path: " << std::endl;
     vector<map<double, vector<double>>> traj2pub =
         parseCSV2Map(_csv_file, _expand_num, _delay_mode, _loop_Hz);
+    std::cout << "traj2pub size: " << traj2pub.size() << std::endl;
     ROS_INFO("STARTING parseCSV !!!   traj2pub size: %d", traj2pub[0].size());
 
-    ros::Publisher traj_pub = pnh.advertise<nav_msgs::Path>("traj_topic", 10);
-    ros::Publisher anglesList_pub = pnh.advertise<JointTrajPub::AnglesList>("anglesList_topic", 10);
+    ros::Publisher anglesList_pub = pnh.advertise<JointTrajPub::AnglesList>("anglesList_topic", 1);
 
     ros::Rate loop_rate(10); // 发布频率 1 Hz
 
     while (ros::ok())
     {
-        nav_msgs::Path traj_msg;
-
-        traj_msg.header.frame_id = _map_frame; // 设置坐标系
-        traj_msg.header.stamp = ros::Time::now(); // 设置时间戳
-
-        geometry_msgs::PoseStamped pose;
-
-        // for base
-        for (map<double, vector<double>>::iterator iter = traj2pub[0].begin(); iter!=traj2pub[0].end();iter++)
-        {
-            //cout << " x is "<< iter->second[0] << " y is " << iter->second[1] << " theta is " << iter->second[2] << endl;
-            pose.header.stamp = ros::Time::now();
-            pose.header.frame_id = _map_frame;
-            pose.header.seq = static_cast<std::uint32_t>(iter->first*100);
-
-            pose.pose.position.x = iter->second[0];
-            pose.pose.position.y = iter->second[1];
-            //todo 用z来存储csv中的期望theta
-            pose.pose.position.z = iter->second[2];
-
-            traj_msg.poses.push_back(pose);
-            //break;
-        }
-
         JointTrajPub::AnglesList anglesList_msg;
         JointTrajPub::Angles angles;
         // for 7-dof arm
-        for(map<double, vector<double>>::iterator iter = traj2pub[1].begin(); iter!=traj2pub[1].end();iter++)
+        for(map<double, vector<double>>::iterator iter = traj2pub[0].begin(); iter!=traj2pub[0].end();iter++)
         {
-            //一个时刻的角度值vector
-            angles.joint1=iter->second[0];
-            angles.joint2=iter->second[1];
-            angles.joint3=iter->second[2];
-            angles.joint4=iter->second[3];
-            angles.joint5=iter->second[4];
-            angles.joint6=iter->second[5];
-            //angles.joint7=iter->second[6];
+            angles.base_x = iter->second[0];
+            angles.base_y = iter->second[1];
+            angles.base_theta = iter->second[2];
+            // 一个时刻的角度值vector
+            angles.joint1 = iter->second[3];
+            angles.joint2 = iter->second[4];
+            angles.joint3 = iter->second[5];
+            angles.joint4 = iter->second[6];
+            angles.joint5 = iter->second[7];
+            angles.joint6 = iter->second[8];
 
             anglesList_msg.AnglesList.push_back(angles);
         }
         //angles_pub.publish(anglesList_msg);
 
         if(traj2pub[0].size() != 0)
-            traj_pub.publish(traj_msg);
-        if(traj2pub[1].size() != 0)
             anglesList_pub.publish(anglesList_msg);
 
         ros::spinOnce();

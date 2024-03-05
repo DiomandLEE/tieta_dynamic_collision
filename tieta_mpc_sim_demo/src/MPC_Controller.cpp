@@ -111,7 +111,7 @@ void MPC::LoadParams(const std::map<string, double> &params)
     _vx_start = _joint6_start + _mpc_steps;
     _vy_start = _vx_start + _mpc_steps - 1;
     _angvel_start = _vy_start + _mpc_steps - 1;
-    _jntvel1_start = _angvel_start + _mpc_steps;
+    _jntvel1_start = _angvel_start + _mpc_steps - 1;
     _jntvel2_start = _jntvel1_start + _mpc_steps - 1;
     _jntvel3_start = _jntvel2_start + _mpc_steps - 1;
     _jntvel4_start = _jntvel3_start + _mpc_steps - 1;
@@ -138,7 +138,7 @@ void MPC::LoadParams(const std::map<string, double> &params)
     cout << "\n!! MPC Obj parameters updated !! " << endl;
 }
 
-vector<double> MPC::Solve(Eigen::VectorXd state, JointTrajPub::AnglesList trackTraj, vector<Eigen::Vector3d> tf_state)
+vector<double> MPC::Solve(Eigen::VectorXd state, JointTrajPub::AnglesList trackTraj, vector<Eigen::Vector3d> tf_state, bool _terminal_flag, int _terminal_nums)
 {
     cout << "\n!! MPC Obj Solve Called !! " << endl;
     bool ok = true;
@@ -183,15 +183,33 @@ vector<double> MPC::Solve(Eigen::VectorXd state, JointTrajPub::AnglesList trackT
     // Set the initial state variable values
     //! 赋初值，有初值就为初值，没有的话默认为0，反正都是要优化的
     vars[_x_start] = x;
+    for (int i = _x_start; i < _y_start; i++)
+        vars[i] = x;
     vars[_y_start] = y;
+    for(int i = _y_start; i < _theta_start; i++)
+        vars[i] = y;
     vars[_theta_start] = theta;
+    for(int i = _theta_start; i < _joint1_start; i++)
+        vars[i] = theta;
 
     vars[_joint1_start] = jntpos1;
+    for(int i = _joint1_start; i < _joint2_start; i++)
+        vars[i] = jntpos1;
     vars[_joint2_start] = jntpos2;
+    for(int i = _joint2_start; i < _joint3_start; i++)
+        vars[i] = jntpos2;
     vars[_joint3_start] = jntpos3;
+    for(int i = _joint3_start; i < _joint4_start; i++)
+        vars[i] = jntpos3;
     vars[_joint4_start] = jntpos4;
+    for(int i = _joint4_start; i < _joint5_start; i++)
+        vars[i] = jntpos4;
     vars[_joint5_start] = jntpos5;
+    for(int i = _joint5_start; i < _joint6_start; i++)
+        vars[i] = jntpos5;
     vars[_joint6_start] = jntpos6;
+    for(int i = _joint6_start; i < _vx_start; i++)
+        vars[i] = jntpos6;
 
     //debug 一定要限制vel_start，不然mpc计算的时候，就相当于0，0，x1，x2 ...
     vars[_vx_start] = vx;
@@ -374,7 +392,7 @@ vector<double> MPC::Solve(Eigen::VectorXd state, JointTrajPub::AnglesList trackT
     //? ### x0 = map_x_0 && 0 = x1 - (x0 + vx_0 * dt) && 这个运动学方程有mpc_steps - 1个，加上第一个初始约束，一维上就有mpc_Steps个约束 ###
 
     //! 计算目标和约束 object that computes objective and constraints： f[0]代表object function，f[1]开始代表g(x)约束
-    FG_eval fg_eval(trackTraj, _collision_check, tf_state); //实例化 一个FG_eval的类
+    FG_eval fg_eval = FG_eval(trackTraj, _collision_check, tf_state, _terminal_flag, _terminal_nums); //实例化 一个FG_eval的类
 
     //------ 文件夹的命名 ------
     fg_eval._file_debug_path = _file_debug_path_class_FG_eval + "/fg_evalue_segTraj.csv";
@@ -407,15 +425,15 @@ vector<double> MPC::Solve(Eigen::VectorXd state, JointTrajPub::AnglesList trackT
     // options += "Numeric max_cpu_time          0.5\n";
     //!new options
     std::string options;
-    // turn off any printing
-    //options += "Integer print_level  0\n";
-    options += "String  sb           yes\n";
+    // turn off any printing 注释下面这一行将关闭CPPAD的求解过程的LOG
+    // options += "Integer print_level  0\n";
+    // options += "String  sb           yes\n";
     // maximum number of iterations
     options += "Integer max_iter     30\n";
     // approximate accuracy in first order necessary conditions;
     // see Mathematical Programming, Volume 106, Number 1,
     // Pages 25-57, Equation (6)
-    options += "Numeric tol          1e-3\n";
+    options += "Numeric tol          1e-12\n";
     options += "Sparse  true        forward\n";
     options += "Sparse  true        reverse\n";
     //options += "Numeric max_cpu_time          0.05\n";
@@ -425,7 +443,19 @@ vector<double> MPC::Solve(Eigen::VectorXd state, JointTrajPub::AnglesList trackT
     cout << "+++++++++++++++++  开始求解  +++++++++++++++" << endl;
     file_debug << "+++++++++++++++++  开始求解  +++++++++++++++" << endl;
 
+    std::cout << "cppAd input size:" << std::endl;
+    std::cout << "n_var:" << vars.size() << std::endl;
+    std::cout << "n_var_lowb" << vars_lowerbound.size() << std::endl;
+    std::cout << "n_var_upb" << vars_upperbound.size() << std::endl;
+    std::cout << "n_con_lowb:" << constraints_lowerbound.size() << std::endl;
+    std::cout << "n_con_upb:" << constraints_upperbound.size() << std::endl;
+
     // solve the problem 返回解决方案的地方
+    CppAD::ipopt::solve<Dvector, FG_eval>(
+        options, vars, vars_lowerbound, vars_upperbound, constraints_lowerbound,
+        constraints_upperbound, fg_eval, solution);
+
+    vars = solution.x;
     CppAD::ipopt::solve<Dvector, FG_eval>(
         options, vars, vars_lowerbound, vars_upperbound, constraints_lowerbound,
         constraints_upperbound, fg_eval, solution);
@@ -568,11 +598,12 @@ vector<double> MPC::Solve(Eigen::VectorXd state, JointTrajPub::AnglesList trackT
     // file << "\n" << endl;
     // file.close(); //每次预测单独保存
     */
-
-    vector<double> result(10); //九个自由度的速度控制 + 判断flag（如果这次没有解出来的话，就停在原地，并且下次的跟踪目标，仍然为这次loop的目标）
+    //debug 根本不需要确定10啊，这后面push back不就成size=20了么。。。
+    vector<double> result; //九个自由度的速度控制 + 判断flag（如果这次没有解出来的话，就停在原地，并且下次的跟踪目标，仍然为这次loop的目标）
 
     if(ok)
     {
+        std::cout << "$$$$$$ MPC solved successfully! $$$$$$" << std::endl;
         //read 如果MPC求解出来了结果，那么机器人执行这个结果
         // velocity & omaga -> return variables
         //! 更改代码后，第一个解变成了初始的机器人状态，所以给cmd_vel第二个速度指令
@@ -586,7 +617,11 @@ vector<double> MPC::Solve(Eigen::VectorXd state, JointTrajPub::AnglesList trackT
         result.push_back(solution.x[_jntvel4_start + 1]);
         result.push_back(solution.x[_jntvel5_start + 1]);
         result.push_back(solution.x[_jntvel6_start + 1]);
-        result.push_back(1.0); //判断flag
+
+        result.push_back(1.0); // 判断flag
+        for(int i = 0; i < 9; i++)
+            std::cout << result[i] << ",";
+        std::cout << result[9] <<  std::endl;
     }
     else
         result = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};

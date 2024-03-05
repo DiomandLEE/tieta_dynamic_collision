@@ -106,26 +106,26 @@ int main(int argc, char *argv[]) {
     ros::Subscriber joint_veloctiy_sub = n.subscribe("joint_velocity", 1, velocityCallback);
 
     ros::Rate loop_rate(pub_rate);
-    std::string urdf_file_name;
-    urdf::Model model;
-    if (n.getParam("robot_description", urdf_file_name)) {
-        //std::cout << "urdf_file_name:" << urdf_file_name << std::endl;
-        if (!model.initString(urdf_file_name)) {
-            ROS_ERROR("Failed to parse urdf file");
-            return -1;
-        }
-    }
-    std::cout << "joint name:";
-    std::vector<urdf::JointSharedPtr> joints;
-    for (auto it = model.joints_.begin(); it != model.joints_.end(); it++) {
-        urdf::JointSharedPtr joint = it->second;
-        if (urdf::Joint::FIXED != joint->type) {
-            joints.push_back(joint);
-            std::cout << joint->name << " , ";
-        }
-    }
+    // std::string urdf_file_name;
+    // urdf::Model model;
+    // if (n.getParam("robot_description", urdf_file_name)) {
+    //     //std::cout << "urdf_file_name:" << urdf_file_name << std::endl;
+    //     if (!model.initString(urdf_file_name)) {
+    //         ROS_ERROR("Failed to parse urdf file");
+    //         return -1;
+    //     }
+    // }
+    // std::cout << "joint name:";
+    // std::vector<urdf::JointSharedPtr> joints;
+    // for (auto it = model.joints_.begin(); it != model.joints_.end(); it++) {
+    //     urdf::JointSharedPtr joint = it->second;
+    //     if (urdf::Joint::FIXED != joint->type) {
+    //         joints.push_back(joint);
+    //         std::cout << joint->name << " , ";
+    //     }
+    // }
     //把这里做成param的参数，给到tieta的初始位置
-    std::vector<double> joint_positions = {0.1, 0.0, 0.3, 0.7, 0.7, 0.0, 0.0, 0.0, 0.0, -3.0};
+    std::vector<double> joint_positions = {0.1, 0.0, 0.3, 0.7, 0.7, 0.0, 0.0, 0.0, 0.0, -3.2};
     std::vector<std::string> joint_names = {"base_y_base_x", "base_theta_base_y", "base_link_base_theta", "right_arm_shoulder_pan_joint",
                                             "right_arm_shoulder_lift_joint", "right_arm_elbow_joint", "right_arm_wrist_1_joint",
                                             "right_arm_wrist_2_joint", "right_arm_wrist_3_joint", "dynamic_pedestrian_joint"};

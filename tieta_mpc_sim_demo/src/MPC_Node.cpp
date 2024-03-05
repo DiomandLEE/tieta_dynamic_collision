@@ -10,7 +10,7 @@ MPCNode::MPCNode()
     pn.param("/dynamic_collision_mpc/thread_numbers", _thread_numbers, 2);   // 多线程的数量 number of threads for this ROS node
     pn.param("/dynamic_collision_mpc/debug_info", _debug_info, true);
     pn.param("/dynamic_collision_mpc/delay_mode", _delay_mode, true); //? 延迟模式？
-    pn.param("/dynamic_collision_mpc/max_speed", _max_speed, 0.50);   // unit: m/s
+    // pn.param("/dynamic_collision_mpc/max_speed", _max_speed, 0.50);   // unit: m/s
     pn.param("/dynamic_collision_mpc/controller_freq", _controller_freq, 100); // 控制器的频率
     pn.param("/dynamic_collision_mpc/pid_freq", _pid_freq, 10);
     _dt = double(1.0 / _controller_freq); // time step duration dt in s 时间步长，0.1s
@@ -42,7 +42,17 @@ MPCNode::MPCNode()
     pn.param("/dynamic_collision_mpc/wrist_threshold", _wrist_threshold, 0.05);
     pn.param("/dynamic_collision_mpc/gripper_threshold", _gripper_threshold, 0.05);
     pn.param("/dynamic_collision_mpc/pedestrian_threshold", _pedestrian_threshold, 0.05);
-    pn.param("/dynamic_collision_mpc/pedestrain_velocity", _pedestrian_vel, 0.05);
+    pn.param("/dynamic_collision_mpc/pedestrian_velocity", _pedestrian_vel, 0.0);
+
+    //终端约束
+    pn.param("/dynamic_collision_mpc/ee_tool_x",_tool_x, 0.0);
+    pn.param("/dynamic_collision_mpc/ee_tool_y",_tool_y, 0.0);
+    pn.param("/dynamic_collision_mpc/ee_tool_z",_tool_z, 0.0);
+    pn.param("/dynamic_collision_mpc/ee_tool_roll",_tool_roll, 0.0);
+    pn.param("/dynamic_collision_mpc/ee_tool_pitch",_tool_pitch, 0.0);
+    pn.param("/dynamic_collision_mpc/ee_tool_yaw",_tool_yaw, 0.0);
+
+    pn.param("/dynamic_collision_mpc/terminal_weight_infite",_w_hard_EE_tool, 0.0);
 
     pn.param("/dynamic_collision_mpc/mpc_max_vel", _max_speed, 1.0);
     pn.param("/dynamic_collision_mpc/mpc_max_angvel", _max_angvel, 3.0);
@@ -83,7 +93,7 @@ MPCNode::MPCNode()
     pn.param("/dynamic_collision_mpc/yaw_ki", _ki_omega, 0.02);
     pn.param("/dynamic_collision_mpc/yaw_kd", _kd_omega, 0.01);
 
-    //#####用于获取数据,存放的文件夹的path
+    //#####用于获取数据,存放的文件夹的pathMPCNode
     pn.param<std::string>("/dynamic_collision_mpc/savefolder_path", save_folder_path, " ");
     pn.param<std::string>("/dynamic_collision_mpc/save_Debugfolder_path", save_Debugfolder_path, " ");
 
@@ -101,7 +111,7 @@ MPCNode::MPCNode()
     cout << "/dynamic_collision_mpc/mpc_max_vel: " << _max_speed << endl;
 
     // Publishers and Subscribers
-    _sub_timed_traj = _nh.subscribe("/traj_topic", 1, &MPCNode::rcvJointTrajCB, this);
+    _sub_timed_traj = _nh.subscribe("anglesList_topic", 1, &MPCNode::rcvJointTrajCB, this);
     _sub_robot_state = _nh.subscribe("/joint_states", 1, &MPCNode::getRobotStateCB, this);
     _pub_robot_velocity = _nh.advertise<std_msgs::Float64MultiArray>("/joint_velocity", 1);
 
@@ -146,6 +156,15 @@ MPCNode::MPCNode()
     _mpc_params["GRIPPER_THRESHOLD"] = _gripper_threshold;
     _mpc_params["PEDESTRIAN_THRESHOLD"] = _pedestrian_threshold;
     _mpc_params["PEDESTRIAN_VELOCITY"] = _pedestrian_vel;
+
+    _mpc_params["EE_TOOL_X"] = _tool_x;
+    _mpc_params["EE_TOOL_Y"] = _tool_y;
+    _mpc_params["EE_TOOL_Z"] = _tool_z;
+    _mpc_params["EE_TOOL_ROLL"] = _tool_roll;
+    _mpc_params["EE_TOOL_PITCH"] = _tool_pitch;
+    _mpc_params["EE_TOOL_YAW"] = _tool_yaw;
+
+    _mpc_params["W_HARD_EE_TOOL"] = _w_hard_EE_tool;
 
     _mpc_params["MAXVEL"] = _max_speed;
     _mpc_params["MAX_ANGVEL"] = _max_angvel;
@@ -225,17 +244,19 @@ MPCNode::MPCNode()
     _mpc_etheta = 0;
     _mpc_distx = 0;
     _mpc_disty = 0;
-
+    ////std::cout << "debug1" << std::endl;
     _rcv_traj = JointTrajPub::AnglesList();
-
+    ////std::cout << "debug2" << std::endl;
     //*******************************************************************************
     //首先，机器人和行人的速度都为0
     for (unsigned int i = 0; i < 10; i++)
     {
-        _jntvel_msg.data[i] = 0.0; //机器人9自由度加上行人1个自由度
+        //std::cout << "debug_" << i << std::endl;
+        _jntvel_msg.data.push_back(0.0); //机器人9自由度加上行人1个自由度
     }
-    //由于test_sim.cpp中，发布了速度信息，所以不需要last_position
-    //获取行人和各个sphere的初始位姿 /tf
+    ////std::cout << "debug3" << std::endl;
+    // 由于test_sim.cpp中，发布了速度信息，所以不需要last_position
+    // 获取行人和各个sphere的初始位姿 /tf
     try
     {
         //debug 需要有个wait,不然一开始也会加载
@@ -283,27 +304,6 @@ MPCNode::MPCNode()
         ROS_ERROR("%s", ex.what());
     }
 
-    file << "loop_cont" << " , "
-             << "time_coordinate" << " , "
-             << "robot_x_" << " , "
-             << "robot_y_" << " , "
-             << "robot_yaw" << " , "
-             << "pre_bot speed_x" << " , "
-             << "pre_bot speed_y" << " , "
-             << "Pre_bot angvel"  << " , "
-             << "real_bot speed_x" << " , "
-             << "real_bot speed_y" << " , "
-             << "real_bot angvel" << " , "
-             << "world speed_x" << " , "
-             << "world speed_y" << " , "
-             << "world angvel" << " , "
-             << "loop_time_cost" << " , "
-             << "loop_x_Tcost" << " , "
-             << "loop_y_Tcost" << " , "
-             << "loop_theta_Tcost" << " , "
-             << "loop_acc_x_Tcost" << " , "
-             << "loop_acc_y_Tcost" << " , "
-             << "loop_acc_theta_Tcost" << endl;
     _time_start = ros::Time::now().toSec();
 }
 
@@ -371,6 +371,17 @@ double MPCNode::range_angvel_MAX(double _input_w)
     return _input_w;
 }
 
+double MPCNode::range_jntvel_MAX(double _input_w)
+{
+    if (_input_w >= _max_jntvel)
+        _input_w = _max_jntvel;
+
+    if (_input_w <= -_max_jntvel)
+        _input_w = -_max_jntvel;
+
+    return _input_w;
+}
+
 //todo 修改使得可以完成9自由度 先让机器人到达第一个轨迹点附近
 bool MPCNode::gotoInitState()
 {
@@ -430,9 +441,9 @@ bool MPCNode::gotoInitState()
         double error_joint6 = first_pose[8] - _joint_pos[8];
 
         double error_distance = sqrt(pow(error_x, 2) + pow(error_y, 2));
-        bool _flag = error_distance <= _tolerence_xy && error_theta <= _tolerence_theta && error_joint1 <= _tolerence_joint
-                        && error_joint2 <= _tolerence_joint && error_joint3 <= _tolerence_joint && error_joint4 <= _tolerence_joint
-                            && error_joint5 <= _tolerence_joint && error_joint6 <= _tolerence_joint;
+        bool _flag = error_distance <= _tolerence_xy && std::fabs(error_theta) <= _tolerence_theta && std::fabs(error_joint1) <= _tolerence_joint
+                        && std::fabs(error_joint2) <= _tolerence_joint && std::fabs(error_joint3) <= _tolerence_joint && std::fabs(error_joint4) <= _tolerence_joint
+                            && std::fabs(error_joint5) <= _tolerence_joint && std::fabs(error_joint6) <= _tolerence_joint;
 
         if (_flag)
         {
@@ -442,7 +453,7 @@ bool MPCNode::gotoInitState()
             // 到达期望位置后，跳出循环，结束gotoInitState
             pid_loop = false;
             _sensor_get = false;
-            ros::Duration(2.0).sleep(); // 3s缓一会儿
+            ros::Duration(1.0).sleep(); // 3s缓一会儿
         }
         else
         {
@@ -599,6 +610,7 @@ bool MPCNode::controlLoop()
         _tf_state.push_back(elbow_sphere_pos);
         _tf_state.push_back(wrist_sphere_pos);
         _tf_state.push_back(gripper_sphere_pos);
+        //todo done 获取初始的每一个障碍物球的位姿
 
         ROS_WARN("Update the Obstacle-Class pose!");
     }
@@ -627,7 +639,7 @@ bool MPCNode::controlLoop()
         time_get_TrackTraj_start = ros::Time::now().toSec();
 
         // 现在对_rcv_traj进行处理，得到用于本次loop要track的轨迹
-        JointTrajPub::AnglesList mpc_trackTraj = getTrackTraj(rcvTrajmsg);
+        JointTrajPub::AnglesList mpc_trackTraj = getTrackTraj(rcvTrajmsg); //!获取从loop_count开始的，mpc_step的size的traj
 
         time_get_TrackTraj_end = ros::Time::now().toSec();
         cout << "getTrackTraj用时: " << time_get_TrackTraj_end - time_get_TrackTraj_start << endl;
@@ -645,6 +657,7 @@ bool MPCNode::controlLoop()
         {
             cout << "===================  进入前期计算  =============================" << endl;
             double time_loop_start = ros::Time::now().toSec();
+            //debug 在这就把loop_cont ++？
             _loop_count++;
             //! Update system states: X=[x, y, yaw, theta1-7]
             //! Update system inputs: U=[vx, vy, w, w1-7]
@@ -672,6 +685,9 @@ bool MPCNode::controlLoop()
                                 current_position[5], current_position[6], current_position[7], current_position[8],
                                 current_velocity[0], current_velocity[1], current_velocity[2], current_velocity[3], current_velocity[4],
                                 current_velocity[5], current_velocity[6], current_velocity[7], current_velocity[8];
+                std::cout << "state position: " << current_position[0] << "," << current_position[1] << "," << current_position[2] << "," << current_position[3] << "," << current_position[4] << "," << current_position[5] << "," << current_position[6] << "," << current_position[7] << "," << current_position[8] << std::endl;
+                std::cout << "state velocity: " << current_velocity[0] << "," << current_velocity[1] << "," << current_velocity[2] << "," << current_velocity[3] << "," << current_velocity[4] << "," << current_velocity[5] << "," << current_velocity[6] << "," << current_velocity[7] << "," << current_velocity[8];
+                std::cout << std::endl;
             }
             else
             {
@@ -679,7 +695,17 @@ bool MPCNode::controlLoop()
             }
 
             double time_solve_start = ros::Time::now().toSec();
-            vector<double> mpc_results = _mpc.Solve(robot_state, mpc_trackTraj, _tf_state);
+            //debug solve函数
+            //todo 需要一个bool 判断是否计算终端约束
+            //写一个 ？ ： 的判断
+            bool terminal_flag = _loop_count >= _realTraj_length - _mpc_steps ? true : false;
+            int terminal_nums = (_realTraj_length - _loop_count) - 1; //这是计算在terminal中，从第几个开始
+
+            std::cout << "flag: " << terminal_flag << std::endl;
+            std::cout << "terminal_nums: " << terminal_nums << std::endl;
+
+            vector<double> mpc_results = _mpc.Solve(robot_state, mpc_trackTraj, _tf_state, terminal_flag, terminal_nums);
+
             double time_solve_end = ros::Time::now().toSec();
             cout << "MPC solve time: " << time_solve_end - time_solve_start << " s" << endl;
             cout << "MPC solve Stamp: " << time_solve_end - time_get_tf_start << endl;
@@ -688,13 +714,14 @@ bool MPCNode::controlLoop()
             _speed_x = range_velocity_MAX(mpc_results[0]);
             _speed_y = range_velocity_MAX(mpc_results[1]);
             _angvel = range_angvel_MAX(mpc_results[2]);
-            _jntvel1 = range_angvel_MAX(mpc_results[3]);
-            _jntvel2 = range_angvel_MAX(mpc_results[4]);
-            _jntvel3 = range_angvel_MAX(mpc_results[5]);
-            _jntvel4 = range_angvel_MAX(mpc_results[6]);
-            _jntvel5 = range_angvel_MAX(mpc_results[7]);
-            _jntvel6 = range_angvel_MAX(mpc_results[8]);
-            //如果MPC求解失败，mpc_result[9] = 0
+            _jntvel1 = range_jntvel_MAX(mpc_results[3]);
+            _jntvel2 = range_jntvel_MAX(mpc_results[4]);
+            _jntvel3 = range_jntvel_MAX(mpc_results[5]);
+            _jntvel4 = range_jntvel_MAX(mpc_results[6]);
+            _jntvel5 = range_jntvel_MAX(mpc_results[7]);
+            _jntvel6 = range_jntvel_MAX(mpc_results[8]);
+            ROS_WARN("CPPAD RESuLT CODE:  %lf", mpc_results[9]);
+            // 如果MPC求解失败，mpc_result[9] = 0
             if(mpc_results[9] < 0.5)
                 _loop_count = _loop_count - 1;
 
@@ -812,17 +839,27 @@ bool MPCNode::controlLoop()
     // publish general cmd_vel
     if (!_track_finished)
     {
-        _jntvel_msg.data.push_back(_speed_x);
-        _jntvel_msg.data.push_back(_speed_y);
-        _jntvel_msg.data.push_back(_angvel);
-        _jntvel_msg.data.push_back(_jntvel1);
-        _jntvel_msg.data.push_back(_jntvel2);
-        _jntvel_msg.data.push_back(_jntvel3);
-        _jntvel_msg.data.push_back(_jntvel4);
-        _jntvel_msg.data.push_back(_jntvel5);
-        _jntvel_msg.data.push_back(_jntvel6);
-        _jntvel_msg.data.push_back(_pedestrian_vel);
-
+        //debug 在构造函数当中，就用push back相当于确定了_jntvel_msg.data[]的size()
+        //debug 所以这里，不能再push_back
+        std::vector<double> temp_jntvel;
+        temp_jntvel.push_back(_speed_x);
+        temp_jntvel.push_back(_speed_y);
+        temp_jntvel.push_back(_angvel);
+        temp_jntvel.push_back(_jntvel1);
+        temp_jntvel.push_back(_jntvel2);
+        temp_jntvel.push_back(_jntvel3);
+        temp_jntvel.push_back(_jntvel4);
+        temp_jntvel.push_back(_jntvel5);
+        temp_jntvel.push_back(_jntvel6);
+        temp_jntvel.push_back(0.0);
+        setJointVelocity(temp_jntvel);
+        // debug 先不管他的速度
+        //_jntvel_msg.data.push_back(_pedestrian_vel);
+        //_jntvel_msg.data.push_back(0.0);
+        ROS_WARN("JOINT VELOCITY : **|**");
+        std::cout << _speed_x << "," << _speed_y << "," << _angvel << "," <<
+            _jntvel1 << "," << _jntvel2 << "," << _jntvel3 << "," << _jntvel4 << "," <<
+                _jntvel5 << "," << _jntvel6 << std::endl;
         _pub_robot_velocity.publish(_jntvel_msg);
         double time_pub_cmd = ros::Time::now().toSec();
         cout << "pub的时间戳" << time_pub_cmd - time_get_tf_start << endl;

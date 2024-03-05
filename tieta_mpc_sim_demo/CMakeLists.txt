@@ -15,6 +15,8 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   kdl_parser
   tf
+  visualization_msgs
+  JointTrajPub
 )
 find_package(Eigen3 REQUIRED)
 find_package(orocos_kdl REQUIRED)
@@ -87,8 +89,7 @@ find_package(orocos_kdl REQUIRED)
 # # * In the file package.xml:
 # #   * add a build_depend and a exec_depend tag for "dynamic_reconfigure"
 # # * In this file (CMakeLists.txt):
-# #   * add "dynamic_reconfigure" to
-# #     find_package(catkin REQUIRED COMPONENTS ...)
+# #   * add "dynamic_reconfigure" tosource ~/ws_moveit/devel/setup.bash ONENTS ...)
 # #   * uncomment the "generate_dynamic_reconfigure_options" section below
 # #     and list every .cfg file to be processed
 
@@ -109,9 +110,9 @@ find_package(orocos_kdl REQUIRED)
 # # DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 
-  # INCLUDE_DIRS include
+  INCLUDE_DIRS include
   # LIBRARIES tieta_mpc_sim_demo
-  CATKIN_DEPENDS roscpp rospy std_msgs urdf sensor_msgs tf
+  CATKIN_DEPENDS roscpp rospy std_msgs urdf sensor_msgs tf visualization_msgs JointTrajPub
   DEPENDS orocos_kdl kdl_parser
 )
 
@@ -122,12 +123,22 @@ catkin_package(
 # # Specify additional locations of header files
 # # Your package locations should be listed before other locations
 include_directories(
-  # include
+  include
   ${catkin_INCLUDE_DIRS}
   ${orocos_kdl_INCLUDE_DIRS}
   ${EIGEN3_INCLUDE_DIR}
 )
+#但是包含不在catkin工作空间下的头文件时，不需要这个变量，相当于有了变量就成为了相对路径
+include_directories("/home/diamondlee/VKConTieta_ws/src/tieta_mpc_sim_demo")
+include_directories("/usr/include/eigen3")
+include_directories(/usr/include)
+link_directories(/usr/lib)
 
+# 添加头文件 使用cion-or
+include_directories("/usr/local/include")
+
+# 添加库 使用coin-or
+link_directories(/usr/local/lib)
 # # Declare a C++ library
 # add_library(${PROJECT_NAME}
 # src/${PROJECT_NAME}/tieta_mpc_sim_demo.cpp
@@ -143,8 +154,15 @@ include_directories(
 # # The recommended prefix ensures that target names across packages don't collide
 add_executable(${PROJECT_NAME}_node src/test_sim.cpp)
 add_executable(tieta_state_observe_node src/test_observe_state.cpp)
+add_executable(tieta_mpc_node src/tieta_mpc_rate_node.cpp src/MPC_Node.cpp src/MPC_Controller.cpp src/FG_evalue.cpp src/Collision_Check.cpp)
 target_link_libraries(${PROJECT_NAME}_node ${catkin_LIBRARIES})
 target_link_libraries(tieta_state_observe_node ${catkin_LIBRARIES} ${orocos_kdl_INCLUDE_DIRS} ${Eigen3_LIBRARIES})
+TARGET_LINK_LIBRARIES(tieta_mpc_node ipopt ${catkin_LIBRARIES} ${orocos_kdl_INCLUDE_DIRS} ${Eigen3_LIBRARIES})
+
+add_executable(csv_test_pub_node src/test_csv_pos_pub.cpp)
+add_executable(csv_test_sub_node src/test_csv_pos_sub.cpp)
+target_link_libraries(csv_test_pub_node ${catkin_LIBRARIES})
+target_link_libraries(csv_test_sub_node ${catkin_LIBRARIES})
 
 # # Rename C++ executable without prefix
 # # The above recommended prefix causes long target names, the following renames the

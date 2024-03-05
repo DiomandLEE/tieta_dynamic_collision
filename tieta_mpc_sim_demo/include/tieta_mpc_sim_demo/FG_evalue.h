@@ -31,13 +31,14 @@ class FG_eval
     public:
         //构造函数
         FG_eval();
-        FG_eval(JointTrajPub::AnglesList _trackTraj, Collision_Check &collisioncheck, vector<Eigen::Vector3d> tf_state);
+        FG_eval(JointTrajPub::AnglesList _trackTraj, Collision_Check &collisioncheck, vector<Eigen::Vector3d> tf_state, bool _flag, int _nums);
 
         //加载public成员的参数
         void LoadParams(const std::map<string, double> &params);
         //todo这里给了行人在init时的位置，就可以用速度计算了
         AD<double> calculate_Obscost(const Dvector objA, const Dvector objB, const double d_threshold, const double weight);
         AD<double> calculate_selfcollision(const Dvector objA, const Dvector objB, const double d_threshold, const double weight);
+        AD<double> calculate_terminalCost(const Dvector objA, const Dvector objB);
 
         //定义目标函数F和约束信息函数G  MPC implementation (cost func & constraints)
         typedef CPPAD_TESTVECTOR(AD<double>) ADvector;
@@ -63,6 +64,13 @@ class FG_eval
         //动态障碍物阈值
         double _pedestrian_threshold, _pedestrian_vel;
         vector<Eigen::Vector3d> _init_sphere;
+
+        //terminal flag
+        bool _terminal_flag;
+        int _terminal_nums;
+        //terminal hard constraint
+        double EE_X, EE_Y, EE_Z, EE_ROLL, EE_PITCH, EE_YAW;
+        double _w_hard_EE_tool;
 
         AD<double> cost_distx, cost_disty, cost_etheta, cost_jnt1, cost_jnt2, cost_jnt3, cost_jnt4, cost_jnt5, cost_jnt6;
         AD<double> cost_vx, cost_vy, cost_angvel, cost_jntvel1, cost_jntvel2, cost_jntvel3, cost_jntvel4, cost_jntvel5, cost_jntvel6;

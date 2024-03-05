@@ -37,7 +37,7 @@ class MPC
 
         // Solve the model given an initial state and ***.
         // Return the first actuatotions.
-        vector<double> Solve(Eigen::VectorXd state, JointTrajPub::AnglesList trackTraj, vector<Eigen::Vector3d> tf_state); //这个不需要Collision，因为已经成为公有变量了
+        vector<double> Solve(Eigen::VectorXd state, JointTrajPub::AnglesList trackTraj, vector<Eigen::Vector3d> tf_state, bool _terminal_flag, int _terminal_nums); //这个不需要Collision，因为已经成为公有变量了
         //用来存储solver计算的位置结果
         vector<double> mpc_x;
         vector<double> mpc_y;
