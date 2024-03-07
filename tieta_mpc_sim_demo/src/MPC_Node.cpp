@@ -9,7 +9,7 @@ MPCNode::MPCNode()
     // Parameters for control loop
     pn.param("/dynamic_collision_mpc/thread_numbers", _thread_numbers, 2);   // 多线程的数量 number of threads for this ROS node
     pn.param("/dynamic_collision_mpc/debug_info", _debug_info, true);
-    pn.param("/dynamic_collision_mpc/delay_mode", _delay_mode, true); //? 延迟模式？
+    pn.param("/dynamic_collision_mpc/delay_mode", _delay_mode, false); //? 延迟模式？
     // pn.param("/dynamic_collision_mpc/max_speed", _max_speed, 0.50);   // unit: m/s
     pn.param("/dynamic_collision_mpc/controller_freq", _controller_freq, 100); // 控制器的频率
     pn.param("/dynamic_collision_mpc/pid_freq", _pid_freq, 10);
@@ -17,8 +17,8 @@ MPCNode::MPCNode()
     pn.param<std::string>("/dynamic_collision_mpc/robot_description", _robot_description,
         "/home/diamondlee/VKConTieta_ws/src/urdf_description/robot_description/ridgeback_dual_arm_description/urdf/vkc_big_task.urdf.urdf");
 
-    _collision_check = Collision_Check(_robot_description);
-    _mpc = MPC(_collision_check);
+    //_collision_check = Collision_Check(_robot_description);
+    _mpc = MPC();
 
     // Parameter for MPC solver 目标函数各项的惩罚系数
     pn.param("/dynamic_collision_mpc/mpc_steps", _mpc_steps, 21); // MPC的步长
@@ -29,6 +29,13 @@ MPCNode::MPCNode()
     pn.param("/dynamic_collision_mpc/mpc_w_angvel", _w_angvel, 100.0); //底盘的角速度
     pn.param("/dynamic_collision_mpc/mpc_w_jnt", _w_jnt, 5000.0); //关节角的位置差，权重系数
     pn.param("/dynamic_collision_mpc/mpc_w_jntvel", _w_jntvel, 100.0); //关节角的速度，惩罚系数
+
+    //加速度惩罚
+    pn.param("/dynamic_collision_mpc/mpc_w_acc", _w_acc, 100.0);
+    pn.param("/dynamic_collision_mpc/mpc_w_angacc", _w_angacc, 100.0);
+    pn.param("/dynamic_collision_mpc/mpc_w_jntacc", _w_jntacc, 100.0);
+
+
     pn.param("/dynamic_collision_mpc/collision_base_weight", _w_base_collision, 1000.0);
     pn.param("/dynamic_collision_mpc/collision_shoulder_weight", _w_shoulder_collision, 1000.0);
     pn.param("/dynamic_collision_mpc/collision_elbow_weight", _w_elbow_collision, 1000.0);
@@ -43,6 +50,17 @@ MPCNode::MPCNode()
     pn.param("/dynamic_collision_mpc/gripper_threshold", _gripper_threshold, 0.05);
     pn.param("/dynamic_collision_mpc/pedestrian_threshold", _pedestrian_threshold, 0.05);
     pn.param("/dynamic_collision_mpc/pedestrian_velocity", _pedestrian_vel, 0.0);
+
+    //sigmod
+    pn.param("/dynamic_collision_mpc/barried_arm_n", _barried_func_arm_n, 1.0);
+    pn.param("/dynamic_collision_mpc/barried_arm_w", _barried_func_arm_w, 10.0);
+    pn.param("/dynamic_collision_mpc/barried_arm_m", _barried_func_arm_m, 3.5);
+    pn.param("/dynamic_collision_mpc/barried_arm_r", _barried_func_arm_r, 1.0);
+
+    pn.param("/dynamic_collision_mpc/barried_base_n", _barried_func_base_n, 1.0);
+    pn.param("/dynamic_collision_mpc/barried_base_w", _barried_func_base_w, 10.0);
+    pn.param("/dynamic_collision_mpc/barried_base_m", _barried_func_base_m, 3.5);
+    pn.param("/dynamic_collision_mpc/barried_base_r", _barried_func_base_r, 1.0);
 
     //终端约束
     pn.param("/dynamic_collision_mpc/ee_tool_x",_tool_x, 0.0);
@@ -143,6 +161,9 @@ MPCNode::MPCNode()
     _mpc_params["W_ANGVEL"] = _w_angvel;
     _mpc_params["W_JOINT"] = _w_jnt;
     _mpc_params["W_JNTVEL"] = _w_jntvel;
+    _mpc_params["W_ACC"] = _w_acc;
+    _mpc_params["W_ANGACC"] = _w_angacc;
+    _mpc_params["W_JNTACC"] = _w_jntacc;
     _mpc_params["COLLISION_BASE_WEIGHT"] = _w_base_collision;
     _mpc_params["COLLISION_SHOULDER_WEIGHT"] = _w_shoulder_collision;
     _mpc_params["COLLISION_ELBOW_WEIGHT"] = _w_elbow_collision;
@@ -156,6 +177,16 @@ MPCNode::MPCNode()
     _mpc_params["GRIPPER_THRESHOLD"] = _gripper_threshold;
     _mpc_params["PEDESTRIAN_THRESHOLD"] = _pedestrian_threshold;
     _mpc_params["PEDESTRIAN_VELOCITY"] = _pedestrian_vel;
+
+    //for sigmod
+    _mpc_params["BARRIED_ARM_n"] = _barried_func_arm_n;
+    _mpc_params["BARRIED_ARM_w"] = _barried_func_arm_w;
+    _mpc_params["BARRIED_ARM_m"] = _barried_func_arm_m;
+    _mpc_params["BARRIED_ARM_r"] = _barried_func_arm_r;
+    _mpc_params["BARRIED_BASE_n"] = _barried_func_base_n;
+    _mpc_params["BARRIED_BASE_w"] = _barried_func_base_w;
+    _mpc_params["BARRIED_BASE_m"] = _barried_func_base_m;
+    _mpc_params["BARRIED_BASE_r"] = _barried_func_base_r;
 
     _mpc_params["EE_TOOL_X"] = _tool_x;
     _mpc_params["EE_TOOL_Y"] = _tool_y;
@@ -173,7 +204,7 @@ MPCNode::MPCNode()
     //底盘的theta上下界
     _mpc_params["ANGEL_UPPER"] = _angel_upper;
     _mpc_params["ANGEL_LOWER"] = _angel_lower;
-    //机械臂UR的上下限
+    //机械臂UR的上下限pn.param("/dynamic_collision_mpc/mpc_w_jntvel", _w_jntvel, 100.0); //关节角的速度，惩罚系数
     _mpc_params["JOINT1_UPPER"] = _joint1_upper;
     _mpc_params["JOINT1_LOWER"] = _joint1_lower;
     _mpc_params["JOINT2_UPPER"] = _joint2_upper;
@@ -297,6 +328,17 @@ MPCNode::MPCNode()
         _tfListener.lookupTransform("world", "right_arm_flange_gripper_sphere", ros::Time(0), _tfTransform);
         gripper_sphere_pos << _tfTransform.getOrigin().getX(), _tfTransform.getOrigin().getY(), _tfTransform.getOrigin().getZ();
 
+        _tf_state.push_back(dynamic_pedestrian_pos);
+        _tf_state.push_back(base_lf_sphere_pos);
+        _tf_state.push_back(base_rf_sphere_pos);
+        _tf_state.push_back(base_lr_sphere_pos);
+        _tf_state.push_back(base_rr_sphere_pos);
+        _tf_state.push_back(shoulder_sphere_pos);
+        _tf_state.push_back(elbow_sphere_pos);
+        _tf_state.push_back(wrist_sphere_pos);
+        _tf_state.push_back(gripper_sphere_pos);
+
+
         ROS_WARN("The Obstacle-Class got the inital pose!");
     }
     catch (tf::TransformException &ex)
@@ -322,6 +364,7 @@ void MPCNode::setJointVelocity(const std::vector<double> &jointVelocity)
 {
     for (unsigned int i = 0; i < jointVelocity.size(); i++)
     {
+        //非常巧妙，在这里将i的范围限制为输入的size()
         _jntvel_msg.data[i] = jointVelocity[i];
     }
 }
@@ -601,15 +644,16 @@ bool MPCNode::controlLoop()
         _tfListener.lookupTransform("world", "right_arm_flange_gripper_sphere", ros::Time(0), _tfTransform);
         gripper_sphere_pos << _tfTransform.getOrigin().getX(), _tfTransform.getOrigin().getY(), _tfTransform.getOrigin().getZ();
 
-        _tf_state.push_back(dynamic_pedestrian_pos);
-        _tf_state.push_back(base_lf_sphere_pos);
-        _tf_state.push_back(base_rf_sphere_pos);
-        _tf_state.push_back(base_lr_sphere_pos);
-        _tf_state.push_back(base_rr_sphere_pos);
-        _tf_state.push_back(shoulder_sphere_pos);
-        _tf_state.push_back(elbow_sphere_pos);
-        _tf_state.push_back(wrist_sphere_pos);
-        _tf_state.push_back(gripper_sphere_pos);
+        _tf_state[0]= dynamic_pedestrian_pos;
+        _tf_state[1]= base_lf_sphere_pos;
+        _tf_state[2]= base_rf_sphere_pos;
+        _tf_state[3]= base_lr_sphere_pos;
+        _tf_state[4]= base_rr_sphere_pos;
+        _tf_state[5]= shoulder_sphere_pos;
+        _tf_state[6]= elbow_sphere_pos;
+        _tf_state[7]= wrist_sphere_pos;
+        _tf_state[8]= gripper_sphere_pos;
+
         //todo done 获取初始的每一个障碍物球的位姿
 
         ROS_WARN("Update the Obstacle-Class pose!");
@@ -703,7 +747,7 @@ bool MPCNode::controlLoop()
 
             std::cout << "flag: " << terminal_flag << std::endl;
             std::cout << "terminal_nums: " << terminal_nums << std::endl;
-
+            //tf_state里包含初始的各个sphere的位置：行人、lf、rf、lr、rr、shouder等
             vector<double> mpc_results = _mpc.Solve(robot_state, mpc_trackTraj, _tf_state, terminal_flag, terminal_nums);
 
             double time_solve_end = ros::Time::now().toSec();
@@ -851,7 +895,7 @@ bool MPCNode::controlLoop()
         temp_jntvel.push_back(_jntvel4);
         temp_jntvel.push_back(_jntvel5);
         temp_jntvel.push_back(_jntvel6);
-        temp_jntvel.push_back(0.0);
+        temp_jntvel.push_back(_pedestrian_vel);
         setJointVelocity(temp_jntvel);
         // debug 先不管他的速度
         //_jntvel_msg.data.push_back(_pedestrian_vel);
@@ -867,7 +911,7 @@ bool MPCNode::controlLoop()
     else
     {
         // 这个也没有必要
-        _jntvel_msg.data = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, _pedestrian_vel};
+        _jntvel_msg.data = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
         _pub_robot_velocity.publish(_jntvel_msg);
         if(true)
             ROS_WARN("track is finished");

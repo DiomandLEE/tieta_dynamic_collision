@@ -12,41 +12,55 @@ pid_freq: 10
 #urdf——file 这个就先不填了，cpp里有写
 
 #mpc的预测范围/时间步长
-mpc_steps: 10
+mpc_steps: 50
 #mpc的目标函数的各项权重
 #运动学
-mpc_w_distx: 50
-mpc_w_disty: 50
-mpc_w_etheta: 50
-mpc_w_vel: 100
-mpc_w_angvel: 100
-mpc_w_jnt: 50
-mpc_w_jntvel: 100
+mpc_w_distx: 3000.0 # 50.0
+mpc_w_disty: 3000.0 # 50.0
+mpc_w_etheta: 3000.0 # 50.0
+mpc_w_vel: 1000.0
+mpc_w_angvel: 1000.0
+mpc_w_jnt: 3000.0 # 50.0
+mpc_w_jntvel: 1000.0
+mpc_w_acc: 500.0 # 100.0
+mpc_w_angacc: 500.0 # 100.0
+mpc_w_jntacc: 500.0 # 100.0
 #碰撞
-collision_base_weight: 1000000
-collision_shoulder_weight: 1000
-collision_elbow_weight: 1000
-collision_wrist_weight: 1000
-collision_gripper_weight: 1000
+collision_base_weight: 50.0 # 200
+collision_shoulder_weight: 50.0 # 100
+collision_elbow_weight: 50.0 # 100
+collision_wrist_weight: 150.0 # 100
+collision_gripper_weight: 150.0 # 100
 #碰撞的阈值
-base_threshold: 1.0
-shoulder_threshold: 0.05
-elbow_threshold: 0.05
-wrist_threshold: 0.05
-gripper_threshold: 0.05
+base_threshold: 0.8 #0.4 urdf
+shoulder_threshold: 0.3 #0.15 urdf
+elbow_threshold: 0.3 #0.15 urdf
+wrist_threshold: 0.3 #0.15 urdf
+gripper_threshold: 0.3 #0.15 urdf
 #行人的参数
-pedestrian_threshold: 0.5
-pedestrian_velocity: 0.00
+pedestrian_threshold: 0.5 # 0.2 urdf
+pedestrian_velocity: -0.03
+
+#对于惩罚函数 barried function
+barried_arm_n: 1.0
+barried_arm_w: 10.0
+barried_arm_m: 3.5
+barried_arm_r: 1.0
+
+barried_base_n: 1.0
+barried_base_w: 10.0
+barried_base_m: 3.5
+barried_base_r: 1.0
 
 #终端约束，即tool的最终在world下的xyzrpy
-ee_tool_x: 0.0
-ee_tool_y: 0.0
-ee_tool_z: 0.0
+ee_tool_x: 1.35
+ee_tool_y: 0.5675
+ee_tool_z: 1.1365
 ee_tool_roll: 0.0
 ee_tool_pitch: 0.0
 ee_tool_yaw: 0.0
 #终端约束为hard constrain，权重加大
-terminal_weight_infite: 50000
+terminal_weight_infite: 500.0
 
 #ur5e的关节角度限制, urdf中看到
 joint1_upper_bound: 3.14
@@ -75,9 +89,9 @@ yaw_kp: 0.2
 yaw_ki: 0.01
 yaw_kd: 0.005
 #到达初始位姿的容差
-tolerance_position: 0.01
-tolerance_theta: 0.01
-tolerance_joint: 0.01 #0.5度
+tolerance_position: 0.05
+tolerance_theta: 0.10
+tolerance_joint: 0.10 #0.01 for 0.5度
 
 savefolder_path: "/home/diamondlee/VKConTieta_ws/src/tieta_mpc_sim_demo/tieta_result_csv/result"
 save_Debugfolder_path: "/home/diamondlee/VKConTieta_ws/src/tieta_mpc_sim_demo/tieta_result_csv/debug"

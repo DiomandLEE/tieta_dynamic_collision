@@ -125,7 +125,7 @@ int main(int argc, char *argv[]) {
     //     }
     // }
     //把这里做成param的参数，给到tieta的初始位置
-    std::vector<double> joint_positions = {0.1, 0.0, 0.3, 0.7, 0.7, 0.0, 0.0, 0.0, 0.0, -3.2};
+    std::vector<double> joint_positions = {0.1, 0.0, 0.3, 0.7, 0.7, 0.0, 0.0, 0.0, 0.0, -1.0};
     std::vector<std::string> joint_names = {"base_y_base_x", "base_theta_base_y", "base_link_base_theta", "right_arm_shoulder_pan_joint",
                                             "right_arm_shoulder_lift_joint", "right_arm_elbow_joint", "right_arm_wrist_1_joint",
                                             "right_arm_wrist_2_joint", "right_arm_wrist_3_joint", "dynamic_pedestrian_joint"};

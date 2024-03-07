@@ -24,7 +24,7 @@
 
 #include "tieta_mpc_sim_demo/FG_evalue.h"
 #include "tieta_mpc_sim_demo/MPC_Controller.h"
-#include "tieta_mpc_sim_demo/Collision_Check.h"
+//#include "tieta_mpc_sim_demo/Collision_Check.h"
 #include <Eigen/Core>
 #include <Eigen/QR>
 #include <Eigen/Dense>
@@ -79,8 +79,8 @@ private:
     //tf作用仅仅是监听当前的行人状态,以及获取每次control的起始障碍物位置。
     tf::TransformListener _tf_listener;
 
-    //! Collision Check类
-    Collision_Check _collision_check;
+    ////! Collision Check类
+    //Collision_Check _collision_check;
     std::string _robot_description;
 
     // geometry_msgs::Point _goal_pos;
@@ -108,10 +108,15 @@ private:
     //对于EE的姿态限制
     double _tool_x,_tool_y,_tool_z,_tool_roll,_tool_pitch,_tool_yaw;
 
-    double _w_distx, _w_disty, _w_etheta, _w_vel,_w_angvel,
-            _w_jnt, _w_jntvel,
+    double _w_distx, _w_disty, _w_etheta, _w_vel,_w_angvel, _w_acc, _w_angacc,
+            _w_jnt, _w_jntvel, _w_jntacc,
             _w_base_collision,_w_shoulder_collision, _w_elbow_collision, _w_wrist_collision, _w_gripper_collision, _w_hard_EE_tool,
             _bound_value, _angel_upper, _angel_lower;
+
+    //用来改变 机械臂的sphere和行人的圆柱 的距离惩罚函数的SIGMOD系数
+    double _barried_func_arm_w, _barried_func_arm_r, _barried_func_arm_m, _barried_func_arm_n;
+    //用来改变 base的sphere和行人的圆柱 的距离惩罚函数的SIGMOD系数
+    double _barried_func_base_w, _barried_func_base_r, _barried_func_base_m, _barried_func_base_n;
 
     double _joint1_upper, _joint1_lower, _joint2_upper, _joint2_lower, _joint3_upper, _joint3_lower, _joint4_upper, _joint4_lower,
             _joint5_upper, _joint5_lower, _joint6_upper, _joint6_lower;

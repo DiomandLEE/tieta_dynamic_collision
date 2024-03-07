@@ -12,13 +12,8 @@ using CppAD::AD;
 // ====================================
 // MPC class definition implementation.
 // ====================================
+
 MPC::MPC()
-{
-
-}
-
-MPC::MPC(Collision_Check &collision_check)
-    : _collision_check(collision_check)
 {
     // Set default value 也就是在默认构造函数中，给到了一些默认参数值
     _mpc_steps = 20;
@@ -392,7 +387,7 @@ vector<double> MPC::Solve(Eigen::VectorXd state, JointTrajPub::AnglesList trackT
     //? ### x0 = map_x_0 && 0 = x1 - (x0 + vx_0 * dt) && 这个运动学方程有mpc_steps - 1个，加上第一个初始约束，一维上就有mpc_Steps个约束 ###
 
     //! 计算目标和约束 object that computes objective and constraints： f[0]代表object function，f[1]开始代表g(x)约束
-    FG_eval fg_eval = FG_eval(trackTraj, _collision_check, tf_state, _terminal_flag, _terminal_nums); //实例化 一个FG_eval的类
+    FG_eval fg_eval = FG_eval(trackTraj, tf_state, _terminal_flag, _terminal_nums); //实例化 一个FG_eval的类
 
     //------ 文件夹的命名 ------
     fg_eval._file_debug_path = _file_debug_path_class_FG_eval + "/fg_evalue_segTraj.csv";
@@ -425,15 +420,15 @@ vector<double> MPC::Solve(Eigen::VectorXd state, JointTrajPub::AnglesList trackT
     // options += "Numeric max_cpu_time          0.5\n";
     //!new options
     std::string options;
-    // turn off any printing 注释下面这一行将关闭CPPAD的求解过程的LOG
+    // turn off any printing 注释下面这一行将 开启 CPPAD的求解过程的 LOG
     // options += "Integer print_level  0\n";
     // options += "String  sb           yes\n";
     // maximum number of iterations
-    options += "Integer max_iter     30\n";
+    options += "Integer max_iter     20\n";
     // approximate accuracy in first order necessary conditions;
     // see Mathematical Programming, Volume 106, Number 1,
     // Pages 25-57, Equation (6)
-    options += "Numeric tol          1e-12\n";
+    options += "Numeric tol          1e-7\n";  //这个是优化的精度，越小精度越大，时间越长
     options += "Sparse  true        forward\n";
     options += "Sparse  true        reverse\n";
     //options += "Numeric max_cpu_time          0.05\n";
@@ -455,10 +450,7 @@ vector<double> MPC::Solve(Eigen::VectorXd state, JointTrajPub::AnglesList trackT
         options, vars, vars_lowerbound, vars_upperbound, constraints_lowerbound,
         constraints_upperbound, fg_eval, solution);
 
-    vars = solution.x;
-    CppAD::ipopt::solve<Dvector, FG_eval>(
-        options, vars, vars_lowerbound, vars_upperbound, constraints_lowerbound,
-        constraints_upperbound, fg_eval, solution);
+    //vars = solution.x;
 
     fg_eval.file_debug.close();
 

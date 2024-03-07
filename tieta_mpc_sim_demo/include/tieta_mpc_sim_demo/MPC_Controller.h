@@ -20,7 +20,7 @@
 #include <string>
 #include <iomanip>
 
-#include "tieta_mpc_sim_demo/Collision_Check.h"
+//#include "tieta_mpc_sim_demo/Collision_Check.h"
 #include "JointTrajPub/Angles.h"
 #include "JointTrajPub/AnglesList.h"
 
@@ -31,9 +31,9 @@ class MPC
     public:
         //构造函数
         MPC();
-        MPC(Collision_Check &collision_check);
+        //MPC(Collision_Check &collision_check);
 
-        Collision_Check _collision_check;
+        //Collision_Check _collision_check;
 
         // Solve the model given an initial state and ***.
         // Return the first actuatotions.
