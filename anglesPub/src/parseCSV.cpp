@@ -64,6 +64,7 @@ std::vector<map<double, vector<double>>> parseCSV2Map(const std::string &file_in
         }
         line++;
     }
+    int size_ = desired_AnglesList.size();
 
     //输出
     // for (map<double, vector<double>>::iterator iter = desired_AnglesList.begin(); iter!=desired_AnglesList.end();iter++)
@@ -102,6 +103,8 @@ std::vector<map<double, vector<double>>> parseCSV2Map(const std::string &file_in
         desired_AnglesList[-0.01] = _Angles_forDelay;
     }
     desired_timedTotalTraj.push_back(desired_AnglesList);
+
+    std::cout << "\n" << "\n" << "original timedTraj size: " << size_ << std::endl;
 
     return desired_timedTotalTraj;
 }

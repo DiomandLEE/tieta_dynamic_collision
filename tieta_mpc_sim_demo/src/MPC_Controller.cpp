@@ -91,6 +91,8 @@ void MPC::LoadParams(const std::map<string, double> &params)
     _joint6_upper  = _params.find("JOINT6_UPPER") != _params.end()  ? _params.at("JOINT6_UPPER") : _joint6_upper;
     _joint6_lower  = _params.find("JOINT6_LOWER") != _params.end()  ? _params.at("JOINT6_LOWER") : _joint6_lower;
 
+    _pedestrian_vel = _params.find("PEDESTRIAN_VELOCITY") != _params.end() ? _params.at("PEDESTRIAN_VELOCITY") : _pedestrian_vel;
+
     //9个位置变量，(9 * mpc_step) * 1
     _x_start = 0;
     _y_start = _x_start + _mpc_steps;
@@ -133,9 +135,10 @@ void MPC::LoadParams(const std::map<string, double> &params)
     cout << "\n!! MPC Obj parameters updated !! " << endl;
 }
 
-vector<double> MPC::Solve(Eigen::VectorXd state, JointTrajPub::AnglesList trackTraj, vector<Eigen::Vector3d> tf_state, bool _terminal_flag, int _terminal_nums)
+vector<vector<double>> MPC::Solve(Eigen::VectorXd state, JointTrajPub::AnglesList trackTraj, vector<Eigen::Vector3d> tf_state, bool _terminal_flag, int _terminal_nums)
 {
     cout << "\n!! MPC Obj Solve Called !! " << endl;
+    auto solve_start_stamp = std::chrono::high_resolution_clock::now();
     bool ok = true;
     size_t i;
     typedef CPPAD_TESTVECTOR(double) Dvector; // CppAD::vector< T >
@@ -590,33 +593,47 @@ vector<double> MPC::Solve(Eigen::VectorXd state, JointTrajPub::AnglesList trackT
     // file << "\n" << endl;
     // file.close(); //每次预测单独保存
     */
-    //debug 根本不需要确定10啊，这后面push back不就成size=20了么。。。
-    vector<double> result; //九个自由度的速度控制 + 判断flag（如果这次没有解出来的话，就停在原地，并且下次的跟踪目标，仍然为这次loop的目标）
+    auto solve_end_stamp = std::chrono::high_resolution_clock::now();
 
-    if(ok)
+    auto duration_solve = std::chrono::duration_cast<std::chrono::milliseconds>(solve_end_stamp - solve_start_stamp);
+    double index_result = std::ceil(duration_solve.count() / 100.0);
+
+    //debug 根本不需要确定10啊，这后面push back不就成size=20了么。。。
+    vector<vector<double>> result_sulotions; //九个自由度的速度控制 + 判断flag（如果这次没有解出来的话，就停在原地，并且下次的跟踪目标，仍然为这次loop的目标）
+
+    if(true /*ok*/)
     {
         std::cout << "$$$$$$ MPC solved successfully! $$$$$$" << std::endl;
-        //read 如果MPC求解出来了结果，那么机器人执行这个结果
-        // velocity & omaga -> return variables
-        //! 更改代码后，第一个解变成了初始的机器人状态，所以给cmd_vel第二个速度指令
-        result.push_back(solution.x[_vx_start + 1]);
-        result.push_back(solution.x[_vy_start + 1]);
-        result.push_back(solution.x[_angvel_start + 1]);
+        //TODO
+        for(int j = index_result + 6; j < _mpc_steps - 1; j++)
+        {
+            vector<double> result;
+            // read 如果MPC求解出来了结果，那么机器人执行这个结果
+            //  velocity & omaga -> return variables
+            //! 更改代码后，第一个解变成了初始的机器人状态，所以给cmd_vel第二个速度指令
+            result.push_back(solution.x[_vx_start + j]);
+            result.push_back(solution.x[_vy_start + j]);
+            result.push_back(solution.x[_angvel_start + j]);
 
-        result.push_back(solution.x[_jntvel1_start + 1]);
-        result.push_back(solution.x[_jntvel2_start + 1]);
-        result.push_back(solution.x[_jntvel3_start + 1]);
-        result.push_back(solution.x[_jntvel4_start + 1]);
-        result.push_back(solution.x[_jntvel5_start + 1]);
-        result.push_back(solution.x[_jntvel6_start + 1]);
+            result.push_back(solution.x[_jntvel1_start + j]);
+            result.push_back(solution.x[_jntvel2_start + j]);
+            result.push_back(solution.x[_jntvel3_start + j]);
+            result.push_back(solution.x[_jntvel4_start + j]);
+            result.push_back(solution.x[_jntvel5_start + j]);
+            result.push_back(solution.x[_jntvel6_start + j]);
+            result.push_back(_pedestrian_vel);
 
-        result.push_back(1.0); // 判断flag
-        for(int i = 0; i < 9; i++)
-            std::cout << result[i] << ",";
-        std::cout << result[9] <<  std::endl;
+            result_sulotions.push_back(result);
+        }
+        //TODO
+        // result.push_back(1.0); // 判断flag
+        // for(int i = 0; i < 9; i++)
+        //     std::cout << result[i] << ",";
+        // std::cout << result[9] <<  std::endl;
+
     }
-    else
-        result = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+    // else
+    //     result = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 
-    return result;
+    return result_sulotions;
 }

@@ -1,6 +1,8 @@
 #include "tieta_mpc_sim_demo/MPC_Node.h"
 using namespace std;
 
+
+
 MPCNode::MPCNode()
 {
     // Private parameters handler  私有的参数处理器，走的是mpc_node应该
@@ -13,15 +15,21 @@ MPCNode::MPCNode()
     // pn.param("/dynamic_collision_mpc/max_speed", _max_speed, 0.50);   // unit: m/s
     pn.param("/dynamic_collision_mpc/controller_freq", _controller_freq, 100); // 控制器的频率
     pn.param("/dynamic_collision_mpc/pid_freq", _pid_freq, 10);
-    _dt = double(1.0 / _controller_freq); // time step duration dt in s 时间步长，0.1s
+    pn.param("/dynamic_collision_mpc/_dt", _dt, 0.1);
+    //_dt = double(1.0 / _controller_freq); // time step duration dt in s 时间步长，0.1s
     pn.param<std::string>("/dynamic_collision_mpc/robot_description", _robot_description,
         "/home/diamondlee/VKConTieta_ws/src/urdf_description/robot_description/ridgeback_dual_arm_description/urdf/vkc_big_task.urdf.urdf");
 
     //_collision_check = Collision_Check(_robot_description);
     _mpc = MPC();
 
+    pn.param("/dynamic_collision_mpc/increase_length", _increase_length, 10); // MPC的预测步数
+
     // Parameter for MPC solver 目标函数各项的惩罚系数
     pn.param("/dynamic_collision_mpc/mpc_steps", _mpc_steps, 21); // MPC的步长
+
+    pn.param("/dynamic_collision_mpc/mpc_freq_int", _mpc_freq, 10);
+
     pn.param("/dynamic_collision_mpc/mpc_w_distx", _w_distx, 5000.0);
     pn.param("/dynamic_collision_mpc/mpc_w_disty", _w_disty, 5000.0);
     pn.param("/dynamic_collision_mpc/mpc_w_etheta", _w_etheta, 5000.0);
@@ -117,7 +125,7 @@ MPCNode::MPCNode()
 
     //*****************************************************************************
     // Display the parameters
-    cout << "\n===== Parameters =====" << endl;
+    std::cout << "\n===== Parameters =====" << endl;
     cout << "/dynamic_collision_mpc/debug_info: " << _debug_info << endl;
     cout << "/dynamic_collision_mpc/delay_mode: " << _delay_mode << endl;
     cout << "/dynamic_collision_mpc/frequency_dT: " << _dt << endl;
@@ -149,6 +157,8 @@ MPCNode::MPCNode()
 
     _jntvel_msg = std_msgs::Float64MultiArray();
     _mpc_traj = JointTrajPub::AnglesList();
+
+    velocity_solutions = std::vector<joints_velocity<double>>(_mpc_steps, std::vector<double>(10, 0.0));
 
     // Init parameters for MPC object
     _mpc_params["DT"] = _dt;
@@ -541,7 +551,7 @@ void MPCNode::rcvJointTrajCB(const JointTrajPub::AnglesListConstPtr &totalTrajMs
             else
             {
                 ROS_WARN("Delay mode is off");
-                _realTraj_length = _subTraj_length - (_mpc_steps - 2); //订阅到，本身traj的长度
+                _realTraj_length = _subTraj_length - (_increase_length - 2); //订阅到，本身traj的长度
             }
             cout << "rcvTrajCB中mpcsteps为 " << _mpc_steps << endl;
             ROS_INFO("Track Traj has received !!! Track Traj real length: %d", _realTraj_length);
@@ -572,9 +582,9 @@ JointTrajPub::AnglesList MPCNode::getTrackTraj(const JointTrajPub::AnglesList &r
     if (_delay_mode)
         _fir_track_point = _loop_count + 1;
     else
-        _fir_track_point = _loop_count;
+        _fir_track_point = _loop_count * _mpc_freq;  //TODO
 
-    for (int i = 0; i < _mpc_steps; i++)
+    for (int i = 0; i < _mpc_steps; i++) //TODO
     {
         JointTrajPub::Angles temp_jntpos;
         temp_jntpos.base_x = rcvJointTrajMsg.AnglesList[i + _fir_track_point].base_x;
@@ -599,7 +609,7 @@ JointTrajPub::AnglesList MPCNode::getTrackTraj(const JointTrajPub::AnglesList &r
 
 // Rater: Control Loop (closed loop nonlinear MPC)RATE保证周期性：控制环（闭环非线性 MPC）
 
-bool MPCNode::controlLoop()
+std::vector<joints_velocity<double>> MPCNode::controlLoop(bool &track_continue_flag)
 {
 
     double time_get_tf_start;
@@ -665,7 +675,8 @@ bool MPCNode::controlLoop()
 
     // 收到要跟踪的轨迹，收到小车的tf位姿，轨迹还没跟踪完，control loop没有到最后一个点
     bool _run_loop_traj = _traj_received && !_track_finished;
-    bool _run_loop_count = _loop_count < _realTraj_length - 1;
+    //!每过1s，执行control_loop，所以，这个查看的是
+    bool _run_loop_count = (_loop_count) * _mpc_freq < _realTraj_length;  //TODO
     bool _run_loop = _run_loop_traj && _run_loop_count;
 
     cout << "_run_loop_traj为 " << _run_loop_traj << endl;
@@ -702,7 +713,7 @@ bool MPCNode::controlLoop()
             cout << "===================  进入前期计算  =============================" << endl;
             double time_loop_start = ros::Time::now().toSec();
             //debug 在这就把loop_cont ++？
-            _loop_count++;
+            //_loop_count++;
             //! Update system states: X=[x, y, yaw, theta1-7]
             //! Update system inputs: U=[vx, vy, w, w1-7]
             // 一开始这些都是0.0
@@ -742,32 +753,62 @@ bool MPCNode::controlLoop()
             //debug solve函数
             //todo 需要一个bool 判断是否计算终端约束
             //写一个 ？ ： 的判断
-            bool terminal_flag = _loop_count >= _realTraj_length - _mpc_steps ? true : false;
-            int terminal_nums = (_realTraj_length - _loop_count) - 1; //这是计算在terminal中，从第几个开始
+            bool terminal_flag = ((_loop_count + 1) * _mpc_freq) >= _realTraj_length ? true : false; //TODO
+            int terminal_nums =
+                ((_realTraj_length - _loop_count * _mpc_freq) - 1); // < 0 ? _mpc_steps - 1 : ((_realTraj_length - _loop_count * _mpc_steps) - 1);
+            // 这是计算在terminal中，从第几个开始 //TODO
 
             std::cout << "flag: " << terminal_flag << std::endl;
             std::cout << "terminal_nums: " << terminal_nums << std::endl;
-            //tf_state里包含初始的各个sphere的位置：行人、lf、rf、lr、rr、shouder等
-            vector<double> mpc_results = _mpc.Solve(robot_state, mpc_trackTraj, _tf_state, terminal_flag, terminal_nums);
+            //tf_state里包含初始的各个sphere的位置：行人、lf、rf、lr、rr、shouder等 //TODO
+            vector<vector<double>> mpc_results = _mpc.Solve(robot_state, mpc_trackTraj, _tf_state, terminal_flag, terminal_nums);
+
+            _loop_count++;
 
             double time_solve_end = ros::Time::now().toSec();
             cout << "MPC solve time: " << time_solve_end - time_solve_start << " s" << endl;
             cout << "MPC solve Stamp: " << time_solve_end - time_get_tf_start << endl;
 
-            // normalize speed & angvel
-            _speed_x = range_velocity_MAX(mpc_results[0]);
-            _speed_y = range_velocity_MAX(mpc_results[1]);
-            _angvel = range_angvel_MAX(mpc_results[2]);
-            _jntvel1 = range_jntvel_MAX(mpc_results[3]);
-            _jntvel2 = range_jntvel_MAX(mpc_results[4]);
-            _jntvel3 = range_jntvel_MAX(mpc_results[5]);
-            _jntvel4 = range_jntvel_MAX(mpc_results[6]);
-            _jntvel5 = range_jntvel_MAX(mpc_results[7]);
-            _jntvel6 = range_jntvel_MAX(mpc_results[8]);
-            ROS_WARN("CPPAD RESuLT CODE:  %lf", mpc_results[9]);
-            // 如果MPC求解失败，mpc_result[9] = 0
-            if(mpc_results[9] < 0.5)
-                _loop_count = _loop_count - 1;
+            velocity_solutions.clear();
+
+            // normalize speed & angvel //TODO
+            for (int k = 0; k < mpc_results.size();k++)
+            {
+                //将速度规范到限制内
+                _speed_x = range_velocity_MAX(mpc_results[k][0]);
+                _speed_y = range_velocity_MAX(mpc_results[k][1]);
+                _angvel = range_angvel_MAX(mpc_results[k][2]);
+
+                _jntvel1 = range_jntvel_MAX(mpc_results[k][3]);
+                _jntvel2 = range_jntvel_MAX(mpc_results[k][4]);
+                _jntvel3 = range_jntvel_MAX(mpc_results[k][5]);
+                _jntvel4 = range_jntvel_MAX(mpc_results[k][6]);
+                _jntvel5 = range_jntvel_MAX(mpc_results[k][7]);
+                _jntvel6 = range_jntvel_MAX(mpc_results[k][8]);
+
+                //而后将这些放到新的速度容器当中
+                joints_velocity<double> temp_vel(10);
+                temp_vel[0] = (_speed_x);
+                temp_vel[1] = (_speed_y);
+                temp_vel[2] = (_angvel);
+
+                temp_vel[3] = (_jntvel1);
+                temp_vel[4] = (_jntvel2);
+                temp_vel[5] = (_jntvel3);
+                temp_vel[6] = (_jntvel4);
+                temp_vel[7] = (_jntvel5);
+                temp_vel[8] = (_jntvel6);
+                temp_vel[9] = (_pedestrian_vel);
+
+                //放到Solution当中
+                velocity_solutions.push_back(temp_vel);
+                //return velocity_solutions;
+            }
+            //TODO
+            // ROS_WARN("CPPAD RESuLT CODE:  %lf", mpc_results[9]);
+            // // 如果MPC求解失败，mpc_result[9] = 0
+            // if(mpc_results[9] < 0.5)
+            //     _loop_count = _loop_count - 1;
 
             // print INFO
             if (_debug_info)
@@ -789,20 +830,10 @@ bool MPCNode::controlLoop()
     }
     else
     {
-        //_acc = 0.0;
-        _speed_x = 0.0;
-        _speed_y = 0.0;
-        _angvel = 0.0;
-        _jntvel1 = 0.0;
-        _jntvel2 = 0.0;
-        _jntvel3 = 0.0;
-        _jntvel4 = 0.0;
-        _jntvel5 = 0.0;
-        _jntvel6 = 0.0;
         // 其实等于就够了
         if (_traj_received)
         {
-            if (_loop_count > _realTraj_length - 2 && _loop_count > 0 && _rcv_traj.AnglesList.size() > 0)
+            if (_loop_count * _mpc_freq + _mpc_freq > _realTraj_length  && _loop_count > 0 && _rcv_traj.AnglesList.size() > 0)
                 _track_finished = true;
             if (_track_finished && _traj_received)
                 ROS_ERROR("Traj has Tracked: control loop OOOVER !");
@@ -885,39 +916,45 @@ bool MPCNode::controlLoop()
     {
         //debug 在构造函数当中，就用push back相当于确定了_jntvel_msg.data[]的size()
         //debug 所以这里，不能再push_back
-        std::vector<double> temp_jntvel;
-        temp_jntvel.push_back(_speed_x);
-        temp_jntvel.push_back(_speed_y);
-        temp_jntvel.push_back(_angvel);
-        temp_jntvel.push_back(_jntvel1);
-        temp_jntvel.push_back(_jntvel2);
-        temp_jntvel.push_back(_jntvel3);
-        temp_jntvel.push_back(_jntvel4);
-        temp_jntvel.push_back(_jntvel5);
-        temp_jntvel.push_back(_jntvel6);
-        temp_jntvel.push_back(_pedestrian_vel);
-        setJointVelocity(temp_jntvel);
+        // std::vector<double> temp_jntvel;
+        // temp_jntvel.push_back(_speed_x);
+        // temp_jntvel.push_back(_speed_y);
+        // temp_jntvel.push_back(_angvel);
+        // temp_jntvel.push_back(_jntvel1);
+        // temp_jntvel.push_back(_jntvel2);
+        // temp_jntvel.push_back(_jntvel3);
+        // temp_jntvel.push_back(_jntvel4);
+        // temp_jntvel.push_back(_jntvel5);
+        // temp_jntvel.push_back(_jntvel6);
+        // temp_jntvel.push_back(_pedestrian_vel);
+        // setJointVelocity(temp_jntvel);
         // debug 先不管他的速度
         //_jntvel_msg.data.push_back(_pedestrian_vel);
         //_jntvel_msg.data.push_back(0.0);
-        ROS_WARN("JOINT VELOCITY : **|**");
-        std::cout << _speed_x << "," << _speed_y << "," << _angvel << "," <<
-            _jntvel1 << "," << _jntvel2 << "," << _jntvel3 << "," << _jntvel4 << "," <<
-                _jntvel5 << "," << _jntvel6 << std::endl;
-        _pub_robot_velocity.publish(_jntvel_msg);
+        //TODO
+        // ROS_WARN("JOINT VELOCITY : **|**");
+        // std::cout << _speed_x << "," << _speed_y << "," << _angvel << "," <<
+        //     _jntvel1 << "," << _jntvel2 << "," << _jntvel3 << "," << _jntvel4 << "," <<
+        //         _jntvel5 << "," << _jntvel6 << std::endl;
+        // _pub_robot_velocity.publish(_jntvel_msg);
         double time_pub_cmd = ros::Time::now().toSec();
         cout << "pub的时间戳" << time_pub_cmd - time_get_tf_start << endl;
+        track_continue_flag = true;
+        std::cout << "DEBUG&&&&&" << std::endl;
+        return velocity_solutions;
     }
     else
     {
         // 这个也没有必要
-        _jntvel_msg.data = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-        _pub_robot_velocity.publish(_jntvel_msg);
-        if(true)
+        // _jntvel_msg.data = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+        // _pub_robot_velocity.publish(_jntvel_msg);
+        std::vector<joints_velocity<double>> t_(40, std::vector<double>(10, 0.0));
+        velocity_solutions = t_;
+        if (true)
             ROS_WARN("track is finished");
         else
             ROS_ERROR("pub twist flag is false");
-        return false;
+        track_continue_flag = false;
+        return velocity_solutions;
     }
-    return true;
 }

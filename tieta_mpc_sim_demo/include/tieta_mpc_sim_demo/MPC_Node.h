@@ -52,6 +52,9 @@
 #include "JointTrajPub/Angles.h"
 #include "JointTrajPub/AnglesList.h"
 
+template<typename T>
+using joints_velocity = std::vector<T>;
+using joints_velocity_t = joints_velocity<double>;
 
 using namespace std;
 //namespace fs = std::filesystem;
@@ -63,7 +66,7 @@ public:
     ~MPCNode();
     int get_thread_numbers();
     int get_controll_freq();
-    bool controlLoop();
+    std::vector<joints_velocity<double>> controlLoop(bool &track_finish_flag);
     bool gotoInitState();
     void rcvJointTrajCB(const JointTrajPub::AnglesListConstPtr &totalTrajMsg);
     void getRobotStateCB(const sensor_msgs::JointStateConstPtr &robotstateMsg);
@@ -94,12 +97,18 @@ private:
 
     // 发布cmd_vel
     std_msgs::Float64MultiArray _jntvel_msg;
+    //速度的容器
+    std::vector<joints_velocity<double>> velocity_solutions;
 
     // 判断是否到达第一个轨迹点的容差
     double _tolerence_xy, _tolerence_theta, _tolerence_joint;
 
     MPC _mpc;
     map<string, double> _mpc_params;
+
+    //增加的轨迹长度
+    int _increase_length;
+    // MPC的步数
     int _mpc_steps;
     //碰撞安全阈值
     double _base_threshold, _shoulder_threshold, _elbow_threshold, _wrist_threshold, _gripper_threshold;
@@ -133,6 +142,8 @@ private:
 
     // 计算Controller—Loop的次数，以更新待track的traj
     int _loop_count;
+    //TODO 这是一次loop，经过的时间步长 _mpc_freq * publish_dt = mpc.controlfreq
+    int _mpc_freq;
     // 需要轨迹中点的数量来确定，_loop_count的上限
     int _realTraj_length;
     // 中间变量，为了得到最终的traj中点的数量

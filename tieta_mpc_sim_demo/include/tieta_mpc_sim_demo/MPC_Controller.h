@@ -19,6 +19,7 @@
 #include <fstream>
 #include <string>
 #include <iomanip>
+#include <chrono>
 
 //#include "tieta_mpc_sim_demo/Collision_Check.h"
 #include "JointTrajPub/Angles.h"
@@ -37,7 +38,7 @@ class MPC
 
         // Solve the model given an initial state and ***.
         // Return the first actuatotions.
-        vector<double> Solve(Eigen::VectorXd state, JointTrajPub::AnglesList trackTraj, vector<Eigen::Vector3d> tf_state, bool _terminal_flag, int _terminal_nums); //这个不需要Collision，因为已经成为公有变量了
+        vector<vector<double>> Solve(Eigen::VectorXd state, JointTrajPub::AnglesList trackTraj, vector<Eigen::Vector3d> tf_state, bool _terminal_flag, int _terminal_nums); //这个不需要Collision，因为已经成为公有变量了
         //用来存储solver计算的位置结果
         vector<double> mpc_x;
         vector<double> mpc_y;
@@ -63,6 +64,8 @@ class MPC
         double _mpc_joint5_Tcost;
         double _mpc_joint6_Tcost;
 
+        double _pedestrian_vel; //行人速度
+
         ofstream file;
         ofstream file_debug;
 
@@ -85,6 +88,7 @@ class MPC
 
         int _joint1_start, _joint2_start, _joint3_start, _joint4_start, _joint5_start, _joint6_start,
             _jntvel1_start, _jntvel2_start, _jntvel3_start, _jntvel4_start, _jntvel5_start, _jntvel6_start;
+
 
         std::map<string, double> _params;
 

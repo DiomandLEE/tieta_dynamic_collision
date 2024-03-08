@@ -14,7 +14,7 @@ int main(int argc, char** argv)
     string _map_frame;
     string _csv_file;
     pnh.param("/JointTrajPub/dynamic_collision_mpc/delay_mode", _delay_mode, false);
-    pnh.param("/JointTrajPub/dynamic_collision_mpc/mpc_steps", _expand_num, 10);
+    pnh.param("/JointTrajPub/dynamic_collision_mpc/increase_length", _expand_num, 10);
     pnh.param("controller_freq", _loop_Hz, 100);
 
     pnh.param<std::string>("/JointTrajPub/dynamic_collision_mpc/csvfile_path", _csv_file, "/home/diamondlee/VKConTieta_ws/src/tieta_mpc_sim_demo/tieta_track_traj/pick/retimed_pickTraj_15_36_51.csv");
@@ -22,7 +22,7 @@ int main(int argc, char** argv)
     vector<map<double, vector<double>>> traj2pub =
         parseCSV2Map(_csv_file, _expand_num, _delay_mode, _loop_Hz);
     std::cout << "traj2pub size: " << traj2pub.size() << std::endl;
-    ROS_INFO("STARTING parseCSV !!!   traj2pub size: %d", traj2pub[0].size());
+    ROS_INFO("\n STARTING parseCSV !!!   traj2pub size: %d", traj2pub[0].size());
 
     ros::Publisher anglesList_pub = pnh.advertise<JointTrajPub::AnglesList>("anglesList_topic", 1);
 

@@ -1789,14 +1789,40 @@ void FG_eval::operator()(ADvector& fg, const ADvector& vars)
         // }
         //debug 这是位置误差
         fg[0] += _w_distx * CppAD::pow(vars[_x_start + i] - _mpc_trackTraj.AnglesList[i].base_x, 2); // x error
+
+        cost_distx =  _w_distx * CppAD::pow(vars[_x_start + i] - _mpc_trackTraj.AnglesList[i].base_x, 2); // x error
+        cout << "cost_distx: " << cost_distx << ",";
+
         fg[0] += _w_disty * CppAD::pow(vars[_y_start + i] - _mpc_trackTraj.AnglesList[i].base_y, 2); // y error
+
+        cost_disty =  _w_disty * CppAD::pow(vars[_y_start + i] - _mpc_trackTraj.AnglesList[i].base_y, 2); // y error
+        cout << "cost_disty: " << cost_disty << ",";
         fg[0] += _w_etheta * CppAD::pow(vars[_theta_start + i] - _mpc_trackTraj.AnglesList[i].base_theta, 2); // theta error
+
+        cost_etheta =  _w_etheta * CppAD::pow(vars[_theta_start + i] - _mpc_trackTraj.AnglesList[i].base_theta, 2); // theta error
+        cout << "cost_etheta: " << cost_etheta << ",";
+
         fg[0] += _w_jnt * CppAD::pow(vars[_joint1_start + i] - _mpc_trackTraj.AnglesList[i].joint1, 2); // joint1 error
+
+        cost_jnt1 =  _w_jnt * CppAD::pow(vars[_joint1_start + i] - _mpc_trackTraj.AnglesList[i].joint1, 2); // joint1 error
+        cout << "cost_joint1: " << cost_jnt1 << ",";
         fg[0] += _w_jnt * CppAD::pow(vars[_joint2_start + i] - _mpc_trackTraj.AnglesList[i].joint2, 2); // joint2 error
+        cost_jnt2 =  _w_jnt * CppAD::pow(vars[_joint2_start + i] - _mpc_trackTraj.AnglesList[i].joint2, 2); // joint2 error
+        cout << "cost_joint2: " << cost_jnt2 << ",";
         fg[0] += _w_jnt * CppAD::pow(vars[_joint3_start + i] - _mpc_trackTraj.AnglesList[i].joint3, 2); // joint3 error
+        cost_jnt3 =  _w_jnt * CppAD::pow(vars[_joint3_start + i] - _mpc_trackTraj.AnglesList[i].joint3, 2); // joint3 error
+        cout << "cost_joint3: " << cost_jnt3 << ",";
         fg[0] += _w_jnt * CppAD::pow(vars[_joint4_start + i] - _mpc_trackTraj.AnglesList[i].joint4, 2); // joint4 error
+        cost_jnt4 =  _w_jnt * CppAD::pow(vars[_joint4_start + i] - _mpc_trackTraj.AnglesList[i].joint4, 2); // joint4 error
+        cout << "cost_joint4: " << cost_jnt4 << ",";
+
         fg[0] += _w_jnt * CppAD::pow(vars[_joint5_start + i] - _mpc_trackTraj.AnglesList[i].joint5, 2); // joint5 error
+        cost_jnt5 =  _w_jnt * CppAD::pow(vars[_joint5_start + i] - _mpc_trackTraj.AnglesList[i].joint5, 2); // joint5 error
+        cout << "cost_joint5: " << cost_jnt5 << ",";
+
         fg[0] += _w_jnt * CppAD::pow(vars[_joint6_start + i] - _mpc_trackTraj.AnglesList[i].joint6, 2); // joint6 error
+        cost_jnt6 =  _w_jnt * CppAD::pow(vars[_joint6_start + i] - _mpc_trackTraj.AnglesList[i].joint6, 2); // joint6 error
+        cout << "cost_joint6: " << cost_jnt6 << std::endl;
         ////std::cout << "here is got ? debug5" << std::endl;
 
         //debug 计算障碍物误差
@@ -1805,17 +1831,22 @@ void FG_eval::operator()(ADvector& fg, const ADvector& vars)
         pedestrian_predpos[0] = _init_sphere[0][0];
         pedestrian_predpos[1] = _init_sphere[0][1] + i * _dt * _pedestrian_vel;
         pedestrian_predpos[2] = _init_sphere[0][2];
-        std::cout << "pedestrian_predpos: " << pedestrian_predpos[0] << "," << pedestrian_predpos[1] <<
-            "," << pedestrian_predpos[2] << std::endl;
+        // std::cout << "pedestrian_predpos: " << pedestrian_predpos[0] << "," << pedestrian_predpos[1] <<
+        //     "," << pedestrian_predpos[2] << std::endl;
 
         if(i == 0)
         {//第一个的目标函数值的计算，是由/tf的结果给出
             //_init_spere[1] -> base_left_front_sphere
             AD<double> distance_lf_ = CppAD::sqrt(CppAD::pow(_init_sphere[1][0] - pedestrian_predpos[0], 2) + CppAD::pow(_init_sphere[1][1] - pedestrian_predpos[1], 2));
             fg[0] += _w_base_collision * barried_func_base_(distance_lf_);
+
+            ////AD<double> distance_lb_ = CppAD::sqrt(CppAD::pow(_init_sphere[3][0] - pedestrian_predpos[0], 2) + CppAD::pow(_init_sphere[3][1] - pedestrian_predpos[1], 2));
+            cout << "distance_lf_: " << distance_lf_ << ",";
             //_init_spere[2] -> base_right_front_sphere
             AD<double> distance_rf_ = CppAD::sqrt(CppAD::pow(_init_sphere[2][0] - pedestrian_predpos[0], 2) + CppAD::pow(_init_sphere[2][1] - pedestrian_predpos[1], 2));
             fg[0] += _w_base_collision * barried_func_base_(distance_rf_);
+            ////AD<double> distance_rb_ = CppAD::sqrt(CppAD::pow(_init_sphere[4][0] - pedestrian_predpos[0], 2) + CppAD::pow(_init_sphere[4][1] - pedestrian_predpos[1], 2));
+            cout << "distance_rf_: " << distance_rf_ << ",";
             //_init_spere[3] -> base_left_rear_sphere
             AD<double> distance_lr_ = CppAD::sqrt(CppAD::pow(_init_sphere[3][0] - pedestrian_predpos[0], 2) + CppAD::pow(_init_sphere[3][1] - pedestrian_predpos[1], 2));
             fg[0] += _w_base_collision * barried_func_base_(distance_lr_);
@@ -1826,15 +1857,29 @@ void FG_eval::operator()(ADvector& fg, const ADvector& vars)
             //_init_sphere[5] -> arm_shoulder_sphere
             AD<double> distance_shoulder_ = CppAD::sqrt(CppAD::pow(_init_sphere[5][0] - pedestrian_predpos[0], 2) + CppAD::pow(_init_sphere[5][1] - pedestrian_predpos[1], 2));
             fg[0] += _w_shoulder_collision * barried_func_arm_(distance_shoulder_);
+            cout << "distance_shoulder_: " << distance_shoulder_ << ",";
+
             //_init_sphere[6] -> arm_elbow_sphere
             AD<double> distance_elbow_ = CppAD::sqrt(CppAD::pow(_init_sphere[6][0] - pedestrian_predpos[0], 2) + CppAD::pow(_init_sphere[6][1] - pedestrian_predpos[1], 2));
             fg[0] += _w_elbow_collision * barried_func_arm_(distance_elbow_);
+            cout << "distance_elbow_: " << distance_elbow_ << ",";
+
             //_init_sphere[7] -> arm_wrist_sphere
             AD<double> distance_wrist_ = CppAD::sqrt(CppAD::pow(_init_sphere[7][0] - pedestrian_predpos[0], 2) + CppAD::pow(_init_sphere[7][1] - pedestrian_predpos[1], 2));
             fg[0] += _w_wrist_collision * barried_func_arm_(distance_wrist_);
+            cout << "distance_wrist_: " << distance_wrist_ << ",";
+
             //_init_sphere[8] -> arm_gripper_sphere
             AD<double> distance_gripper_ = CppAD::sqrt(CppAD::pow(_init_sphere[8][0] - pedestrian_predpos[0], 2) + CppAD::pow(_init_sphere[8][1] - pedestrian_predpos[1], 2));
             fg[0] += _w_gripper_collision * barried_func_arm_(distance_gripper_);
+            cout << "distance_gripper_: " << distance_gripper_ << std::endl;
+
+            cout << "cost_base_lf: " << barried_func_base_(distance_lf_) << "," <<
+                "cost_base_rf: " << barried_func_base_(distance_rf_) << "," <<
+                "cost_shoulder: " << barried_func_arm_(distance_shoulder_) << "," <<
+                "cost_elbow: " << barried_func_arm_(distance_elbow_) << "," <<
+                "cost_wrist: " << barried_func_arm_(distance_wrist_) << "," <<
+                "cost_gripper: " << barried_func_arm_(distance_gripper_) << std::endl;
         }
         else
         {
@@ -1942,57 +1987,57 @@ void FG_eval::operator()(ADvector& fg, const ADvector& vars)
 
         }
 
-        //!self collision 因为不考虑速度先，所以用w_vel代替，自碰撞的系 // 先不考虑自碰撞
+    //     //!self collision 因为不考虑速度先，所以用w_vel代替，自碰撞的系 // 先不考虑自碰撞
 
-        // //!终端约束 //先不考虑 //不考虑不行了，最后一个位姿差太多了
-        /*
-        // if(_terminal_flag && i >= _terminal_nums)
-        // {
-        //     ADvector arg_tool_pose(9);
-        //     arg_tool_pose[0] = vars[_x_start + i];
-        //     arg_tool_pose[1] = vars[_y_start + i];
-        //     arg_tool_pose[2] = vars[_theta_start + i];
-        //     arg_tool_pose[3] = vars[_joint1_start + i];
-        //     arg_tool_pose[4] = vars[_joint2_start + i];
-        //     arg_tool_pose[5] = vars[_joint3_start + i];
-        //     arg_tool_pose[6] = vars[_joint4_start + i];
-        //     arg_tool_pose[7] = vars[_joint5_start + i];
-        //     arg_tool_pose[8] = vars[_joint6_start + i];
-        //     ADvector res_tool_pose_(16);
-        //     casadi_tool_pose(arg_tool_pose, res_tool_pose_);
+    //     // //!终端约束 //先不考虑 //不考虑不行了，最后一个位姿差太多了
+    //     /*
+    //     // if(_terminal_flag && i >= _terminal_nums)
+    //     // {
+    //     //     ADvector arg_tool_pose(9);
+    //     //     arg_tool_pose[0] = vars[_x_start + i];
+    //     //     arg_tool_pose[1] = vars[_y_start + i];
+    //     //     arg_tool_pose[2] = vars[_theta_start + i];
+    //     //     arg_tool_pose[3] = vars[_joint1_start + i];
+    //     //     arg_tool_pose[4] = vars[_joint2_start + i];
+    //     //     arg_tool_pose[5] = vars[_joint3_start + i];
+    //     //     arg_tool_pose[6] = vars[_joint4_start + i];
+    //     //     arg_tool_pose[7] = vars[_joint5_start + i];
+    //     //     arg_tool_pose[8] = vars[_joint6_start + i];
+    //     //     ADvector res_tool_pose_(16);
+    //     //     casadi_tool_pose(arg_tool_pose, res_tool_pose_);
 
-        //     cout << "ee_pos: " << res_tool_pose_[12] << "," << res_tool_pose_[13] << "," << res_tool_pose_[14] << endl;
-        //     //!网上说，eigen库的求欧拉角不是很准确，改用tf
-        //     // Eigen::Matrix4d EE_Matrix;
-        //     // EE_Matrix << CppAD::Value(CppAD::Var2Par(res_tool_pose_[0])), CppAD::Value(CppAD::Var2Par(res_tool_pose_[4])), CppAD::Value(CppAD::Var2Par(res_tool_pose_[8])), CppAD::Value(CppAD::Var2Par(res_tool_pose_[12])),
-        //     //                 CppAD::Value(CppAD::Var2Par(res_tool_pose_[1])), CppAD::Value(CppAD::Var2Par(res_tool_pose_[5])), CppAD::Value(CppAD::Var2Par(res_tool_pose_[9])), CppAD::Value(CppAD::Var2Par(res_tool_pose_[13])),
-        //     //                 CppAD::Value(CppAD::Var2Par(res_tool_pose_[2])), CppAD::Value(CppAD::Var2Par(res_tool_pose_[6])), CppAD::Value(CppAD::Var2Par(res_tool_pose_[10])), CppAD::Value(CppAD::Var2Par(res_tool_pose_[14])),
-        //     //                 CppAD::Value(CppAD::Var2Par(res_tool_pose_[3])), CppAD::Value(CppAD::Var2Par(res_tool_pose_[7])), CppAD::Value(CppAD::Var2Par(res_tool_pose_[11])), CppAD::Value(CppAD::Var2Par(res_tool_pose_[15]));
+    //     //     cout << "ee_pos: " << res_tool_pose_[12] << "," << res_tool_pose_[13] << "," << res_tool_pose_[14] << endl;
+    //     //     //!网上说，eigen库的求欧拉角不是很准确，改用tf
+    //     //     // Eigen::Matrix4d EE_Matrix;
+    //     //     // EE_Matrix << CppAD::Value(CppAD::Var2Par(res_tool_pose_[0])), CppAD::Value(CppAD::Var2Par(res_tool_pose_[4])), CppAD::Value(CppAD::Var2Par(res_tool_pose_[8])), CppAD::Value(CppAD::Var2Par(res_tool_pose_[12])),
+    //     //     //                 CppAD::Value(CppAD::Var2Par(res_tool_pose_[1])), CppAD::Value(CppAD::Var2Par(res_tool_pose_[5])), CppAD::Value(CppAD::Var2Par(res_tool_pose_[9])), CppAD::Value(CppAD::Var2Par(res_tool_pose_[13])),
+    //     //     //                 CppAD::Value(CppAD::Var2Par(res_tool_pose_[2])), CppAD::Value(CppAD::Var2Par(res_tool_pose_[6])), CppAD::Value(CppAD::Var2Par(res_tool_pose_[10])), CppAD::Value(CppAD::Var2Par(res_tool_pose_[14])),
+    //     //     //                 CppAD::Value(CppAD::Var2Par(res_tool_pose_[3])), CppAD::Value(CppAD::Var2Par(res_tool_pose_[7])), CppAD::Value(CppAD::Var2Par(res_tool_pose_[11])), CppAD::Value(CppAD::Var2Par(res_tool_pose_[15]));
 
-        //     // Eigen::Vector3d tool_position = EE_Matrix.block<3, 1>(0, 3);
-        //     // Eigen::Vector3d tool_orientation = (EE_Matrix.block<3, 3>(0, 0)).eulerAngles(2, 1, 0);
-        //     //!又犯了致命错误： 1、调用了非数学库计算ojective； 2、这里面不可以出现if判断
-        //     // tf::Matrix3x3 ee_rotation(
-        //     //     CppAD::Value(CppAD::Var2Par(res_tool_pose_[0])), CppAD::Value(CppAD::Var2Par(res_tool_pose_[4])), CppAD::Value(CppAD::Var2Par(res_tool_pose_[8])),
-        //     //     CppAD::Value(CppAD::Var2Par(res_tool_pose_[1])), CppAD::Value(CppAD::Var2Par(res_tool_pose_[5])), CppAD::Value(CppAD::Var2Par(res_tool_pose_[9])),
-        //     //     CppAD::Value(CppAD::Var2Par(res_tool_pose_[2])), CppAD::Value(CppAD::Var2Par(res_tool_pose_[6])), CppAD::Value(CppAD::Var2Par(res_tool_pose_[10])));
-        //     // tf::Vector3 ee_position(
-        //     //     CppAD::Value(CppAD::Var2Par(res_tool_pose_[12])), CppAD::Value(CppAD::Var2Par(res_tool_pose_[13])), CppAD::Value(CppAD::Var2Par(res_tool_pose_[14])));
-        //     // tf::Vector3 ee_orientation;
-        //     // ee_rotation.getEulerYPR(ee_orientation[0], ee_orientation[1], ee_orientation[2]);
-        //     fg[0] += _w_hard_EE_tool * (CppAD::pow(res_tool_pose_[12] - EE_X, 2) + CppAD::pow(res_tool_pose_[13] - EE_Y, 2)
-        //                 + CppAD::pow(res_tool_pose_[14] - EE_Z, 2));
+    //     //     // Eigen::Vector3d tool_position = EE_Matrix.block<3, 1>(0, 3);
+    //     //     // Eigen::Vector3d tool_orientation = (EE_Matrix.block<3, 3>(0, 0)).eulerAngles(2, 1, 0);
+    //     //     //!又犯了致命错误： 1、调用了非数学库计算ojective； 2、这里面不可以出现if判断
+    //     //     // tf::Matrix3x3 ee_rotation(
+    //     //     //     CppAD::Value(CppAD::Var2Par(res_tool_pose_[0])), CppAD::Value(CppAD::Var2Par(res_tool_pose_[4])), CppAD::Value(CppAD::Var2Par(res_tool_pose_[8])),
+    //     //     //     CppAD::Value(CppAD::Var2Par(res_tool_pose_[1])), CppAD::Value(CppAD::Var2Par(res_tool_pose_[5])), CppAD::Value(CppAD::Var2Par(res_tool_pose_[9])),
+    //     //     //     CppAD::Value(CppAD::Var2Par(res_tool_pose_[2])), CppAD::Value(CppAD::Var2Par(res_tool_pose_[6])), CppAD::Value(CppAD::Var2Par(res_tool_pose_[10])));
+    //     //     // tf::Vector3 ee_position(
+    //     //     //     CppAD::Value(CppAD::Var2Par(res_tool_pose_[12])), CppAD::Value(CppAD::Var2Par(res_tool_pose_[13])), CppAD::Value(CppAD::Var2Par(res_tool_pose_[14])));
+    //     //     // tf::Vector3 ee_orientation;
+    //     //     // ee_rotation.getEulerYPR(ee_orientation[0], ee_orientation[1], ee_orientation[2]);
+    //     //     fg[0] += _w_hard_EE_tool * (CppAD::pow(res_tool_pose_[12] - EE_X, 2) + CppAD::pow(res_tool_pose_[13] - EE_Y, 2)
+    //     //                 + CppAD::pow(res_tool_pose_[14] - EE_Z, 2));
 
-        //     cost_etheta +=
-        //         _w_hard_EE_tool * (CppAD::pow(res_tool_pose_[12] - EE_X, 2) + CppAD::pow(res_tool_pose_[13] - EE_Y, 2)
-        //                 + CppAD::pow(res_tool_pose_[14] - EE_Z, 2));
+    //     //     cost_etheta +=
+    //     //         _w_hard_EE_tool * (CppAD::pow(res_tool_pose_[12] - EE_X, 2) + CppAD::pow(res_tool_pose_[13] - EE_Y, 2)
+    //     //                 + CppAD::pow(res_tool_pose_[14] - EE_Z, 2));
 
-        //     // 到了flag，就说明在这次prediction中，会到预测到终点；
-        //     // 那么就在预测到终点的time step，开始计算terminal 误差，就是EE的pose和期望的pose的误差
-        //     // 硬约束采取该项权重系数很大很大来实现，哦对，还要引入一个参数，_w_hard_EE_tool
-        //     //fg[0] += calculate_terminalCost(ee_position, ee_orientation);
-        // }
-        */
+    //     //     // 到了flag，就说明在这次prediction中，会到预测到终点；
+    //     //     // 那么就在预测到终点的time step，开始计算terminal 误差，就是EE的pose和期望的pose的误差
+    //     //     // 硬约束采取该项权重系数很大很大来实现，哦对，还要引入一个参数，_w_hard_EE_tool
+    //     //     //fg[0] += calculate_terminalCost(ee_position, ee_orientation);
+    //     // }
+    //     */
         ADvector arg_tool_pose(9);
         arg_tool_pose[0] = vars[_x_start + i];
         arg_tool_pose[1] = vars[_y_start + i];
@@ -2015,25 +2060,37 @@ void FG_eval::operator()(ADvector& fg, const ADvector& vars)
                 _w_vector_terminal[i] * (CppAD::pow(res_tool_pose_[12] - EE_X, 2) + CppAD::pow(res_tool_pose_[13] - EE_Y, 2)
                         + CppAD::pow(res_tool_pose_[14] - EE_Z, 2));
 
-    //     // 计算cost
-    //     // 需要改一下parseCSV的traj代码，将theta放在position.z里
-    //     // cost_distx += _w_distx * CppAD::pow(vars[_x_start + i] - _mpc_trackTraj.poses[i].pose.position.x, 2);
-    //     // cost_disty +=  (_w_disty * CppAD::pow(vars[_y_start + i] - _mpc_trackTraj.poses[i].pose.position.y, 2));
-    //     // cost_etheta +=  (_w_etheta * CppAD::pow(vars[_theta_start + i] - _mpc_trackTraj.poses[i].pose.position.z, 2));
+    // //     // 计算cost
+    // //     // 需要改一下parseCSV的traj代码，将theta放在position.z里
+    // //     // cost_distx += _w_distx * CppAD::pow(vars[_x_start + i] - _mpc_trackTraj.poses[i].pose.position.x, 2);
+    // //     // cost_disty +=  (_w_disty * CppAD::pow(vars[_y_start + i] - _mpc_trackTraj.poses[i].pose.position.y, 2));
+    // //     // cost_etheta +=  (_w_etheta * CppAD::pow(vars[_theta_start + i] - _mpc_trackTraj.poses[i].pose.position.z, 2));
     }
     cout << "-----------------------------------------------" <<endl;
     //diff -> get the angle-acc & jerk
     for (int i = 0; i < _mpc_steps - 1; i++) {
         fg[0] += _w_vel * CppAD::pow(vars[_x_start + i + 1] - vars[_x_start + i], 2);
+        cout << "vel_x_cost: " << _w_vel * CppAD::pow(vars[_x_start + i + 1] - vars[_x_start + i], 2) << ",";
+
         fg[0] += _w_vel * CppAD::pow(vars[_y_start + i + 1] - vars[_y_start + i], 2);
+        cout << "vel_y_cost: " << _w_vel * CppAD::pow(vars[_y_start + i + 1] - vars[_y_start + i], 2) << ",";
+
         fg[0] += _w_angvel * CppAD::pow(vars[_theta_start + i + 1] - vars[_theta_start + i], 2);
+        cout << "angvel_cost: " << _w_angvel * CppAD::pow(vars[_theta_start + i + 1] - vars[_theta_start + i], 2) << ",";
 
         fg[0] += _w_jntvel * CppAD::pow(vars[_joint1_start + i + 1] - vars[_joint1_start + i], 2);
+        cout << "jntvel1_cost: " << _w_jntvel * CppAD::pow(vars[_joint1_start + i + 1] - vars[_joint1_start + i], 2) << ",";
         fg[0] += _w_jntvel * CppAD::pow(vars[_joint2_start + i + 1] - vars[_joint2_start + i], 2);
+        cout << "jntvel2_cost: " << _w_jntvel * CppAD::pow(vars[_joint2_start + i + 1] - vars[_joint2_start + i], 2) << ",";
         fg[0] += _w_jntvel * CppAD::pow(vars[_joint3_start + i + 1] - vars[_joint3_start + i], 2);
+        cout << "jntvel3_cost: " << _w_jntvel * CppAD::pow(vars[_joint3_start + i + 1] - vars[_joint3_start + i], 2) << ",";
         fg[0] += _w_jntvel * CppAD::pow(vars[_joint4_start + i + 1] - vars[_joint4_start + i], 2);
+        cout << "jntvel4_cost: " << _w_jntvel * CppAD::pow(vars[_joint4_start + i + 1] - vars[_joint4_start + i], 2) << ",";
         fg[0] += _w_jntvel * CppAD::pow(vars[_joint5_start + i + 1] - vars[_joint5_start + i], 2);
+        cout << "jntvel5_cost: " << _w_jntvel * CppAD::pow(vars[_joint5_start + i + 1] - vars[_joint5_start + i], 2) << ",";
         fg[0] += _w_jntvel * CppAD::pow(vars[_joint6_start + i + 1] - vars[_joint6_start + i], 2);
+        cout << "jntvel6_cost: " << _w_jntvel * CppAD::pow(vars[_joint6_start + i + 1] - vars[_joint6_start + i], 2) << std::endl;
+        ;
     }
 
     //!Minimize the use of actuators.速度变化顺滑些，惩罚加速度 //0306 15:13实验证明，必须要有这一项，否则机器人抖得厉害
@@ -2117,15 +2174,15 @@ void FG_eval::operator()(ADvector& fg, const ADvector& vars)
         AD<double> joint4_speed_ = vars[_jntvel4_start + i];
         AD<double> joint5_speed_ = vars[_jntvel5_start + i];
         AD<double> joint6_speed_ = vars[_jntvel6_start + i];
-        std::cout << "速度： " << vx_ << ","
-                  << vy_ << ","
-                  << w_ << ","
-                  << joint1_speed_ << ","
-                  << joint2_speed_ << ","
-                  << joint3_speed_ << ","
-                  << joint4_speed_ << ","
-                  << joint5_speed_ << ","
-                  << joint6_speed_ << std::endl;
+        // std::cout << "速度： " << vx_ << ","
+        //           << vy_ << ","
+        //           << w_ << ","
+        //           << joint1_speed_ << ","
+        //           << joint2_speed_ << ","
+        //           << joint3_speed_ << ","
+        //           << joint4_speed_ << ","
+        //           << joint5_speed_ << ","
+        //           << joint6_speed_ << std::endl;
         ////std::cout << "F[" << i << "] #################################### STATE 3" << std::endl;
 
         //! 使用运动学的积分方程,这些都是线性的，所以不需要什么运动学方程，直接乘时间就行。毕竟都是在world系下进行的
@@ -2142,5 +2199,5 @@ void FG_eval::operator()(ADvector& fg, const ADvector& vars)
         fg[2 + _joint6_start + i] = joint6_angle_t1 - (joint6_angle_t0 + joint6_speed_ * _dt);
         ////std::cout << "F[" << i << "] #################################### STATE 4" << std::endl;
     }
-    cout << "cost_EE_position: " << cost_etheta << endl;
+    //cout << "cost_EE_position: " << cost_etheta << endl;
 }
