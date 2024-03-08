@@ -596,6 +596,8 @@ vector<vector<double>> MPC::Solve(Eigen::VectorXd state, JointTrajPub::AnglesLis
     auto solve_end_stamp = std::chrono::high_resolution_clock::now();
 
     auto duration_solve = std::chrono::duration_cast<std::chrono::milliseconds>(solve_end_stamp - solve_start_stamp);
+    cout << "CHRONO  MPC solve time: " << duration_solve.count() << "ms" << endl;
+
     double index_result = std::ceil(duration_solve.count() / 100.0);
 
     //debug 根本不需要确定10啊，这后面push back不就成size=20了么。。。
@@ -605,7 +607,7 @@ vector<vector<double>> MPC::Solve(Eigen::VectorXd state, JointTrajPub::AnglesLis
     {
         std::cout << "$$$$$$ MPC solved successfully! $$$$$$" << std::endl;
         //TODO
-        for(int j = index_result + 6; j < _mpc_steps - 1; j++)
+        for(int j = index_result /*+ 6*/; j < _mpc_steps - 1; j++)
         {
             vector<double> result;
             // read 如果MPC求解出来了结果，那么机器人执行这个结果

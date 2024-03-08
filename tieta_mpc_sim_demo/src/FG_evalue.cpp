@@ -1806,7 +1806,7 @@ void FG_eval::operator()(ADvector& fg, const ADvector& vars)
 
         cost_jnt1 =  _w_jnt * CppAD::pow(vars[_joint1_start + i] - _mpc_trackTraj.AnglesList[i].joint1, 2); // joint1 error
         cout << "cost_joint1: " << cost_jnt1 << ",";
-        fg[0] += _w_jnt * CppAD::pow(vars[_joint2_start + i] - _mpc_trackTraj.AnglesList[i].joint2, 2); // joint2 error
+        fg[0] +=  1000 * _w_jnt * CppAD::pow(vars[_joint2_start + i] - _mpc_trackTraj.AnglesList[i].joint2, 2); // joint2 error
         cost_jnt2 =  _w_jnt * CppAD::pow(vars[_joint2_start + i] - _mpc_trackTraj.AnglesList[i].joint2, 2); // joint2 error
         cout << "cost_joint2: " << cost_jnt2 << ",";
         fg[0] += _w_jnt * CppAD::pow(vars[_joint3_start + i] - _mpc_trackTraj.AnglesList[i].joint3, 2); // joint3 error
@@ -2080,7 +2080,7 @@ void FG_eval::operator()(ADvector& fg, const ADvector& vars)
 
         fg[0] += _w_jntvel * CppAD::pow(vars[_joint1_start + i + 1] - vars[_joint1_start + i], 2);
         cout << "jntvel1_cost: " << _w_jntvel * CppAD::pow(vars[_joint1_start + i + 1] - vars[_joint1_start + i], 2) << ",";
-        fg[0] += _w_jntvel * CppAD::pow(vars[_joint2_start + i + 1] - vars[_joint2_start + i], 2);
+        fg[0] += 0.01 *_w_jntvel * CppAD::pow(vars[_joint2_start + i + 1] - vars[_joint2_start + i], 2);
         cout << "jntvel2_cost: " << _w_jntvel * CppAD::pow(vars[_joint2_start + i + 1] - vars[_joint2_start + i], 2) << ",";
         fg[0] += _w_jntvel * CppAD::pow(vars[_joint3_start + i + 1] - vars[_joint3_start + i], 2);
         cout << "jntvel3_cost: " << _w_jntvel * CppAD::pow(vars[_joint3_start + i + 1] - vars[_joint3_start + i], 2) << ",";
@@ -2101,7 +2101,7 @@ void FG_eval::operator()(ADvector& fg, const ADvector& vars)
         fg[0] += _w_angacc * CppAD::pow(vars[_angvel_start + i + 1] - vars[_angvel_start + i], 2);
 
         fg[0] += _w_jntacc * CppAD::pow(vars[_jntvel1_start + i + 1] - vars[_jntvel1_start + i], 2);
-        fg[0] += _w_jntacc * CppAD::pow(vars[_jntvel2_start + i + 1] - vars[_jntvel2_start + i], 2);
+        fg[0] += 0.01 * _w_jntacc * CppAD::pow(vars[_jntvel2_start + i + 1] - vars[_jntvel2_start + i], 2);
         fg[0] += _w_jntacc * CppAD::pow(vars[_jntvel3_start + i + 1] - vars[_jntvel3_start + i], 2);
         fg[0] += _w_jntacc * CppAD::pow(vars[_jntvel4_start + i + 1] - vars[_jntvel4_start + i], 2);
         fg[0] += _w_jntacc * CppAD::pow(vars[_jntvel5_start + i + 1] - vars[_jntvel5_start + i], 2);
