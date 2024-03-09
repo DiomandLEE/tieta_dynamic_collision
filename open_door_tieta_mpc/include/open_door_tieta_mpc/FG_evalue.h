@@ -6,6 +6,7 @@
 #include <Eigen/Core>
 #include <Eigen/Dense>
 #include "ros/ros.h"
+#include <Eigen/Geometry>
 
 //tf include
 #include <tf/transform_listener.h>
@@ -82,6 +83,21 @@ class FG_eval
         //动态障碍物阈值
         double _pedestrian_threshold, _pedestrian_vel;
         vector<Eigen::Vector3d> _init_sphere;
+
+        Eigen::Vector3d tv_normal, closet_right_normal, closet_front_normal;
+        Eigen::Vector3d tv_point, closet_point; //closet point for 柜子右面和前面，计算距离用的
+        //上面这个两个point是为了计算法向量
+
+        Eigen::Vector3d closet_right_proj_, closet_front_proj_; //这个是求投影的vector
+        Eigen::Vector3d closet_right_proj_start_point, closet_front_proj_start_point; //这个是求投影的起始点
+        //对应柜子的右后方的点 对应柜子的左前点即closet_bottom_left_door_link x
+        Eigen::Vector4d door_init_normal; //无论门在什么角度，门系上的法向量都是它
+        Eigen::Vector4d door_bottom_tip_point; //in door frame
+        Eigen::Vector4d door_handle_point; //in door
+        Eigen::Vector3d door_link_origin; //in world
+
+        //旋转轴
+        Eigen::Vector3d door_axis;
 
         //terminal flag //todo 这个应该是用不着了，因为没有next step
         bool _terminal_flag;

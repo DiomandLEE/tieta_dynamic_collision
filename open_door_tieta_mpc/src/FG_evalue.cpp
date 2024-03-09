@@ -1,7 +1,4 @@
 #include "open_door_tieta_mpc/FG_evalue.h"
-//#include <cppad/cppad.hpp>
-//#include <NLsolver/cppad/ipopt/solve.hpp>
-#include <Eigen/Core>
 typedef CPPAD_TESTVECTOR(double) Dvector;
 typedef CPPAD_TESTVECTOR(AD<double>) ADvector;
 using CppAD::AD;
@@ -58,6 +55,27 @@ FG_eval::FG_eval(DoorTrajPub::AnglesList _trackTraj, vector<Eigen::Vector3d> tf_
     //_terminal_nums = _mpc_steps - 1;
 
     _file_debug_path = " ";
+
+    //都得在world系，因为检测的碰撞点都在world系
+    tv_normal << -1, 0, 0;
+    closet_right_normal << 0, -1, 0;
+    closet_front_normal << -1, 0, 0;
+
+    tv_point << 1.665, -1.1, 0.39;
+    closet_point << 1.4755, 0.03, 0.085;
+
+    closet_right_proj_ << -1, 0, 0;
+    closet_front_proj_ << 0, -1, 0;
+
+    closet_front_proj_start_point << 1.4755, 1.2, 0.085; //柜子的宽度是0.58
+    closet_right_proj_start_point << 2.05, 0.03, 0.085;    //柜子的长度是1.17 //柜门的长度是0.56
+
+    door_init_normal << 1, 0, 0, 1;
+    door_bottom_tip_point << 0, -0.56, 0, 1;
+    door_hanlde_point << 0.0105, -0.507, 1.051498720329, 1;
+    door_link_origin << 1.4755, 0.0605, 0.085;
+
+    door_axis << 0, 0, 1;
 }
 
 void FG_eval::LoadParams(const std::map<string, double> &params)
@@ -1819,37 +1837,89 @@ void FG_eval::operator()(ADvector& fg, const ADvector& vars)
             fg[0] += _w_base_collision * barried_func_base_(distance_rr_);
 
             //TODO 计算和电视柜子平面的距离，并惩罚防止撞到电视柜
-            Eigen::Vector3d tv_normal; //电视柜的法向量
-            Eigen::Vector3d tv_point; //电视柜表面的点
+            //Eigen::Vector3d tv_normal; //电视柜的法向量
+            //Eigen::Vector3d tv_point; //电视柜表面的点
             //计算向量点乘，也就是对应相乘相加
             //maybe：
-            auto dist_ = (tv_point[0] - res_lf_[0]) * tv_normal[0] +
-                                (tv_point[1] - res_lf_[1]) * tv_normal[1] + (tv_point[2] - res_lf_[2]) * tv_normal[2];
+            auto dist_tv = (-tv_point[0] + res_lf_[0]) * tv_normal[0] +
+                                (-tv_point[1] + res_lf_[1]) * tv_normal[1] + (-tv_point[2] + res_lf_[2]) * tv_normal[2];
 
             //TODO 计算到柜子正面、侧面的距离，并惩罚，防止撞到衣柜
-            Eigen::Vector3d closet_normal; //衣柜的法向量
-            Eigen::Vector3d closet_point; //衣柜表面的点
+            //Eigen::Vector3d closet_normal; //衣柜的法向量
+            //Eigen::Vector3d closet_point; //衣柜表面的点
             //计算向量点乘，也就是对应相乘相加
             //maybe：
-            auto dist_ = (closet_point[0] - res_lf_[0]) * closet_normal[0] +
-                                (closet_point[1] - res_lf_[1]) * closet_normal[1] + (closet_point[2] - res_lf_[2]) * closet_normal[2];
+            auto dist_closet_right = (-closet_point[0] + res_lf_[0]) * closet_right_normal[0] +
+                                (-closet_point[1] + res_lf_[1]) * closet_right_normal[1] + (-closet_point[2] + res_lf_[2]) * closet_right_normal[2];
+
+            auto proj_closet_right = (-closet_right_proj_start_point[0] + res_lf_[0]) * closet_right_normal[0] +
+                                (-closet_right_proj_start_point[1] + res_lf_[1]) * closet_right_normal[1] + (-closet_right_proj_start_point[2] + res_lf_[2]) * closet_right_normal[2];
+
             //还有一个
+            auto dist_closet_front = (-closet_point[0] + res_lf_[0]) * closet_front_normal[0] +
+                                (-closet_point[1] + res_lf_[1]) * closet_front_normal[1] + (-closet_point[2] + res_lf_[2]) * closet_front_normal[2];
+            auto proj_closet_front = (-closet_front_proj_start_point[0] + res_lf_[0]) * closet_right_normal[0] +
+                                (-closet_front_proj_start_point[1] + res_lf_[1]) * closet_right_normal[1] + (-closet_front_proj_start_point[2] + res_lf_[2]) * closet_right_normal[2];
+
+            //TODO 由于法向量会矫枉过正，还得加入在线段上的投影
+
 
             //TODO 计算到移动柜门的距离
             //柜门打开的角度
-            Eigen::Vector3d closet_door_normal; //柜门的法向量 //最初的，那就是相对于door系
+            //Eigen::Vector3d closet_door_normal; //柜门的法向量 //最初的，那就是相对于door系
             double door_angle = _mpc_trackTraj.AnglesList[i].joint_door;
             //旋转轴
-            Eigen::Vector3d door_axis;
+            //Eigen::Vector3d door_axis;
             //新的door系，相对于之前的旋转矩阵，这个是new_door系
-            Eigen::AngleAxisd rotation_(door_angle, door_axis);
+            Eigen::AngleAxisd rotation_(door_angle, door_axis); //TODO 这些用eigen库来算没事儿，因为这些都不包含vars[]
 
-            Eigen::Matrix3d new_door = rotation_.toRotationMatrix();
+            Eigen::Matrix3d door2new_door = rotation_.toRotationMatrix();
             //new_door的法向量：
-            Eigen::Vector3d new_door_normal = new_door * closet_door_normal;
+            //Eigen::Vector3d new_door_normal = door2new_door * closet_door_normal;
 
-            //todo
+            //TODO  new_door 到 door的T
             //new_door系上的点（x,y,z） -> 旋转矩阵到 door系 -> 旋转矩阵到world系
+            //首先，计算new_door -> door
+            Eigen::Matrix3d new_door2door_rotate = door2new_door.transpose(); //转置也可以，因为正交矩阵，转置和逆等同。
+            //平移向量是
+            Eigen::Vector3d new_door_trans = Eigen::Vector3d::Zero();
+            //构造齐次矩阵
+            Eigen::Matrix4d new_door2door = Eigen::Matrix4d::Identity();
+            new_door2door.block<3,3>(0,0) = new_door2door_rotate;
+            new_door2door.block<3,1>(0,3) = new_door_trans;
+
+            //door到world的T
+            //Eigen::Vector3d door_trans(4.4555, 0.0905, 0.0653); //4.4555; 0.0905; 0.06535 closet_bottom_right_door_link
+            double angle = M_PI; // 绕z轴旋转180度，即π弧度
+
+            Eigen::Matrix3d door2world_rotate;
+            door2world_rotate << -1 , 0, 0,
+                                0, -1, 0,
+                                0, 0, 1;
+
+            // 构造齐次变换矩阵
+            Eigen::Matrix4d door2world = Eigen::Matrix4d::Identity();
+            door2world.block<3, 3>(0, 0) = door2world_rotate;
+            door2world.block<3, 1>(0, 3) = door_link_origin;
+
+            // 计算new_door到world的T
+            Eigen::Matrix4d new_door2world = door2world * new_door2door;
+
+            Eigen::Vector3d door_normal_world = (new_door2world * door_init_normal).block<3, 1>(0, 0);
+            Eigen::Vector3d door_bottom_tip_point_world = (new_door2world * door_bottom_tip_point).block<3, 1>(0, 0);
+
+            //TODO 计算距离：
+            auto dist_new_door = (-door_link_origin[0] + res_lf_[0]) * door_normal_world[0] +
+                                (-door_link_origin[1] + res_lf_[1]) * door_normal_world[1] + (-door_link_origin[2] + res_lf_[2]) * door_normal_world[2];
+            Eigen::Vector3d door_bottom_ = door_bottom_tip_point_world - door_link_origin;
+            auto proj_new_door = (-door_link_origin[0] + res_lf_[0]) * door_bottom_[0] +
+                                (-door_link_origin[1] + res_lf_[1]) * door_bottom_[1] + (-door_link_origin[2] + res_lf_[2]) * door_bottom_[2]; //用来计算到平面的距离的惩罚函数的惩罚系数是否为0
+
+            Eigen::Vector3d door_hanlde_point_world
+                = (new_door2world * door_hanlde_point).block<3, 1>(0, 0); //TODO 机器人不能离把手太远
+
+
+
         }
 
         // ADvector arg_tool_pose(9);
