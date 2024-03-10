@@ -42,6 +42,20 @@ class FG_eval
         //barried func
         AD<double> barried_func_arm_(AD<double> distance_);
         AD<double> barried_func_base_(AD<double> distance_);
+        //proj func 投影函数
+        AD<double> proj_func_closet_(AD<double> distance_); //以0为分界,值域为0，1
+        double _proj_func_closet_w, _proj_func_closet_r, _proj_func_closet_m, _proj_func_closet_n;
+
+        AD<double> proj_func_door_(AD<double> distance_); //几字型
+        double _proj_func_door_w1, _proj_func_door_r1, _proj_func_door_m1, _proj_func_door_n1;
+        double _proj_func_door_w2, _proj_func_door_r2, _proj_func_door_m2, _proj_func_door_n2;
+
+        AD<double> barried_normal_dist_(AD<double> distance_); //以0为分界
+        double _barried_normal_tip_handle_w, _barried_normal_tip_handle_r, _barried_normal_tip_handle_m, _barried_normal_tip_handle_n;
+        AD<double> barried_tip_door_(AD<double> distance_); //以0为分界
+        AD<double> barried_handle_arm_(AD<double> distance_); //以0为分界
+        double _w_normal, _w_tip_bottom_door, _w_handle_arm_base;
+
 
         typedef CPPAD_TESTVECTOR(AD<double>) ADvector;
 
@@ -54,6 +68,9 @@ class FG_eval
         int casadi_base_rf(ADvector arg, ADvector &res);
         int casadi_base_lr(ADvector arg, ADvector &res);
         int casadi_base_rr(ADvector arg, ADvector &res);
+        //由于UR的安装位置，计算肩膀到handle的距离时，采用right_arm_shoulder_link进行计算，距离尽量小于1.0m ~ 1.2m
+        //输入是4维ADvector，最后一个是0.0
+        int casadi_arm_fake_base(ADvector arg, ADvector &res);
 
         //定义目标函数F和约束信息函数G  MPC implementation (cost func & constraints)
 
@@ -81,7 +98,7 @@ class FG_eval
         //碰撞安全阈值
         double _base_threshold, _shoulder_threshold, _elbow_threshold, _wrist_threshold, _gripper_threshold;
         //动态障碍物阈值
-        double _pedestrian_threshold, _pedestrian_vel;
+        double _pedestrian_threshold, _pedestrian_vel_x, _pedestrian_vel_y;
         vector<Eigen::Vector3d> _init_sphere;
 
         Eigen::Vector3d tv_normal, closet_right_normal, closet_front_normal;

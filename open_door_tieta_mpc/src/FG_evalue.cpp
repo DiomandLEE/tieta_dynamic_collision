@@ -72,7 +72,7 @@ FG_eval::FG_eval(DoorTrajPub::AnglesList _trackTraj, vector<Eigen::Vector3d> tf_
 
     door_init_normal << 1, 0, 0, 1;
     door_bottom_tip_point << 0, -0.56, 0, 1;
-    door_hanlde_point << 0.0105, -0.507, 1.051498720329, 1;
+    door_handle_point << 0.0105, -0.507, 1.051498720329, 1;
     door_link_origin << 1.4755, 0.0605, 0.085;
 
     door_axis << 0, 0, 1;
@@ -1698,6 +1698,116 @@ int FG_eval::casadi_base_rr(ADvector arg, ADvector& res)
     res[15] = a3; // if (res[0]!=0) res[0][15]=a3;
     return 0;
 }
+int FG_eval::casadi_arm_fake_base(ADvector arg, ADvector& res)
+{
+    /* T_fk:(i0[3])->(o0[4x4]) */
+    //read arg.size():3
+    //['base_y_base_x', 'base_theta_base_y', 'base_link_base_theta', 'right_arm_shoulder_pan_joint']
+    AD<double> a0, a1, a10, a11, a12, a13, a14, a15, a16, a2, a3, a4, a5, a6, a7, a8, a9;
+    a0=1.2246467991473532e-16;
+    a1 = arg[2]; // a1=arg[0]? arg[0][2] : 0;
+    a2=cos(a1);
+    a3=6.1232339957367660e-17;
+    a4=-7.0710678118654746e-01;
+    a1=sin(a1);
+    a5=(a4*a1);
+    a6=(a3*a5);
+    a6=(a2-a6);
+    a7=-6.1232339957367660e-17;
+    a8=7.0710678118654757e-01;
+    a9=(a8*a1);
+    a10=(a7*a9);
+    a6=(a6-a10);
+    a10=(a0*a6);
+    a11=(a3*a2);
+    a11=(a11-a9);
+    a10=(a10-a11);
+    a12 = arg[3]; // a12=arg[0]? arg[0][3] : 0;
+    a13=cos(a12);
+    a14=(a10*a13);
+    a15=-1.2246467991473532e-16;
+    a11=(a15*a11);
+    a11=(a11-a6);
+    a12=sin(a12);
+    a6=(a11*a12);
+    a14=(a14+a6);
+    res[0] = a14; // if (res[0]!=0) res[0][0]=a14;
+    a4=(a4*a2);
+    a14=(a3*a4);
+    a14=(a1+a14);
+    a8=(a8*a2);
+    a6=(a7*a8);
+    a14=(a14+a6);
+    a0=(a0*a14);
+    a3=(a3*a1);
+    a3=(a3+a8);
+    a0=(a0-a3);
+    a6=(a0*a13);
+    a15=(a15*a3);
+    a15=(a15-a14);
+    a14=(a15*a12);
+    a6=(a6+a14);
+    res[1] = a6; // if (res[0]!=0) res[0][1]=a6;
+    a6=7.0710678118654746e-01;
+    a14=(a6*a13);
+    a3=8.6595605623549329e-17;
+    a16=(a3*a12);
+    a14=(a14+a16);
+    res[2] = a14; // if (res[0]!=0) res[0][2]=a14;
+    a14=0.;
+    res[3] = a14; // if (res[0]!=0) res[0][3]=a14;
+    a11=(a11*a13);
+    a10=(a10*a12);
+    a11=(a11-a10);
+    res[4] = a11; // if (res[0]!=0) res[0][4]=a11;
+    a15=(a15*a13);
+    a0=(a0*a12);
+    a15=(a15-a0);
+    res[5] = a15; // if (res[0]!=0) res[0][5]=a15;
+    a3=(a3*a13);
+    a6=(a6*a12);
+    a3=(a3-a6);
+    res[6] = a3; // if (res[0]!=0) res[0][6]=a3;
+    res[7] = a14; // if (res[0]!=0) res[0][7]=a14;
+    a3=(a7*a2);
+    a3=(a3-a5);
+    a5=3.7493994566546440e-33;
+    a9=(a5*a9);
+    a3=(a3-a9);
+    res[8] = a3; // if (res[0]!=0) res[0][8]=a3;
+    a7=(a7*a1);
+    a7=(a7+a4);
+    a5=(a5*a8);
+    a7=(a7+a5);
+    res[9] = a7; // if (res[0]!=0) res[0][9]=a7;
+    a5=-7.0710678118654757e-01;
+    res[10] = a5; // if (res[0]!=0) res[0][10]=a5;
+    res[11] = a14; // if (res[0]!=0) res[0][11]=a14;
+    a14=1.6250000000000001e-01;
+    a3=(a14*a3);
+    a5=2.0000000000000001e-01;
+    a8=(a5*a2);
+    a4=-2.2000000000000000e-01;
+    a9=(a4*a1);
+    a8=(a8-a9);
+    a9 = arg[0]; // a9=arg[0]? arg[0][0] : 0;
+    a8=(a8+a9);
+    a3=(a3+a8);
+    res[12] = a3; // if (res[0]!=0) res[0][12]=a3;
+    a14=(a14*a7);
+    a5=(a5*a1);
+    a4=(a4*a2);
+    a5=(a5+a4);
+    a4 = arg[1]; // a4=arg[0]? arg[0][1] : 0;
+    a5=(a5+a4);
+    a14=(a14+a5);
+    res[13] = a14; // if (res[0]!=0) res[0][13]=a14;
+    a14=1.1180951480571861e+00;
+    res[14] = a14; // if (res[0]!=0) res[0][14]=a14;
+    a14=1.;
+    res[15] = a14; // if (res[0]!=0) res[0][15]=a14;
+    return 0;
+}
 
 
 // AD<double> FG_eval::calculate_terminalCost(tf::Vector3 ee_position, tf::Vector3 ee_orientation)
@@ -1795,7 +1905,7 @@ void FG_eval::operator()(ADvector& fg, const ADvector& vars)
         {
             //for(int j = 1; j < _mpc_steps; j++)
             //从第二个开始是预测的，需要自己计算
-            //read 计算和行人的距离并惩罚
+            //READ 计算和行人的距离并惩罚
             ADvector arg_lf(3);
             arg_lf[0] = vars[_x_start + i];
             arg_lf[1] = vars[_y_start + i];
@@ -1836,35 +1946,97 @@ void FG_eval::operator()(ADvector& fg, const ADvector& vars)
             AD<double> distance_rr_ = CppAD::sqrt(CppAD::pow(res_rr_[12] - pedestrian_predpos[0], 2) + CppAD::pow(res_rr_[13] - pedestrian_predpos[1], 2));
             fg[0] += _w_base_collision * barried_func_base_(distance_rr_);
 
-            //TODO 计算和电视柜子平面的距离，并惩罚防止撞到电视柜
-            //Eigen::Vector3d tv_normal; //电视柜的法向量
-            //Eigen::Vector3d tv_point; //电视柜表面的点
-            //计算向量点乘，也就是对应相乘相加
-            //maybe：
-            auto dist_tv = (-tv_point[0] + res_lf_[0]) * tv_normal[0] +
+            //TODO arm_fake_base
+            ADvector arg_arm_base(4);
+            arg_arm_base[0] = vars[_x_start + i];
+            arg_arm_base[1] = vars[_y_start + i];
+            arg_arm_base[2] = vars[_theta_start + i];
+            arg_arm_base[3] = 0;
+            ADvector res_arm_base_(16);
+            casadi_arm_fake_base(arg_arm_base, res_arm_base_);
+            //res[12] -> x , res[13] -> y , res[14] -> z
+            AD<double> distance_arm_base_;
+            // CppAD::sqrt(CppAD::pow(res_arm_base_[12] - pedestrian_predpos[0], 2)
+            // + CppAD::pow(res_arm_base_[13] - pedestrian_predpos[1], 2));
+
+            //READ 计算base和电视柜子平面的距离，并惩罚防止撞到电视柜
+            auto dist_tv_lf_ = (-tv_point[0] + res_lf_[0]) * tv_normal[0] +
                                 (-tv_point[1] + res_lf_[1]) * tv_normal[1] + (-tv_point[2] + res_lf_[2]) * tv_normal[2];
+            fg[0] += 0.0;
 
-            //TODO 计算到柜子正面、侧面的距离，并惩罚，防止撞到衣柜
-            //Eigen::Vector3d closet_normal; //衣柜的法向量
-            //Eigen::Vector3d closet_point; //衣柜表面的点
-            //计算向量点乘，也就是对应相乘相加
-            //maybe：
-            auto dist_closet_right = (-closet_point[0] + res_lf_[0]) * closet_right_normal[0] +
+            auto dist_tv_rf_ = (-tv_point[0] + res_rf_[0]) * tv_normal[0] +
+                                (-tv_point[1] + res_rf_[1]) * tv_normal[1] + (-tv_point[2] + res_rf_[2]) * tv_normal[2];
+            fg[0] += 0.0;
+
+            auto dist_tv_lr_ = (-tv_point[0] + res_lr_[0]) * tv_normal[0] +
+                                (-tv_point[1] + res_lr_[1]) * tv_normal[1] + (-tv_point[2] + res_lr_[2]) * tv_normal[2];
+            fg[0] += 0.0;
+
+            auto dist_tv_rr_ = (-tv_point[0] + res_rr_[0]) * tv_normal[0] +
+                                (-tv_point[1] + res_rr_[1]) * tv_normal[1] + (-tv_point[2] + res_rr_[2]) * tv_normal[2];
+            fg[0] += 0.0;
+
+            //READ 计算到柜子正面、侧面的距离，并惩罚，防止撞到衣柜
+            //right left front
+            auto dist_closet_right_lf = (-closet_point[0] + res_lf_[0]) * closet_right_normal[0] +
                                 (-closet_point[1] + res_lf_[1]) * closet_right_normal[1] + (-closet_point[2] + res_lf_[2]) * closet_right_normal[2];
-
-            auto proj_closet_right = (-closet_right_proj_start_point[0] + res_lf_[0]) * closet_right_normal[0] +
+            auto proj_closet_right_lf = (-closet_right_proj_start_point[0] + res_lf_[0]) * closet_right_normal[0] +
                                 (-closet_right_proj_start_point[1] + res_lf_[1]) * closet_right_normal[1] + (-closet_right_proj_start_point[2] + res_lf_[2]) * closet_right_normal[2];
+            fg[0] += func(proj_closet_right_lf) * func_1(dist_closet_right_lf);
 
-            //还有一个
-            auto dist_closet_front = (-closet_point[0] + res_lf_[0]) * closet_front_normal[0] +
+            //right right front
+            auto dist_closet_right_rf = (-closet_point[0] + res_rf_[0]) * closet_right_normal[0] +
+                                (-closet_point[1] + res_rf_[1]) * closet_right_normal[1] + (-closet_point[2] + res_rf_[2]) * closet_right_normal[2];
+            auto proj_closet_right_rf = (-closet_right_proj_start_point[0] + res_rf_[0]) * closet_right_normal[0] +
+                                (-closet_right_proj_start_point[1] + res_rf_[1]) * closet_right_normal[1] + (-closet_right_proj_start_point[2] + res_rf_[2]) * closet_right_normal[2];
+            fg[0] += func(proj_closet_right_rf) * func_1(dist_closet_right_rf);
+
+            //right left rear
+            auto dist_closet_right_lr = (-closet_point[0] + res_lr_[0]) * closet_right_normal[0] +
+                                (-closet_point[1] + res_lr_[1]) * closet_right_normal[1] + (-closet_point[2] + res_lr_[2]) * closet_right_normal[2];
+            auto proj_closet_right_lr = (-closet_right_proj_start_point[0] + res_lr_[0]) * closet_right_normal[0] +
+                                (-closet_right_proj_start_point[1] + res_lr_[1]) * closet_right_normal[1] + (-closet_right_proj_start_point[2] + res_lr_[2]) * closet_right_normal[2];
+            fg[0] += func(proj_closet_right_lr) * func_1(dist_closet_right_lr);
+
+            //right right rear
+            auto dist_closet_right_rr = (-closet_point[0] + res_rr_[0]) * closet_right_normal[0] +
+                                (-closet_point[1] + res_rr_[1]) * closet_right_normal[1] + (-closet_point[2] + res_rr_[2]) * closet_right_normal[2];
+            auto proj_closet_right_rr = (-closet_right_proj_start_point[0] + res_rr_[0]) * closet_right_normal[0] +
+                                (-closet_right_proj_start_point[1] + res_rr_[1]) * closet_right_normal[1] + (-closet_right_proj_start_point[2] + res_rr_[2]) * closet_right_normal[2];
+            fg[0] += func(proj_closet_right_rr) * func_1(dist_closet_right_rr);
+
+            //!还有一个front
+            //front left front
+            auto dist_closet_front_lf = (-closet_point[0] + res_lf_[0]) * closet_front_normal[0] +
                                 (-closet_point[1] + res_lf_[1]) * closet_front_normal[1] + (-closet_point[2] + res_lf_[2]) * closet_front_normal[2];
-            auto proj_closet_front = (-closet_front_proj_start_point[0] + res_lf_[0]) * closet_right_normal[0] +
+            auto proj_closet_front_lf = (-closet_front_proj_start_point[0] + res_lf_[0]) * closet_right_normal[0] +
                                 (-closet_front_proj_start_point[1] + res_lf_[1]) * closet_right_normal[1] + (-closet_front_proj_start_point[2] + res_lf_[2]) * closet_right_normal[2];
+            fg[0] += func(proj_closet_front_lf) * func_1(dist_closet_front_lf);
 
-            //TODO 由于法向量会矫枉过正，还得加入在线段上的投影
+            //front right front
+            auto dist_closet_front_rf = (-closet_point[0] + res_rf_[0]) * closet_front_normal[0] +
+                                (-closet_point[1] + res_rf_[1]) * closet_front_normal[1] + (-closet_point[2] + res_rf_[2]) * closet_front_normal[2];
+            auto proj_closet_front_rf = (-closet_front_proj_start_point[0] + res_rf_[0]) * closet_right_normal[0] +
+                                (-closet_front_proj_start_point[1] + res_rf_[1]) * closet_right_normal[1] + (-closet_front_proj_start_point[2] + res_rf_[2]) * closet_right_normal[2];
+            fg[0] += func(proj_closet_front_rf) * func_1(dist_closet_front_rf);
+
+            //front left rear
+            auto dist_closet_front_lr = (-closet_point[0] + res_lr_[0]) * closet_front_normal[0] +
+                                (-closet_point[1] + res_lr_[1]) * closet_front_normal[1] + (-closet_point[2] + res_lr_[2]) * closet_front_normal[2];
+            auto proj_closet_front_lr = (-closet_front_proj_start_point[0] + res_lr_[0]) * closet_right_normal[0] +
+                                (-closet_front_proj_start_point[1] + res_lr_[1]) * closet_right_normal[1] + (-closet_front_proj_start_point[2] + res_lr_[2]) * closet_right_normal[2];
+            fg[0] += func(proj_closet_front_lr) * func_1(dist_closet_front_lr);
+
+            //front right rear
+            auto dist_closet_front_rr = (-closet_point[0] + res_rr_[0]) * closet_front_normal[0] +
+                                (-closet_point[1] + res_rr_[1]) * closet_front_normal[1] + (-closet_point[2] + res_rr_[2]) * closet_front_normal[2];
+            auto proj_closet_front_rr = (-closet_front_proj_start_point[0] + res_rr_[0]) * closet_right_normal[0] +
+                                (-closet_front_proj_start_point[1] + res_rr_[1]) * closet_right_normal[1] + (-closet_front_proj_start_point[2] + res_rr_[2]) * closet_right_normal[2];
+            fg[0] += func(proj_closet_front_rr) * func_1(dist_closet_front_rr);
+            //TODO 对于上面的，由于法向量会矫枉过正，还得加入在线段上的投影 done
 
 
-            //TODO 计算到移动柜门的距离
+            //READ 计算到移动柜门的距离,柜门下边顶点的距离以及arm_fake_base到handle的距离
             //柜门打开的角度
             //Eigen::Vector3d closet_door_normal; //柜门的法向量 //最初的，那就是相对于door系
             double door_angle = _mpc_trackTraj.AnglesList[i].joint_door;
@@ -1876,7 +2048,6 @@ void FG_eval::operator()(ADvector& fg, const ADvector& vars)
             Eigen::Matrix3d door2new_door = rotation_.toRotationMatrix();
             //new_door的法向量：
             //Eigen::Vector3d new_door_normal = door2new_door * closet_door_normal;
-
             //TODO  new_door 到 door的T
             //new_door系上的点（x,y,z） -> 旋转矩阵到 door系 -> 旋转矩阵到world系
             //首先，计算new_door -> door
@@ -1902,24 +2073,63 @@ void FG_eval::operator()(ADvector& fg, const ADvector& vars)
             door2world.block<3, 3>(0, 0) = door2world_rotate;
             door2world.block<3, 1>(0, 3) = door_link_origin;
 
-            // 计算new_door到world的T
+            //DEBUG 计算new_door到world的T,以及door的法向量在world系下的坐标，以及door底边顶点在world系下的坐标，以及door底边的向量，以及门扳手handle在world系下的坐标
             Eigen::Matrix4d new_door2world = door2world * new_door2door;
 
             Eigen::Vector3d door_normal_world = (new_door2world * door_init_normal).block<3, 1>(0, 0);
             Eigen::Vector3d door_bottom_tip_point_world = (new_door2world * door_bottom_tip_point).block<3, 1>(0, 0);
-
-            //TODO 计算距离：
-            auto dist_new_door = (-door_link_origin[0] + res_lf_[0]) * door_normal_world[0] +
-                                (-door_link_origin[1] + res_lf_[1]) * door_normal_world[1] + (-door_link_origin[2] + res_lf_[2]) * door_normal_world[2];
             Eigen::Vector3d door_bottom_ = door_bottom_tip_point_world - door_link_origin;
-            auto proj_new_door = (-door_link_origin[0] + res_lf_[0]) * door_bottom_[0] +
-                                (-door_link_origin[1] + res_lf_[1]) * door_bottom_[1] + (-door_link_origin[2] + res_lf_[2]) * door_bottom_[2]; //用来计算到平面的距离的惩罚函数的惩罚系数是否为0
-
             Eigen::Vector3d door_hanlde_point_world
-                = (new_door2world * door_hanlde_point).block<3, 1>(0, 0); //TODO 机器人不能离把手太远
+                = (new_door2world * door_handle_point).block<3, 1>(0, 0); //TODO 机器人不能离把手太远
 
+            //TODO 计算base到door的距离：
+            //door left front:
+            auto dist_new_door_lf = (-door_link_origin[0] + res_lf_[0]) * door_normal_world[0] +
+                                (-door_link_origin[1] + res_lf_[1]) * door_normal_world[1] + (-door_link_origin[2] + res_lf_[2]) * door_normal_world[2];
+            auto proj_new_door_lf = (-door_link_origin[0] + res_lf_[0]) * door_bottom_[0] +
+                                (-door_link_origin[1] + res_lf_[1]) * door_bottom_[1] + (-door_link_origin[2] + res_lf_[2]) * door_bottom_[2]; //用来计算到平面的距离的惩罚函数的惩罚系数是否为0
+            fg[0] += func_ji_(proj_new_door_lf) * func_door_(dist_new_door_lf);
 
+            //door right front:
+            auto dist_new_door_rf = (-door_link_origin[0] + res_rf_[0]) * door_normal_world[0] +
+                                (-door_link_origin[1] + res_rf_[1]) * door_normal_world[1] + (-door_link_origin[2] + res_rf_[2]) * door_normal_world[2];
+            auto proj_new_door_rf = (-door_link_origin[0] + res_rf_[0]) * door_bottom_[0] +
+                                (-door_link_origin[1] + res_rf_[1]) * door_bottom_[1] + (-door_link_origin[2] + res_rf_[2]) * door_bottom_[2];
+            fg[0] += func_ji_(proj_new_door_rf) * func_door_(dist_new_door_rf);
 
+            //door left rear
+            auto dist_new_door_lr = (-door_link_origin[0] + res_lr_[0]) * door_normal_world[0] +
+                                (-door_link_origin[1] + res_lr_[1]) * door_normal_world[1] + (-door_link_origin[2] + res_lr_[2]) * door_normal_world[2];
+            auto proj_new_door_lr = (-door_link_origin[0] + res_lr_[0]) * door_bottom_[0] +
+                                (-door_link_origin[1] + res_lr_[1]) * door_bottom_[1] + (-door_link_origin[2] + res_lr_[2]) * door_bottom_[2];
+            fg[0] += func_ji_(proj_new_door_lr) * func_door_(dist_new_door_lr);
+
+            //door right rear
+            auto dist_new_door_rr = (-door_link_origin[0] + res_rr_[0]) * door_normal_world[0] +
+                                (-door_link_origin[1] + res_rr_[1]) * door_normal_world[1] + (-door_link_origin[2] + res_rr_[2]) * door_normal_world[2];
+            fg[0] += func_ji_(res_rr_[0]) * func_door_(dist_new_door_rr);
+
+            //TODO 计算到门角的距离,二维
+            //base door bottom point: left front
+            auto dist_door_bottom_lf = CppAD::pow(res_lf[0] - door_bottom_tip_point_world[0], 2) + CppAD::pow(res_lf[1] - door_bottom_tip_point_world[1], 2);
+            fg[0] += func_bae_(CppAD::sqrt(_door_bottom_lf));
+
+            //base door bottom point: right front
+            auto dist_door_bottom_rf = CppAD::pow(res_rf[0] - door_bottom_tip_point_world[0], 2) + CppAD::pow(res_rf[1] - door_bottom_tip_point_world[1], 2);
+            fg[0] += func_bae_(CppAD::sqrt(_door_bottom_rf));
+
+            //base door bottom point: left rear
+            auto dist_door_bottom_lr = CppAD::pow(res_lr[0] - door_bottom_tip_point_world[0], 2) + CppAD::pow(res_lr[1] - door_bottom_tip_point_world[1], 2);
+            fg[0] += func_base_(CppAD::sqrt(_door_bottom_lr));
+
+            //base door bottom point: right rear
+            auto dist_door_bottom_rr = CppAD::pow(res_rr[0] - door_bottom_tip_point_world[0], 2) + CppAD::pow(res_rr[1] - door_bottom_tip_point_world[1], 2);
+            fg[0] += func_base_(CppAD::sqrt(_door_bottom_rr));
+
+            //TODO 计算arm_fake_base到handle的距离，三维
+            auto dist_arm_fake_base_handle = CppAD::pow(res_arm_base_[12] - door_hanlde_point_world[0], 2) +
+                                        CppAD::pow(res_arm_base_[13] - door_hanlde_point_world[1], 2) + CppAD::pow(res_arm_base_[14] - door_hanlde_point_world[2], 2);
+            fg[0] += func_base_(CppAD::sqrt(_arm_fake_base_handle));
         }
 
         // ADvector arg_tool_pose(9);
