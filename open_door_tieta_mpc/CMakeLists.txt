@@ -8,7 +8,7 @@ project(open_door_tieta_mpc)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  JointTrajPub
+  DoorTrajPub
   kdl_parser
   #orocos_kdl
   roscpp
@@ -113,7 +113,7 @@ find_package(orocos_kdl REQUIRED)
 catkin_package(
   INCLUDE_DIRS include
 #  LIBRARIES open_door_tieta_mpc
-  CATKIN_DEPENDS JointTrajPub roscpp rospy sensor_msgs std_msgs tf urdf visualization_msgs
+  CATKIN_DEPENDS DoorTrajPub roscpp rospy sensor_msgs std_msgs tf urdf visualization_msgs
   DEPENDS orocos_kdl kdl_parser
 )
 

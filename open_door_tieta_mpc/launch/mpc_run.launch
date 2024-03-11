@@ -1,0 +1,9 @@
+<launch>
+
+    <node name="dynamic_collision_mpc" pkg="open_door_tieta_mpc" type="tieta_mpc_place_node" output="screen" >
+        <!--rosparam file="$(find mpc_ros)/params/mpc_local_square_params.yaml" command="load" /-->
+        <rosparam file="$(find open_door_tieta_mpc)/config/mpc_run.yaml" command="load" />
+        <!--rosparam file="$(find mpc_ros)//params/mpc_local_epitrochoid_params.yaml" command="load" /-->
+    </node>
+
+</launch>

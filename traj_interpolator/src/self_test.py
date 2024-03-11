@@ -241,7 +241,7 @@ def main():
         for row in retimed_traj.joint_trajectory.points:
             writer.writerow(row)
 
-
+    retimed_traj.joint_trajectory.points
 
         # print(file_path)
         # file_path_pick = file_path_pick_pre + str(i)+ '.yaml'

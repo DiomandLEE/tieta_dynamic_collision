@@ -7,7 +7,7 @@
 template<typename T>
 using joints_velocity = std::vector<T>;
 //TODO 这里就不需要这么多了，只需要给base和行人发送数据，行人的话可能需要两个方向的速度，这就需要给urdf了，先假设只有一个方向的速度
-std::vector<joints_velocity<double>> Velocity_Solution(50, joints_velocity<double>(4, 0.0)); //3 joints + 行人的速度
+std::vector<joints_velocity<double>> Velocity_Solution(50, joints_velocity<double>(12, 0.0)); //3 joints + 行人的速度
 bool update_velocity_solution = false;
 std::mutex update_mutex;
 
@@ -28,11 +28,13 @@ void publish_thread_jointVelocitys(ros::Publisher &pub, ros::NodeHandle &nh){
         {
             single_velocity_msg.data = Velocity_Solution[i];
             pub.publish(single_velocity_msg);
-            std::cout << "publish joint velocitys: " << Velocity_Solution[i][1] << "," <<
+            std::cout << "publish joint velocitys: " <<
+            Velocity_Solution[i][0] << "," << Velocity_Solution[i][1] << "," <<
             Velocity_Solution[i][2] << "," << Velocity_Solution[i][3] << "," <<
             Velocity_Solution[i][4] << "," << Velocity_Solution[i][5] << "," <<
             Velocity_Solution[i][6] << "," << Velocity_Solution[i][7] << "," <<
             Velocity_Solution[i][8] << "," << Velocity_Solution[i][9] << "," <<
+            Velocity_Solution[i][10] << "," << Velocity_Solution[i][11] << "," <<
             std::endl;
             i++;
 
@@ -59,6 +61,7 @@ int main(int argc, char **argv)
     //在这启动mpc_node的controll_loop函数
 
     //设置循环的频率
+    ROS_ERROR("MPC CONTROLL FREQ: %d", mpc_node.get_controll_freq());
     ros::Rate controlloop_Rate(mpc_node.get_controll_freq());
 
     ROS_INFO("Waiting for reference traj msgs ~");
@@ -69,8 +72,8 @@ int main(int argc, char **argv)
 
     ROS_WARN("Start Spinning ! & Controll to Init Traj Point !!!!!!");
 
-    if(mpc_node.gotoInitState())
-        ROS_INFO("if code ,Arrived Init State !!!!!!");
+    // if(mpc_node.gotoInitState())
+    //     ROS_INFO("if code ,Arrived Init State !!!!!!");
 
     ros::Duration(1.0).sleep();
 
@@ -102,7 +105,7 @@ int main(int argc, char **argv)
         // //和放在开头执行没有区别
         //debug
         {
-            std::vector<joints_velocity<double>> temp_solutions(50, std::vector<double>(4, 0.0));
+            std::vector<joints_velocity<double>> temp_solutions(50, std::vector<double>(12, 0.0));
             std::vector<joints_velocity<double>> temp_;
             temp_ = mpc_node.controlLoop(track_continue_flag);
 
@@ -123,7 +126,7 @@ int main(int argc, char **argv)
             std::lock_guard<std::mutex> lock(update_mutex);
             update_velocity_solution = true;
         }
-
+        //break;
         controlloop_Rate.sleep();
     }
 

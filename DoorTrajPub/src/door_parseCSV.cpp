@@ -45,15 +45,21 @@ std::vector<map<double, vector<double>>> parseCSV2Map(const std::string &file_in
                     angles.push_back(str2double1);
                 }
 
-                i++;
-
                 if(i == 10)
                 {
+                    istringstream iss2(str);
+                    double str2double2;
+                    iss2 >> std::setprecision(std::numeric_limits<double>::max_digits10) >> str2double2;
+                    //todo 解析的时候就要把弧度转为 -1 * 弧度，因为vkc这里算的是inverse //done
+                    str2double2 = -str2double2;
+                    angles.push_back(str2double2);
                     break;
                 }
-                //csv中一行的分类完毕
+
+                i++;
+                // csv中一行的分类完毕
             }
-            if (angles.size() == 9)
+            if (angles.size() == 10)
             {
                 // 存入map
                 //获取轨迹部分
@@ -92,7 +98,9 @@ std::vector<map<double, vector<double>>> parseCSV2Map(const std::string &file_in
     {
         cout << "time is " << iter->first << " date is "<< iter->second[0] << "," << iter->second[1] << "," << iter->second[2] <<
             "," << iter->second[3] << "," << iter->second[4] << "," << iter->second[5] <<
-            " ," << iter->second[6] << "," << iter->second[7] << "," << iter->second[8] << endl;
+            " ," << iter->second[6] << "," << iter->second[7] << "," << iter->second[8] <<
+            " ," << iter->second[9] 
+            << endl;
     }
     //速度作为模型的输入时，需要在开头补齐一个delay_,这样的话前面补了一个，后面补了_mpc_step-2个，一共是_mpc_step - 1个
     //然而，真实的N是_mpc_step - 1个，这是因为在fg var中 “+ _mpc_step”导致的

@@ -1,0 +1,30 @@
+
+===== Parameters =====
+/dynamic_collision_mpc/debug_info: 0
+/dynamic_collision_mpc/delay_mode: 0
+/dynamic_collision_mpc/frequency_dT: 0.1
+/dynamic_collision_mpc/mpc_steps: 40
+/dynamic_collision_mpc/mpc_w_distx: 10000
+/dynamic_collision_mpc/mpc_w_disty: 10000
+/dynamic_collision_mpc/mpc_w_etheta: 5000
+/dynamic_collision_mpc/mpc_max_angvel: 0.3
+/dynamic_collision_mpc/mpc_max_vel: 0.2
+[0m[ INFO] [1710163831.339838732]: Create the record folder: /home/diamondlee/VKConTieta_ws/src/open_door_tieta_mpc/tieta_result_csv/result/sim_plot_20240311_213031[0m
+[0m[ INFO] [1710163831.340250515]: record_csv/csv file has been open ![0m
+[0m[ INFO] [1710163831.340296010]: Create the record folder: /home/diamondlee/VKConTieta_ws/src/open_door_tieta_mpc/tieta_result_csv/debug/sim_debug20240311_213031[0m
+[0m[ INFO] [1710163831.340327709]: debug_csv/csv file has been open ![0m
+[0m[ INFO] [1710163831.340389966]: Class mpc : record_csv/csv file has been open ![0m
+[0m[ INFO] [1710163831.340444208]: Class mpc : debug_csv/csv file has been open ![0m
+
+!! MPC Obj parameters updated !! 
+[0m[ INFO] [1710163831.521688565]: Waiting for reference traj msgs ~[0m
+rcvTrajCB中mpcsteps为 40
+[0m[ INFO] [1710163831.533637331]: Track Traj has received !!! Track Traj real length: 264[0m
+[0m[ INFO] [1710163831.533645025]: Track Traj has received !!! Track Traj subscribed length: 428[0m
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,

@@ -56,7 +56,8 @@ MPCNode::MPCNode()
     pn.param("/dynamic_collision_mpc/wrist_threshold", _wrist_threshold, 0.05);
     pn.param("/dynamic_collision_mpc/gripper_threshold", _gripper_threshold, 0.05);
     pn.param("/dynamic_collision_mpc/pedestrian_threshold", _pedestrian_threshold, 0.05);
-    pn.param("/dynamic_collision_mpc/pedestrian_velocity", _pedestrian_vel, 0.0);
+    pn.param("/dynamic_collision_mpc/pedestrian_velocity_x", _pedestrian_vel_x, 0.0);
+    pn.param("/dynamic_collision_mpc/pedestrian_velocity_y", _pedestrian_vel_y, 0.0);
 
     //sigmod
     pn.param("/dynamic_collision_mpc/barried_arm_n", _barried_func_arm_n, 1.0);
@@ -69,9 +70,35 @@ MPCNode::MPCNode()
     pn.param("/dynamic_collision_mpc/barried_base_m", _barried_func_base_m, 3.5);
     pn.param("/dynamic_collision_mpc/barried_base_r", _barried_func_base_r, 1.0);
 
+    //door sigmod
+    pn.param("/dynamic_collision_mpc/proj_closet_n", _proj_func_closet_n, 1.0);
+    pn.param("/dynamic_collision_mpc/proj_closet_w", _proj_func_closet_w, 10.0);
+    pn.param("/dynamic_collision_mpc/proj_closet_m", _proj_func_closet_m, 3.5);
+    pn.param("/dynamic_collision_mpc/proj_closet_r", _proj_func_closet_r, 1.0);
+
+    pn.param("/dynamic_collision_mpc/proj_door_n1", _proj_func_door_n1, 1.0);
+    pn.param("/dynamic_collision_mpc/proj_door_w1", _proj_func_door_w1, 10.0);
+    pn.param("/dynamic_collision_mpc/proj_door_m1", _proj_func_door_m1, 3.5);
+    pn.param("/dynamic_collision_mpc/proj_door_r1", _proj_func_door_r1, 1.0);
+
+    pn.param("/dynamic_collision_mpc/proj_door_n2", _proj_func_door_n2, 1.0);
+    pn.param("/dynamic_collision_mpc/proj_door_w2", _proj_func_door_w2, 10.0);
+    pn.param("/dynamic_collision_mpc/proj_door_m2", _proj_func_door_m2, 3.5);
+    pn.param("/dynamic_collision_mpc/proj_door_r2", _proj_func_door_r2, 1.0);
+
+    pn.param("/dynamic_collision_mpc/barried_normal_tip_handle_n", _barried_normal_tip_handle_n, 1.0);
+    pn.param("/dynamic_collision_mpc/barried_normal_tip_handle_w", _barried_normal_tip_handle_w, 10.0);
+    pn.param("/dynamic_collision_mpc/barried_normal_tip_handle_m", _barried_normal_tip_handle_m, 3.5);
+    pn.param("/dynamic_collision_mpc/barried_normal_tip_handle_r", _barried_normal_tip_handle_r, 1.0);
+
+    pn.param("/dynamic_collision_mpc/collision_normal_vector_weight", _w_normal, 1000.0);
+    pn.param("/dynamic_collision_mpc/collision_tip_bottom_door_weight", _w_tip_bottom_door, 1000.0);
+    pn.param("/dynamic_collision_mpc/collision_handle_arm_base_weight", _w_handle_arm_base, 1000.0);
+
 
     pn.param("/dynamic_collision_mpc/mpc_max_vel", _max_speed, 1.0);
     pn.param("/dynamic_collision_mpc/mpc_max_angvel", _max_angvel, 3.0);
+    pn.param("/dynamic_collision_mpc/mpc_max_jntvel", _max_jntvel, 3.0);
 
     pn.param("/dynamic_collision_mpc/mpc_bound_value", _bound_value, 1.0e3); // Bound value for other variables
     pn.param("/dynamic_collision_mpc/angel_upper_bound", _angel_upper, M_PI);
@@ -114,7 +141,7 @@ MPCNode::MPCNode()
     cout << "/dynamic_collision_mpc/mpc_max_vel: " << _max_speed << endl;
 
     // Publishers and Subscribers
-    _sub_timed_traj = _nh.subscribe("anglesList_topic", 1, &MPCNode::rcvJointTrajCB, this);
+    _sub_timed_traj = _nh.subscribe("door_anglesList_topic", 1, &MPCNode::rcvJointTrajCB, this);
     _sub_robot_state = _nh.subscribe("/joint_states", 1, &MPCNode::getRobotStateCB, this);
     _pub_robot_velocity = _nh.advertise<std_msgs::Float64MultiArray>("/joint_velocity", 1);
 
@@ -163,7 +190,8 @@ MPCNode::MPCNode()
     _mpc_params["WRIST_THRESHOLD"] = _wrist_threshold;
     _mpc_params["GRIPPER_THRESHOLD"] = _gripper_threshold;
     _mpc_params["PEDESTRIAN_THRESHOLD"] = _pedestrian_threshold;
-    _mpc_params["PEDESTRIAN_VELOCITY"] = _pedestrian_vel;
+    _mpc_params["PEDESTRIAN_VELOCITY_X"] = _pedestrian_vel_x;
+    _mpc_params["PEDESTRIAN_VELOCITY_Y"] = _pedestrian_vel_y;
 
     //for sigmod
     _mpc_params["BARRIED_ARM_n"] = _barried_func_arm_n;
@@ -175,35 +203,40 @@ MPCNode::MPCNode()
     _mpc_params["BARRIED_BASE_m"] = _barried_func_base_m;
     _mpc_params["BARRIED_BASE_r"] = _barried_func_base_r;
 
-    _mpc_params["EE_TOOL_X"] = _tool_x;
-    _mpc_params["EE_TOOL_Y"] = _tool_y;
-    _mpc_params["EE_TOOL_Z"] = _tool_z;
-    _mpc_params["EE_TOOL_ROLL"] = _tool_roll;
-    _mpc_params["EE_TOOL_PITCH"] = _tool_pitch;
-    _mpc_params["EE_TOOL_YAW"] = _tool_yaw;
+    _mpc_params["PROJ_CLOSET_n"] = _proj_func_closet_n;
+    _mpc_params["PROJ_CLOSET_w"] = _proj_func_closet_w;
+    _mpc_params["PROJ_CLOSET_m"] = _proj_func_closet_m;
+    _mpc_params["PROJ_CLOSET_r"] = _proj_func_closet_r;
+
+    _mpc_params["PROJ_DOOR_n1"] = _proj_func_door_n1;
+    _mpc_params["PROJ_DOOR_w1"] = _proj_func_door_w1;
+    _mpc_params["PROJ_DOOR_m1"] = _proj_func_door_m1;
+    _mpc_params["PROJ_DOOR_r1"] = _proj_func_door_r1;
+
+    _mpc_params["PROJ_DOOR_n2"] = _proj_func_door_n2;
+    _mpc_params["PROJ_DOOR_w2"] = _proj_func_door_w2;
+    _mpc_params["PROJ_DOOR_m2"] = _proj_func_door_m2;
+    _mpc_params["PROJ_DOOR_r2"] = _proj_func_door_r2;
+
+    _mpc_params["BARRIED_NORMAL_TIP_HANDLE_n"] = _barried_normal_tip_handle_n;
+    _mpc_params["BARRIED_NORMAL_TIP_HANDLE_w"] = _barried_normal_tip_handle_w;
+    _mpc_params["BARRIED_NORMAL_TIP_HANDLE_m"] = _barried_normal_tip_handle_m;
+    _mpc_params["BARRIED_NORMAL_TIP_HANDLE_r"] = _barried_normal_tip_handle_r;
+
+    _mpc_params["COLLISION_NORMAL_VECTOR"] = _w_normal;
+    _mpc_params["COLLISION_TIP_BOTTOM"] = _w_tip_bottom_door;
+    _mpc_params["COLLISION_HANDLE_ARM_BASE"] = _w_handle_arm_base;
 
     _mpc_params["W_HARD_EE_TOOL"] = _w_hard_EE_tool;
 
     _mpc_params["MAXVEL"] = _max_speed;
     _mpc_params["MAX_ANGVEL"] = _max_angvel;
     _mpc_params["MAX_JNTVEL"] = _max_jntvel;
+
     _mpc_params["BOUND"] = _bound_value;
     //底盘的theta上下界
     _mpc_params["ANGEL_UPPER"] = _angel_upper;
     _mpc_params["ANGEL_LOWER"] = _angel_lower;
-    //机械臂UR的上下限pn.param("/dynamic_collision_mpc/mpc_w_jntvel", _w_jntvel, 100.0); //关节角的速度，惩罚系数
-    _mpc_params["JOINT1_UPPER"] = _joint1_upper;
-    _mpc_params["JOINT1_LOWER"] = _joint1_lower;
-    _mpc_params["JOINT2_UPPER"] = _joint2_upper;
-    _mpc_params["JOINT2_LOWER"] = _joint2_lower;
-    _mpc_params["JOINT3_UPPER"] = _joint3_upper;
-    _mpc_params["JOINT3_LOWER"] = _joint3_lower;
-    _mpc_params["JOINT4_UPPER"] = _joint4_upper;
-    _mpc_params["JOINT4_LOWER"] = _joint4_lower;
-    _mpc_params["JOINT5_UPPER"] = _joint5_upper;
-    _mpc_params["JOINT5_LOWER"] = _joint5_lower;
-    _mpc_params["JOINT6_UPPER"] = _joint6_upper;
-    _mpc_params["JOINT6_LOWER"] = _joint6_lower;
 
     //*************************************************************************
     //这里来创建文件夹 获取当前的日期和时间
@@ -299,9 +332,9 @@ MPCNode::MPCNode()
         _tfListener.lookupTransform("world", "rear_right_sphere_collision", ros::Time(0), _tfTransform);
         base_rr_sphere_pos << _tfTransform.getOrigin().getX(), _tfTransform.getOrigin().getY(), _tfTransform.getOrigin().getZ();
 
-        _tfListener.waitForTransform("world", "right_arm_shoulder_sphere_link", ros::Time(0), ros::Duration(1.0));
-        _tfListener.lookupTransform("world", "right_arm_shoulder_sphere_link", ros::Time(0), _tfTransform);
-        add_doorlink_pos << _tfTransform.getOrigin().getX(), _tfTransform.getOrigin().getY(), _tfTransform.getOrigin().getZ();
+        _tfListener.waitForTransform("world", "right_arm_shoulder_link", ros::Time(0), ros::Duration(1.0));
+        _tfListener.lookupTransform("world", "right_arm_shoulder_link", ros::Time(0), _tfTransform);
+        add_fake_arm_base_pos << _tfTransform.getOrigin().getX(), _tfTransform.getOrigin().getY(), _tfTransform.getOrigin().getZ();
 
 
         _tf_state.push_back(dynamic_pedestrian_pos);
@@ -309,7 +342,7 @@ MPCNode::MPCNode()
         _tf_state.push_back(base_rf_sphere_pos);
         _tf_state.push_back(base_lr_sphere_pos);
         _tf_state.push_back(base_rr_sphere_pos);
-        _tf_state.push_back(add_doorlink_pos);
+        _tf_state.push_back(add_fake_arm_base_pos);
 
         ROS_WARN("The EIGEN-TF-State-Class got the inital pose!");
     }
@@ -459,14 +492,12 @@ bool MPCNode::gotoInitState()
         double error_joint6 = first_pose[8] - _joint_pos[8];
 
         double error_distance = sqrt(pow(error_x, 2) + pow(error_y, 2));
-        bool _flag = error_distance <= _tolerence_xy && std::fabs(error_theta) <= _tolerence_theta && std::fabs(error_joint1) <= _tolerence_joint
-                        && std::fabs(error_joint2) <= _tolerence_joint && std::fabs(error_joint3) <= _tolerence_joint && std::fabs(error_joint4) <= _tolerence_joint
-                            && std::fabs(error_joint5) <= _tolerence_joint && std::fabs(error_joint6) <= _tolerence_joint;
+        bool _flag = error_distance <= _tolerence_xy && std::fabs(error_theta) <= _tolerence_theta;
 
         if (_flag)
         {
             // 如果到达期望的轨迹的初始位置，速度置为0
-            setJointVelocity({0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0});
+            setJointVelocity({0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0});
             _pub_robot_velocity.publish(_jntvel_msg);
             // 到达期望位置后，跳出循环，结束gotoInitState
             pid_loop = false;
@@ -484,6 +515,10 @@ bool MPCNode::gotoInitState()
             temp_vel.push_back(0.0);
             temp_vel.push_back(0.0);
             temp_vel.push_back(0.0);
+            temp_vel.push_back(0.0);
+            temp_vel.push_back(0.0);
+            temp_vel.push_back(0.0);
+
             temp_vel.push_back(0.0);
             temp_vel.push_back(0.0);
             temp_vel.push_back(0.0);
@@ -597,28 +632,28 @@ std::vector<joints_velocity<double>> MPCNode::controlLoop(bool &track_continue_f
         // 如果拿到了tf，将位姿赋给行人状态
         dynamic_pedestrian_pos << _tfTransform.getOrigin().getX(), _tfTransform.getOrigin().getY(), _tfTransform.getOrigin().getZ();
 
-        _tfListener.lookupTransform("world", "front_left_sphere_collision", ros::Time(0), _tfTransform);
-        base_lf_sphere_pos << _tfTransform.getOrigin().getX(), _tfTransform.getOrigin().getY(), _tfTransform.getOrigin().getZ();
+        // _tfListener.lookupTransform("world", "front_left_sphere_collision", ros::Time(0), _tfTransform);
+        // base_lf_sphere_pos << _tfTransform.getOrigin().getX(), _tfTransform.getOrigin().getY(), _tfTransform.getOrigin().getZ();
 
-        _tfListener.lookupTransform("world", "front_right_sphere_collision", ros::Time(0), _tfTransform);
-        base_rf_sphere_pos << _tfTransform.getOrigin().getX(), _tfTransform.getOrigin().getY(), _tfTransform.getOrigin().getZ();
+        // _tfListener.lookupTransform("world", "front_right_sphere_collision", ros::Time(0), _tfTransform);
+        // base_rf_sphere_pos << _tfTransform.getOrigin().getX(), _tfTransform.getOrigin().getY(), _tfTransform.getOrigin().getZ();
 
-        _tfListener.lookupTransform("world", "rear_left_sphere_collision", ros::Time(0), _tfTransform);
-        base_lr_sphere_pos << _tfTransform.getOrigin().getX(), _tfTransform.getOrigin().getY(), _tfTransform.getOrigin().getZ();
+        // _tfListener.lookupTransform("world", "rear_left_sphere_collision", ros::Time(0), _tfTransform);
+        // base_lr_sphere_pos << _tfTransform.getOrigin().getX(), _tfTransform.getOrigin().getY(), _tfTransform.getOrigin().getZ();
 
-        _tfListener.lookupTransform("world", "rear_right_sphere_collision", ros::Time(0), _tfTransform);
-        base_rr_sphere_pos << _tfTransform.getOrigin().getX(), _tfTransform.getOrigin().getY(), _tfTransform.getOrigin().getZ();
+        // _tfListener.lookupTransform("world", "rear_right_sphere_collision", ros::Time(0), _tfTransform);
+        // base_rr_sphere_pos << _tfTransform.getOrigin().getX(), _tfTransform.getOrigin().getY(), _tfTransform.getOrigin().getZ();
 
-        _tfListener.lookupTransform("world", "door", ros::Time(0), _tfTransform);
-        add_doorlink_pos << _tfTransform.getOrigin().getX(), _tfTransform.getOrigin().getY(), _tfTransform.getOrigin().getZ();
+        // _tfListener.lookupTransform("world", "right_arm_shoudler_link", ros::Time(0), _tfTransform);
+        // add_fake_arm_base_pos << _tfTransform.getOrigin().getX(), _tfTransform.getOrigin().getY(), _tfTransform.getOrigin().getZ();
         //TODO 这里不再需要
 
         _tf_state[0]= dynamic_pedestrian_pos;
-        _tf_state[1]= base_lf_sphere_pos;
-        _tf_state[2]= base_rf_sphere_pos;
-        _tf_state[3]= base_lr_sphere_pos;
-        _tf_state[4]= base_rr_sphere_pos;
-        _tf_state[5] = add_doorlink_pos;
+        // _tf_state[1]= base_lf_sphere_pos;
+        // _tf_state[2]= base_rf_sphere_pos;
+        // _tf_state[3]= base_lr_sphere_pos;
+        // _tf_state[4]= base_rr_sphere_pos;
+        // _tf_state[5] = add_fake_arm_base_pos;
 
         //todo done 获取初始的每一个障碍物球的位姿
 
@@ -741,7 +776,7 @@ std::vector<joints_velocity<double>> MPCNode::controlLoop(bool &track_continue_f
                 _jntvel6 = range_jntvel_MAX(0);
 
                 //而后将这些放到新的速度容器当中
-                joints_velocity<double> temp_vel(10);
+                joints_velocity<double> temp_vel(12);
                 temp_vel[0] = (_speed_x);
                 temp_vel[1] = (_speed_y);
                 temp_vel[2] = (_angvel);
@@ -752,7 +787,9 @@ std::vector<joints_velocity<double>> MPCNode::controlLoop(bool &track_continue_f
                 temp_vel[6] = (_jntvel4);
                 temp_vel[7] = (_jntvel5);
                 temp_vel[8] = (_jntvel6);
-                temp_vel[9] = (_pedestrian_vel);
+                temp_vel[9] = 0.0;
+                temp_vel[10] = (_pedestrian_vel_x);
+                temp_vel[11] = (_pedestrian_vel_y);
 
                 //放到Solution当中
                 velocity_solutions.push_back(temp_vel);
@@ -902,7 +939,7 @@ std::vector<joints_velocity<double>> MPCNode::controlLoop(bool &track_continue_f
         // 这个也没有必要
         // _jntvel_msg.data = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
         // _pub_robot_velocity.publish(_jntvel_msg);
-        std::vector<joints_velocity<double>> t_(40, std::vector<double>(10, 0.0));
+        std::vector<joints_velocity<double>> t_(40, std::vector<double>(12, 0.0));
         velocity_solutions = t_;
         if (true)
             ROS_WARN("track is finished");

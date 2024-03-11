@@ -1,8 +1,9 @@
 #include "open_door_tieta_mpc/FG_evalue.h"
 #include "open_door_tieta_mpc/MPC_Controller.h"
 
-// #include <cppad/cppad.hpp>
-#include <NLsolver/cppad/ipopt/solve.hpp>
+#include <cppad/cppad.hpp>
+#include <cppad/ipopt/solve.hpp>
+//#include <NLsolver/cppad/ipopt/solve.hpp>
 #include <Eigen/Core>
 
 // The program use fragments of code from
@@ -356,9 +357,9 @@ vector<vector<double>> MPC::Solve(Eigen::VectorXd state, DoorTrajPub::AnglesList
         //      << "omega_" << i << ":  " << solution.x[_angvel_start + i] << " ----" << endl;
 
         // 预测结果装在mpc_state[],
-        this->mpc_x.push_back(solution.x[_x_start + i + 1]);
-        this->mpc_y.push_back(solution.x[_y_start + i + 1]);
-        this->mpc_theta.push_back(solution.x[_theta_start + i + 1]);
+        // this->mpc_x.push_back(solution.x[_x_start + i + 1]);
+        // this->mpc_y.push_back(solution.x[_y_start + i + 1]);
+        // this->mpc_theta.push_back(solution.x[_theta_start + i + 1]);
 
         // //print 执行前一时刻的速度和加速度 得到的当前时刻的位姿
         // cout << "----- 位置预测结果 " <<
@@ -421,6 +422,8 @@ vector<vector<double>> MPC::Solve(Eigen::VectorXd state, DoorTrajPub::AnglesList
 
     double index_result = std::ceil(duration_solve.count() / 100.0);
 
+    cout << "CHRONO  MPC solve index: " << index_result << endl;
+
     //debug 根本不需要确定3+1啊，这后面push back不就成size= *2 了么。。。
     vector<vector<double>> result_sulotions; //九个自由度的速度控制 + 判断flag（如果这次没有解出来的话，就停在原地，并且下次的跟踪目标，仍然为这次loop的目标）
 
@@ -428,17 +431,17 @@ vector<vector<double>> MPC::Solve(Eigen::VectorXd state, DoorTrajPub::AnglesList
     {
         std::cout << "$$$$$$ MPC solved successfully! $$$$$$" << std::endl;
         //TODO
-        for(int j = index_result /*+ 6*/; j < _mpc_steps - 1; j++)
+        for(int j = index_result /*+ 6*/; j < _mpc_steps - 2; j++)
         {
             vector<double> result;
             // read 如果MPC求解出来了结果，那么机器人执行这个结果
             //  velocity & omaga -> return variables
             //! 更改代码后，第一个解变成了初始的机器人状态，所以给cmd_vel第二个速度指令
-            result.push_back(solution.x[_vx_start + j]);
-            result.push_back(solution.x[_vy_start + j]);
-            result.push_back(solution.x[_angvel_start + j]);
+            result.push_back(solution.x[_vx_start + 1 + j]);
+            result.push_back(solution.x[_vy_start + 1 + j]);
+            result.push_back(solution.x[_angvel_start + 1 + j]);
 
-            result.push_back(_pedestrian_vel);
+            //result.push_back(_pedestrian_vel);
 
             result_sulotions.push_back(result);
         }

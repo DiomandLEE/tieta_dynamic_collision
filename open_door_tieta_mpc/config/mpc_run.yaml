@@ -1,0 +1,99 @@
+thread_numbers: 3
+debug_info: false
+delay_mode: false
+#最大速度
+mpc_max_vel: 0.2
+mpc_max_angvel: 0.3
+mpc_max_jntvel: 0.5
+#控制频率
+controller_freq: 10
+_dt: 0.1
+#pid到初始位姿频率
+pid_freq: 10
+#urdf——file 这个就先不填了，cpp里有写
+mpc_freq_int: 1
+#需要增加的重复轨迹长度
+increase_length: 166 #int #这个必须小于最近的mpc_step的倍数
+#mpc的预测范围/时间步长
+mpc_steps: 40 #int
+
+delay_steps: 6
+#mpc的目标函数的各项权重
+#运动学
+mpc_w_distx: 10000.0 # 50.0
+mpc_w_disty: 10000.0 # 50.0
+mpc_w_etheta: 1000.0 # 50.0
+
+mpc_w_vel: 100.0
+mpc_w_angvel: 1000.0
+
+mpc_w_acc: 10.0 # 100.0
+mpc_w_angacc: 1000.0 # 100.0
+
+#碰撞
+collision_base_weight: 300000.0 # 200
+
+collision_normal_vector_weight: 10000.0
+collision_tip_bottom_door_weight: 10000.0
+collision_handle_arm_base_weight: 200000.0
+#碰撞的阈值
+base_threshold: 0.5 # 0.8 #0.4 urdf
+shoulder_threshold: 0.3 #0.15 urdf
+elbow_threshold: 0.3 #0.15 urdf
+wrist_threshold: 0.3 #0.15 urdf
+gripper_threshold: 0.3 #0.15 urdf
+#行人的参数
+pedestrian_threshold: 0.3 # # 0.2 urdf
+pedestrian_velocity_y: 0.0 #-0.11
+pedestrian_velocity_x: 0.0
+
+#对于惩罚函数 barried function
+barried_arm_n: 0.2 # 1.0
+barried_arm_w: 10.0
+barried_arm_m: 4.7 #3.5
+barried_arm_r: -0.2 # 1.0
+
+barried_base_n: 1.0
+barried_base_w: 10.0
+barried_base_m: 4.7 #3.5
+barried_base_r: 0.3 # 0.0 #1.0
+
+proj_closet_n: 1.2
+proj_closet_w: 1.2
+proj_closet_m: 80.0
+proj_closet_r: 0.0
+
+proj_door_n1: 1.2
+proj_door_w1: 1.1
+proj_door_m1: -70.0
+proj_door_r1: -1.0
+
+proj_door_n2: 1.2
+proj_door_w2: 1.1
+proj_door_m2: 80.0
+proj_door_r2: 0.0
+
+barried_normal_tip_handle_n: 1
+barried_normal_tip_handle_w: 10
+barried_normal_tip_handle_m: 3
+barried_normal_tip_handle_r: -1.1
+
+#到达初始位姿的pid
+x_kp: 0.2
+x_ki: 0.01
+x_kd: 0.005
+
+y_kp: 0.2
+y_ki: 0.01
+y_kd: 0.005
+
+yaw_kp: 0.2
+yaw_ki: 0.01
+yaw_kd: 0.005
+#到达初始位姿的容差
+tolerance_position: 0.05
+tolerance_theta: 0.10
+tolerance_joint: 0.08 #0.01 for 0.5度
+
+savefolder_path: "/home/diamondlee/VKConTieta_ws/src/open_door_tieta_mpc/tieta_result_csv/result"
+save_Debugfolder_path: "/home/diamondlee/VKConTieta_ws/src/open_door_tieta_mpc/tieta_result_csv/debug"

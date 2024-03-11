@@ -30,11 +30,13 @@ int main(int argc, char **argv)
     ros::Subscriber position_sub = nh.subscribe("csv_test_pos", 1, positionCallback);
     ros::Rate loop_rate(pub_rate);
 
-    std::vector<double> joint_positions = {-1.2, 2.4, -5.99132e-10, 1.57, -0.8678, -2.2043, -0.0347, 1.6315, -4.37875e-11, -3.0};
-    current_positions = joint_positions;
+    std::vector<double> joint_positions = {0.103956,0.953408,0.396687,1.84723,-0.0777131,-0.976665,0.77764,1.5597,-1.60804,-2.72827e-09, -0.1, 0.0};
+    current_positions = {0.103956, 0.953408, 0.396687, 1.84723, -0.0777131, -0.976665, 0.77764, 1.5597, -1.60804, -2.72827e-09};
     std::vector<std::string> joint_names = {"base_y_base_x", "base_theta_base_y", "base_link_base_theta", "right_arm_shoulder_pan_joint",
                                             "right_arm_shoulder_lift_joint", "right_arm_elbow_joint", "right_arm_wrist_1_joint",
-                                            "right_arm_wrist_2_joint", "right_arm_wrist_3_joint", "dynamic_pedestrian_joint"};
+                                            "right_arm_wrist_2_joint", "right_arm_wrist_3_joint", "closet_bottom_right_door_joint",
+                                            "dynamic_pedestrian_joint_x", "dynamic_pedestrian_joint_y"};
+
     while (ros::ok()) {
         sensor_msgs::JointState joint_msg;
         joint_msg.header.stamp = ros::Time::now();
@@ -42,10 +44,10 @@ int main(int argc, char **argv)
         joint_msg.name = joint_names;
         {
             std::lock_guard<std::mutex> lock(mutex);
-            for (int i = 0; i < joint_positions.size(); i++) {
+            for (int i = 0; i < current_positions.size(); i++) {
                 joint_positions[i] = current_positions[i];
             }
-            joint_positions[9] = -3.0;
+            //joint_positions[9] = -3.0;
             joint_msg.position = joint_positions; // 这个代码块我觉得挺妙的
         }
         joint_state_pub.publish(joint_msg);

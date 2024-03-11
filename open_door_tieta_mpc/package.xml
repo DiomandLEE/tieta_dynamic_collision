@@ -49,7 +49,7 @@
   <!-- Use doc_depend for packages you need only for building documentation: -->
   <!--   <doc_depend>doxygen</doc_depend> -->
   <buildtool_depend>catkin</buildtool_depend>
-  <build_depend>JointTrajPub</build_depend>
+  <build_depend>DoorTrajPub</build_depend>
   <build_depend>kdl_parser</build_depend>
   <build_depend>orocos_kdl</build_depend>
   <build_depend>roscpp</build_depend>
@@ -59,7 +59,7 @@
   <build_depend>tf</build_depend>
   <build_depend>urdf</build_depend>
   <build_depend>visualization_msgs</build_depend>
-  <build_export_depend>JointTrajPub</build_export_depend>
+  <build_export_depend>DoorTrajPub</build_export_depend>
   <build_export_depend>kdl_parser</build_export_depend>
   <build_export_depend>orocos_kdl</build_export_depend>
   <build_export_depend>roscpp</build_export_depend>
@@ -69,7 +69,7 @@
   <build_export_depend>tf</build_export_depend>
   <build_export_depend>urdf</build_export_depend>
   <build_export_depend>visualization_msgs</build_export_depend>
-  <exec_depend>JointTrajPub</exec_depend>
+  <exec_depend>DoorTrajPub</exec_depend>
   <exec_depend>kdl_parser</exec_depend>
   <exec_depend>orocos_kdl</exec_depend>
   <exec_depend>roscpp</exec_depend>

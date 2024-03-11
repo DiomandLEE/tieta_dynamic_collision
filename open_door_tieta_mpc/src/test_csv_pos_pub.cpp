@@ -18,7 +18,7 @@ int main(int argc, char **argv){
     ros::init(argc, argv, "test_csv_pub_node");
     ros::NodeHandle nh;
 
-    std::string file_in = "/home/diamondlee/VKConTieta_ws/src/tieta_mpc_sim_demo/tieta_track_traj/pick/retimed_pickTraj_15_36_51.csv";
+    std::string file_in = "/home/diamondlee/VKConTieta_ws/src/tieta_mpc_sim_demo/tieta_track_traj/place/retimed_placeTraj_15_36_51.csv";
     std::ifstream fs;
     fs.open(file_in);
     if (!fs.is_open())
@@ -27,7 +27,7 @@ int main(int argc, char **argv){
         return {};
     }
     std_msgs::Float64MultiArray position_msg;
-    position_msg.data.resize(9);
+    position_msg.data.resize(10);
     std::vector<std::vector<double>> positions_vector;
 
     std::string lineStr;
@@ -44,10 +44,12 @@ int main(int argc, char **argv){
             //     continue;
             // } //一样地
             //std::cout << item << std::endl;
+            //if(i == 0)
             position_vector.push_back(std::stod(item));
             i++;
         }
         position_vector.erase(position_vector.begin());
+        position_vector[9] = -1 * position_vector[9];
         positions_vector.push_back(position_vector);
         //ROS_INFO("Publishing: %s", position_msg.data[0].c_str());
         //ROS_INFO("Publishing: %s", position_msg.data[1].c_str());
@@ -60,7 +62,7 @@ int main(int argc, char **argv){
     // }
 
     ros::Publisher position_pub = nh.advertise<std_msgs::Float64MultiArray>("csv_test_pos", 1);
-    ros::Rate loop_rate(100);
+    ros::Rate loop_rate(10);
 
     int start = 0;
 

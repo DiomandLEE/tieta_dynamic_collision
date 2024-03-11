@@ -104,7 +104,8 @@ void FG_eval::LoadParams(const std::map<string, double> &params)
     _wrist_threshold = params.find("WRIST_THRESHOLD") != params.end() ? params.at("WRIST_THRESHOLD") : _wrist_threshold;
     _gripper_threshold = params.find("GRIPPER_THRESHOLD") != params.end() ? params.at("GRIPPER_THRESHOLD") : _gripper_threshold;
     _pedestrian_threshold = params.find("PEDESTRIAN_THRESHOLD") != params.end() ? params.at("PEDESTRIAN_THRESHOLD") : _pedestrian_threshold;
-    _pedestrian_vel = params.find("PEDESTRIAN_VELOCITY") != params.end() ? params.at("PEDESTRIAN_VELOCITY") : _pedestrian_vel;
+    _pedestrian_vel_x = params.find("PEDESTRIAN_VELOCITY_X") != params.end() ? params.at("PEDESTRIAN_VELOCITY_X") : _pedestrian_vel_x;
+    _pedestrian_vel_y = params.find("PEDESTRIAN_VELOCITY_Y") != params.end() ? params.at("PEDESTRIAN_VELOCITY_Y") : _pedestrian_vel_y;
 
     //for sigmod
     _barried_func_arm_n = params.find("BARRIED_ARM_n") != params.end() ? params.at("BARRIED_ARM_n") : _barried_func_arm_n;
@@ -116,6 +117,31 @@ void FG_eval::LoadParams(const std::map<string, double> &params)
     _barried_func_base_w = params.find("BARRIED_BASE_w") != params.end() ? params.at("BARRIED_BASE_w") : _barried_func_base_w;
     _barried_func_base_m = params.find("BARRIED_BASE_m") != params.end() ? params.at("BARRIED_BASE_m") : _barried_func_base_m;
     _barried_func_base_r = params.find("BARRIED_BASE_r") != params.end() ? params.at("BARRIED_BASE_r") : _barried_func_base_r;
+
+    _proj_func_closet_n = params.find("PROJ_CLOSET_n") != params.end() ? params.at("PROJ_CLOSET_n") : _proj_func_closet_n;
+    _proj_func_closet_w = params.find("PROJ_CLOSET_w") != params.end() ? params.at("PROJ_CLOSET_w") : _proj_func_closet_w;
+    _proj_func_closet_m = params.find("PROJ_CLOSET_m") != params.end() ? params.at("PROJ_CLOSET_m") : _proj_func_closet_m;
+    _proj_func_closet_r = params.find("PROJ_CLOSET_r") != params.end() ? params.at("PROJ_CLOSET_r") : _proj_func_closet_r;
+
+    _proj_func_door_n1 = params.find("PROJ_DOOR_n1") != params.end() ? params.at("PROJ_DOOR_n1") : _proj_func_door_n1;
+    _proj_func_door_w1 = params.find("PROJ_DOOR_w1") != params.end() ? params.at("PROJ_DOOR_w1") : _proj_func_door_w1;
+    _proj_func_door_m1 = params.find("PROJ_DOOR_m1") != params.end() ? params.at("PROJ_DOOR_m1") : _proj_func_door_m1;
+    _proj_func_door_r1 = params.find("PROJ_DOOR_r1") != params.end() ? params.at("PROJ_DOOR_r1") : _proj_func_door_r1;
+
+    _proj_func_door_n2 = params.find("PROJ_DOOR_n2") != params.end() ? params.at("PROJ_DOOR_n2") : _proj_func_door_n2;
+    _proj_func_door_w2 = params.find("PROJ_DOOR_w2") != params.end() ? params.at("PROJ_DOOR_w2") : _proj_func_door_w2;
+    _proj_func_door_m2 = params.find("PROJ_DOOR_m2") != params.end() ? params.at("PROJ_DOOR_m2") : _proj_func_door_m2;
+    _proj_func_door_r2 = params.find("PROJ_DOOR_r2") != params.end() ? params.at("PROJ_DOOR_r2") : _proj_func_door_r2;
+
+    _barried_normal_tip_handle_n = params.find("BARRIED_NORMAL_TIP_HANDLE_n") != params.end() ? params.at("BARRIED_NORMAL_TIP_HANDLE_n") : _barried_normal_tip_handle_n;
+    _barried_normal_tip_handle_w = params.find("BARRIED_NORMAL_TIP_HANDLE_w") != params.end() ? params.at("BARRIED_NORMAL_TIP_HANDLE_w") : _barried_normal_tip_handle_w;
+    _barried_normal_tip_handle_m = params.find("BARRIED_NORMAL_TIP_HANDLE_m") != params.end() ? params.at("BARRIED_NORMAL_TIP_HANDLE_m") : _barried_normal_tip_handle_m;
+    _barried_normal_tip_handle_r = params.find("BARRIED_NORMAL_TIP_HANDLE_r") != params.end() ? params.at("BARRIED_NORMAL_TIP_HANDLE_r") : _barried_normal_tip_handle_r;
+
+    _w_normal = params.find("COLLISION_NORMAL_VECTOR") != params.end() ? params.at("COLLISION_NORMAL_VECTOR") : _w_normal;
+    _w_tip_bottom_door = params.find("COLLISION_TIP_BOTTOM") != params.end() ? params.at("COLLISION_TIP_BOTTOM") : _w_tip_bottom_door;
+    _w_handle_arm_base = params.find("COLLISION_HANDLE_ARM_BASE") != params.end() ? params.at("COLLISION_ELBOW_WEIGHT") : _w_handle_arm_base;
+
 
     //state index
     //9个位置变量，(9 * mpc_step) * 1
@@ -159,6 +185,35 @@ AD<double> FG_eval::barried_func_base_(AD<double> distance_)
 {
     distance_ = _barried_func_base_w / (_barried_func_base_n + CppAD::exp(_barried_func_base_m * (distance_ - _barried_func_base_r)));
     return distance_;
+}
+AD<double> FG_eval::proj_func_closet_(AD<double> distance_)
+{
+    distance_ = _proj_func_closet_w / (_proj_func_closet_n + CppAD::exp(_proj_func_closet_m * (distance_ - _proj_func_closet_r)));
+    return distance_;
+}
+
+AD<double> FG_eval::proj_func_door_(AD<double> distance_)
+{
+    distance_ = _proj_func_door_w1 / (_proj_func_door_n1 + CppAD::exp(_proj_func_door_m1 * (distance_ - _proj_func_door_r1))) +
+                    _proj_func_door_w2 / (_proj_func_door_n2 + CppAD::exp(_proj_func_door_m2 * (distance_ - _proj_func_door_r2))) - 0.9;
+    return distance_;
+}
+
+AD<double> FG_eval::barried_normal_dist_(AD<double> distance_)
+{
+    distance_ = _barried_normal_tip_handle_w / (_barried_normal_tip_handle_n + CppAD::exp(_barried_normal_tip_handle_m * (distance_ - _barried_normal_tip_handle_r)));
+    return _w_normal * distance_;
+}
+
+AD<double> FG_eval::barried_tip_door_(AD<double> distance_)
+{
+    return _w_tip_bottom_door * CppAD::pow(distance_, 2);
+}
+
+AD<double> FG_eval::barried_handle_arm_(AD<double> distance_)
+{
+    distance_ = _barried_normal_tip_handle_w / (_barried_normal_tip_handle_n + CppAD::exp(-_barried_normal_tip_handle_m * (distance_ - _barried_normal_tip_handle_r + 0.9)));
+    return _w_handle_arm_base * distance_;
 }
 
 // forwards kinematics 解析式公式
@@ -1837,6 +1892,13 @@ void FG_eval::operator()(ADvector& fg, const ADvector& vars)
     cost_vy = 0;
     cost_angvel = 0;
 
+    for(int q = 0; q < _mpc_trackTraj.AnglesList.size(); q++)
+        {
+            std::cout << "track traj angle_" << q << std::endl;
+            std::cout << _mpc_trackTraj.AnglesList[q].base_x << "," << _mpc_trackTraj.AnglesList[q].base_y << "," << _mpc_trackTraj.AnglesList[q].base_theta
+            << std::endl;
+        }
+
     for (int i = 0; i < _mpc_steps; i++)
     {
         ////std::cout << "here is got ? debug1" << std::endl;
@@ -1844,13 +1906,6 @@ void FG_eval::operator()(ADvector& fg, const ADvector& vars)
         // todo z represent theta for traj_pub
         //!这不和正常的double 也可以做减法么
         ////std::cout << "here is got ? debug4" << std::endl;
-        // for(int i = 0; i < _mpc_trackTraj.AnglesList.size(); i++)
-        // {
-        //     std::cout << "track traj angle_" << i << std::endl;
-        //     std::cout << _mpc_trackTraj.AnglesList[i].base_x << "," << _mpc_trackTraj.AnglesList[i].base_y << "," << _mpc_trackTraj.AnglesList[i].base_theta
-        //     << "," << _mpc_trackTraj.AnglesList[i].joint1 << ","  << _mpc_trackTraj.AnglesList[i].joint2 << "," << _mpc_trackTraj.AnglesList[i].joint3 << "," <<
-        //     _mpc_trackTraj.AnglesList[i].joint4 << "," << _mpc_trackTraj.AnglesList[i].joint5 << "," << _mpc_trackTraj.AnglesList[i].joint6 << std::endl;
-        // }
         //debug 这是位置误差
         fg[0] += _w_distx * CppAD::pow(vars[_x_start + i] - _mpc_trackTraj.AnglesList[i].base_x, 2); // x error
 
@@ -1864,44 +1919,45 @@ void FG_eval::operator()(ADvector& fg, const ADvector& vars)
         fg[0] += _w_etheta * CppAD::pow(vars[_theta_start + i] - _mpc_trackTraj.AnglesList[i].base_theta, 2); // theta error
 
         cost_etheta =  _w_etheta * CppAD::pow(vars[_theta_start + i] - _mpc_trackTraj.AnglesList[i].base_theta, 2); // theta error
-        cout << "cost_etheta: " << cost_etheta << ",";
+        cout << "cost_etheta: " << cost_etheta << endl;
 
         //debug 计算障碍物误差
         //debug 先不考虑避障
         Dvector pedestrian_predpos(3);
-        pedestrian_predpos[0] = _init_sphere[0][0];
-        pedestrian_predpos[1] = _init_sphere[0][1] + i * _dt * _pedestrian_vel;
+        pedestrian_predpos[0] = _init_sphere[0][0] + i * _dt * _pedestrian_vel_x;
+        pedestrian_predpos[1] = _init_sphere[0][1] + i * _dt * _pedestrian_vel_y;
         pedestrian_predpos[2] = _init_sphere[0][2];
         // std::cout << "pedestrian_predpos: " << pedestrian_predpos[0] << "," << pedestrian_predpos[1] <<
         //     "," << pedestrian_predpos[2] << std::endl;
 
-        if(i == 0)
-        {//第一个的目标函数值的计算，是由/tf的结果给出
+        // if(i == 0)
+        // {//第一个的目标函数值的计算，是由/tf的结果给出
 
-            //read 计算和行人的距离，并惩罚
-            //_init_spere[1] -> base_left_front_sphere
-            AD<double> distance_lf_ = CppAD::sqrt(CppAD::pow(_init_sphere[1][0] - pedestrian_predpos[0], 2) + CppAD::pow(_init_sphere[1][1] - pedestrian_predpos[1], 2));
-            fg[0] += _w_base_collision * barried_func_base_(distance_lf_);
+        //     //read 计算和行人的距离，并惩罚
+        //     //_init_spere[1] -> base_left_front_sphere
+        //     AD<double> distance_lf_ = CppAD::sqrt(CppAD::pow(_init_sphere[1][0] - pedestrian_predpos[0], 2) + CppAD::pow(_init_sphere[1][1] - pedestrian_predpos[1], 2));
+        //     fg[0] += _w_base_collision * barried_func_base_(distance_lf_);
 
-            ////AD<double> distance_lb_ = CppAD::sqrt(CppAD::pow(_init_sphere[3][0] - pedestrian_predpos[0], 2) + CppAD::pow(_init_sphere[3][1] - pedestrian_predpos[1], 2));
-            cout << "distance_lf_: " << distance_lf_ << ",";
-            //_init_spere[2] -> base_right_front_sphere
-            AD<double> distance_rf_ = CppAD::sqrt(CppAD::pow(_init_sphere[2][0] - pedestrian_predpos[0], 2) + CppAD::pow(_init_sphere[2][1] - pedestrian_predpos[1], 2));
-            fg[0] += _w_base_collision * barried_func_base_(distance_rf_);
-            ////AD<double> distance_rb_ = CppAD::sqrt(CppAD::pow(_init_sphere[4][0] - pedestrian_predpos[0], 2) + CppAD::pow(_init_sphere[4][1] - pedestrian_predpos[1], 2));
-            cout << "distance_rf_: " << distance_rf_ << ",";
-            //_init_spere[3] -> base_left_rear_sphere
-            AD<double> distance_lr_ = CppAD::sqrt(CppAD::pow(_init_sphere[3][0] - pedestrian_predpos[0], 2) + CppAD::pow(_init_sphere[3][1] - pedestrian_predpos[1], 2));
-            fg[0] += _w_base_collision * barried_func_base_(distance_lr_);
-            //_init_spere[4] -> base_right_rear_sphere
-            AD<double> distance_rr_ = CppAD::sqrt(CppAD::pow(_init_sphere[4][0] - pedestrian_predpos[0], 2) + CppAD::pow(_init_sphere[4][1] - pedestrian_predpos[1], 2));
-            fg[0] += _w_base_collision * barried_func_base_(distance_rr_);
+        //     ////AD<double> distance_lb_ = CppAD::sqrt(CppAD::pow(_init_sphere[3][0] - pedestrian_predpos[0], 2) + CppAD::pow(_init_sphere[3][1] - pedestrian_predpos[1], 2));
+        //     cout << "distance_lf_: " << distance_lf_ << ",";
+        //     //_init_spere[2] -> base_right_front_sphere
+        //     AD<double> distance_rf_ = CppAD::sqrt(CppAD::pow(_init_sphere[2][0] - pedestrian_predpos[0], 2) + CppAD::pow(_init_sphere[2][1] - pedestrian_predpos[1], 2));
+        //     fg[0] += _w_base_collision * barried_func_base_(distance_rf_);
+        //     ////AD<double> distance_rb_ = CppAD::sqrt(CppAD::pow(_init_sphere[4][0] - pedestrian_predpos[0], 2) + CppAD::pow(_init_sphere[4][1] - pedestrian_predpos[1], 2));
+        //     cout << "distance_rf_: " << distance_rf_ << ",";
+        //     //_init_spere[3] -> base_left_rear_sphere
+        //     AD<double> distance_lr_ = CppAD::sqrt(CppAD::pow(_init_sphere[3][0] - pedestrian_predpos[0], 2) + CppAD::pow(_init_sphere[3][1] - pedestrian_predpos[1], 2));
+        //     fg[0] += _w_base_collision * barried_func_base_(distance_lr_);
+        //     //_init_spere[4] -> base_right_rear_sphere
+        //     AD<double> distance_rr_ = CppAD::sqrt(CppAD::pow(_init_sphere[4][0] - pedestrian_predpos[0], 2) + CppAD::pow(_init_sphere[4][1] - pedestrian_predpos[1], 2));
+        //     fg[0] += _w_base_collision * barried_func_base_(distance_rr_);
 
-            cout << "cost_base_lf: " << barried_func_base_(distance_lf_) << "," <<
-                "cost_base_rf: " << barried_func_base_(distance_rf_) << "," << std::endl;
+        //     cout << "cost_base_lf: " << barried_func_base_(distance_lf_) << "," <<
+        //         "cost_base_rf: " << barried_func_base_(distance_rf_) << "," << std::endl;
 
-        }
-        else
+        // }
+        // else
+        /*
         {
             //for(int j = 1; j < _mpc_steps; j++)
             //从第二个开始是预测的，需要自己计算
@@ -1962,19 +2018,19 @@ void FG_eval::operator()(ADvector& fg, const ADvector& vars)
             //READ 计算base和电视柜子平面的距离，并惩罚防止撞到电视柜
             auto dist_tv_lf_ = (-tv_point[0] + res_lf_[0]) * tv_normal[0] +
                                 (-tv_point[1] + res_lf_[1]) * tv_normal[1] + (-tv_point[2] + res_lf_[2]) * tv_normal[2];
-            fg[0] += 0.0;
+            fg[0] += barried_normal_dist_(dist_tv_lf_ - _base_threshold);
 
             auto dist_tv_rf_ = (-tv_point[0] + res_rf_[0]) * tv_normal[0] +
                                 (-tv_point[1] + res_rf_[1]) * tv_normal[1] + (-tv_point[2] + res_rf_[2]) * tv_normal[2];
-            fg[0] += 0.0;
+            fg[0] += barried_normal_dist_(dist_tv_rf_ - _base_threshold);
 
             auto dist_tv_lr_ = (-tv_point[0] + res_lr_[0]) * tv_normal[0] +
                                 (-tv_point[1] + res_lr_[1]) * tv_normal[1] + (-tv_point[2] + res_lr_[2]) * tv_normal[2];
-            fg[0] += 0.0;
+            fg[0] += barried_normal_dist_(dist_tv_lr_ - _base_threshold);
 
             auto dist_tv_rr_ = (-tv_point[0] + res_rr_[0]) * tv_normal[0] +
                                 (-tv_point[1] + res_rr_[1]) * tv_normal[1] + (-tv_point[2] + res_rr_[2]) * tv_normal[2];
-            fg[0] += 0.0;
+            fg[0] += barried_normal_dist_(dist_tv_rr_ - _base_threshold);
 
             //READ 计算到柜子正面、侧面的距离，并惩罚，防止撞到衣柜
             //right left front
@@ -1982,28 +2038,28 @@ void FG_eval::operator()(ADvector& fg, const ADvector& vars)
                                 (-closet_point[1] + res_lf_[1]) * closet_right_normal[1] + (-closet_point[2] + res_lf_[2]) * closet_right_normal[2];
             auto proj_closet_right_lf = (-closet_right_proj_start_point[0] + res_lf_[0]) * closet_right_normal[0] +
                                 (-closet_right_proj_start_point[1] + res_lf_[1]) * closet_right_normal[1] + (-closet_right_proj_start_point[2] + res_lf_[2]) * closet_right_normal[2];
-            fg[0] += func(proj_closet_right_lf) * func_1(dist_closet_right_lf);
+            fg[0] += proj_func_closet_(proj_closet_right_lf - 0.58 - _base_threshold) * barried_normal_dist_(dist_closet_right_lf - _base_threshold);
 
             //right right front
             auto dist_closet_right_rf = (-closet_point[0] + res_rf_[0]) * closet_right_normal[0] +
                                 (-closet_point[1] + res_rf_[1]) * closet_right_normal[1] + (-closet_point[2] + res_rf_[2]) * closet_right_normal[2];
             auto proj_closet_right_rf = (-closet_right_proj_start_point[0] + res_rf_[0]) * closet_right_normal[0] +
                                 (-closet_right_proj_start_point[1] + res_rf_[1]) * closet_right_normal[1] + (-closet_right_proj_start_point[2] + res_rf_[2]) * closet_right_normal[2];
-            fg[0] += func(proj_closet_right_rf) * func_1(dist_closet_right_rf);
+            fg[0] += proj_func_closet_(proj_closet_right_rf - 0.58 - _base_threshold) * barried_normal_dist_(dist_closet_right_rf - _base_threshold);
 
             //right left rear
             auto dist_closet_right_lr = (-closet_point[0] + res_lr_[0]) * closet_right_normal[0] +
                                 (-closet_point[1] + res_lr_[1]) * closet_right_normal[1] + (-closet_point[2] + res_lr_[2]) * closet_right_normal[2];
             auto proj_closet_right_lr = (-closet_right_proj_start_point[0] + res_lr_[0]) * closet_right_normal[0] +
                                 (-closet_right_proj_start_point[1] + res_lr_[1]) * closet_right_normal[1] + (-closet_right_proj_start_point[2] + res_lr_[2]) * closet_right_normal[2];
-            fg[0] += func(proj_closet_right_lr) * func_1(dist_closet_right_lr);
+            fg[0] += proj_func_closet_(proj_closet_right_lr - 0.58 - _base_threshold) * barried_normal_dist_(dist_closet_right_lr - _base_threshold);
 
             //right right rear
             auto dist_closet_right_rr = (-closet_point[0] + res_rr_[0]) * closet_right_normal[0] +
                                 (-closet_point[1] + res_rr_[1]) * closet_right_normal[1] + (-closet_point[2] + res_rr_[2]) * closet_right_normal[2];
             auto proj_closet_right_rr = (-closet_right_proj_start_point[0] + res_rr_[0]) * closet_right_normal[0] +
                                 (-closet_right_proj_start_point[1] + res_rr_[1]) * closet_right_normal[1] + (-closet_right_proj_start_point[2] + res_rr_[2]) * closet_right_normal[2];
-            fg[0] += func(proj_closet_right_rr) * func_1(dist_closet_right_rr);
+            fg[0] += proj_func_closet_(proj_closet_right_rr - 0.58 - _base_threshold) * barried_normal_dist_(dist_closet_right_rr - _base_threshold);
 
             //!还有一个front
             //front left front
@@ -2011,28 +2067,28 @@ void FG_eval::operator()(ADvector& fg, const ADvector& vars)
                                 (-closet_point[1] + res_lf_[1]) * closet_front_normal[1] + (-closet_point[2] + res_lf_[2]) * closet_front_normal[2];
             auto proj_closet_front_lf = (-closet_front_proj_start_point[0] + res_lf_[0]) * closet_right_normal[0] +
                                 (-closet_front_proj_start_point[1] + res_lf_[1]) * closet_right_normal[1] + (-closet_front_proj_start_point[2] + res_lf_[2]) * closet_right_normal[2];
-            fg[0] += func(proj_closet_front_lf) * func_1(dist_closet_front_lf);
+            fg[0] += proj_func_closet_(proj_closet_front_lf - 1.17 - _base_threshold) * barried_normal_dist_(dist_closet_front_lf - _base_threshold);
 
             //front right front
             auto dist_closet_front_rf = (-closet_point[0] + res_rf_[0]) * closet_front_normal[0] +
                                 (-closet_point[1] + res_rf_[1]) * closet_front_normal[1] + (-closet_point[2] + res_rf_[2]) * closet_front_normal[2];
             auto proj_closet_front_rf = (-closet_front_proj_start_point[0] + res_rf_[0]) * closet_right_normal[0] +
                                 (-closet_front_proj_start_point[1] + res_rf_[1]) * closet_right_normal[1] + (-closet_front_proj_start_point[2] + res_rf_[2]) * closet_right_normal[2];
-            fg[0] += func(proj_closet_front_rf) * func_1(dist_closet_front_rf);
+            fg[0] += proj_func_closet_(proj_closet_front_rf - 1.17 - _base_threshold) * barried_normal_dist_(dist_closet_front_rf - _base_threshold);
 
             //front left rear
             auto dist_closet_front_lr = (-closet_point[0] + res_lr_[0]) * closet_front_normal[0] +
                                 (-closet_point[1] + res_lr_[1]) * closet_front_normal[1] + (-closet_point[2] + res_lr_[2]) * closet_front_normal[2];
             auto proj_closet_front_lr = (-closet_front_proj_start_point[0] + res_lr_[0]) * closet_right_normal[0] +
                                 (-closet_front_proj_start_point[1] + res_lr_[1]) * closet_right_normal[1] + (-closet_front_proj_start_point[2] + res_lr_[2]) * closet_right_normal[2];
-            fg[0] += func(proj_closet_front_lr) * func_1(dist_closet_front_lr);
+            fg[0] += proj_func_closet_(proj_closet_front_lr - 1.17 - _base_threshold) * barried_normal_dist_(dist_closet_front_lr - _base_threshold);
 
             //front right rear
             auto dist_closet_front_rr = (-closet_point[0] + res_rr_[0]) * closet_front_normal[0] +
                                 (-closet_point[1] + res_rr_[1]) * closet_front_normal[1] + (-closet_point[2] + res_rr_[2]) * closet_front_normal[2];
             auto proj_closet_front_rr = (-closet_front_proj_start_point[0] + res_rr_[0]) * closet_right_normal[0] +
                                 (-closet_front_proj_start_point[1] + res_rr_[1]) * closet_right_normal[1] + (-closet_front_proj_start_point[2] + res_rr_[2]) * closet_right_normal[2];
-            fg[0] += func(proj_closet_front_rr) * func_1(dist_closet_front_rr);
+            fg[0] += proj_func_closet_(proj_closet_front_rr - 1.17 - _base_threshold) * barried_normal_dist_(dist_closet_front_rr - _base_threshold);
             //TODO 对于上面的，由于法向量会矫枉过正，还得加入在线段上的投影 done
 
 
@@ -2088,49 +2144,50 @@ void FG_eval::operator()(ADvector& fg, const ADvector& vars)
                                 (-door_link_origin[1] + res_lf_[1]) * door_normal_world[1] + (-door_link_origin[2] + res_lf_[2]) * door_normal_world[2];
             auto proj_new_door_lf = (-door_link_origin[0] + res_lf_[0]) * door_bottom_[0] +
                                 (-door_link_origin[1] + res_lf_[1]) * door_bottom_[1] + (-door_link_origin[2] + res_lf_[2]) * door_bottom_[2]; //用来计算到平面的距离的惩罚函数的惩罚系数是否为0
-            fg[0] += func_ji_(proj_new_door_lf) * func_door_(dist_new_door_lf);
+            fg[0] += proj_func_door_(proj_new_door_lf - 0.56 - _base_threshold) * barried_normal_dist_(dist_new_door_lf - _base_threshold);
 
             //door right front:
             auto dist_new_door_rf = (-door_link_origin[0] + res_rf_[0]) * door_normal_world[0] +
                                 (-door_link_origin[1] + res_rf_[1]) * door_normal_world[1] + (-door_link_origin[2] + res_rf_[2]) * door_normal_world[2];
             auto proj_new_door_rf = (-door_link_origin[0] + res_rf_[0]) * door_bottom_[0] +
                                 (-door_link_origin[1] + res_rf_[1]) * door_bottom_[1] + (-door_link_origin[2] + res_rf_[2]) * door_bottom_[2];
-            fg[0] += func_ji_(proj_new_door_rf) * func_door_(dist_new_door_rf);
+            fg[0] += proj_func_door_(proj_new_door_rf - 0.56 - _base_threshold) * barried_normal_dist_(dist_new_door_rf - _base_threshold);
 
             //door left rear
             auto dist_new_door_lr = (-door_link_origin[0] + res_lr_[0]) * door_normal_world[0] +
                                 (-door_link_origin[1] + res_lr_[1]) * door_normal_world[1] + (-door_link_origin[2] + res_lr_[2]) * door_normal_world[2];
             auto proj_new_door_lr = (-door_link_origin[0] + res_lr_[0]) * door_bottom_[0] +
                                 (-door_link_origin[1] + res_lr_[1]) * door_bottom_[1] + (-door_link_origin[2] + res_lr_[2]) * door_bottom_[2];
-            fg[0] += func_ji_(proj_new_door_lr) * func_door_(dist_new_door_lr);
+            fg[0] += proj_func_door_(proj_new_door_lr - 0.56 - _base_threshold) * barried_normal_dist_(dist_new_door_lr - _base_threshold);
 
             //door right rear
             auto dist_new_door_rr = (-door_link_origin[0] + res_rr_[0]) * door_normal_world[0] +
                                 (-door_link_origin[1] + res_rr_[1]) * door_normal_world[1] + (-door_link_origin[2] + res_rr_[2]) * door_normal_world[2];
-            fg[0] += func_ji_(res_rr_[0]) * func_door_(dist_new_door_rr);
+            fg[0] += proj_func_door_(res_rr_[0] - 0.56 - _base_threshold) * barried_normal_dist_(dist_new_door_rr - _base_threshold);
 
             //TODO 计算到门角的距离,二维
             //base door bottom point: left front
-            auto dist_door_bottom_lf = CppAD::pow(res_lf[0] - door_bottom_tip_point_world[0], 2) + CppAD::pow(res_lf[1] - door_bottom_tip_point_world[1], 2);
-            fg[0] += func_bae_(CppAD::sqrt(_door_bottom_lf));
+            auto dist_door_bottom_lf = CppAD::pow(res_lf_[0] - door_bottom_tip_point_world[0], 2) + CppAD::pow(res_lf_[1] - door_bottom_tip_point_world[1], 2);
+            fg[0] += barried_normal_dist_(CppAD::sqrt(dist_door_bottom_lf) - _base_threshold);
 
             //base door bottom point: right front
-            auto dist_door_bottom_rf = CppAD::pow(res_rf[0] - door_bottom_tip_point_world[0], 2) + CppAD::pow(res_rf[1] - door_bottom_tip_point_world[1], 2);
-            fg[0] += func_bae_(CppAD::sqrt(_door_bottom_rf));
+            auto dist_door_bottom_rf = CppAD::pow(res_rf_[0] - door_bottom_tip_point_world[0], 2) + CppAD::pow(res_rf_[1] - door_bottom_tip_point_world[1], 2);
+            fg[0] += barried_normal_dist_(CppAD::sqrt(dist_door_bottom_rf) - _base_threshold);
 
             //base door bottom point: left rear
-            auto dist_door_bottom_lr = CppAD::pow(res_lr[0] - door_bottom_tip_point_world[0], 2) + CppAD::pow(res_lr[1] - door_bottom_tip_point_world[1], 2);
-            fg[0] += func_base_(CppAD::sqrt(_door_bottom_lr));
+            auto dist_door_bottom_lr = CppAD::pow(res_lr_[0] - door_bottom_tip_point_world[0], 2) + CppAD::pow(res_lr_[1] - door_bottom_tip_point_world[1], 2);
+            fg[0] += barried_normal_dist_(CppAD::sqrt(dist_door_bottom_lr) - _base_threshold);
 
             //base door bottom point: right rear
-            auto dist_door_bottom_rr = CppAD::pow(res_rr[0] - door_bottom_tip_point_world[0], 2) + CppAD::pow(res_rr[1] - door_bottom_tip_point_world[1], 2);
-            fg[0] += func_base_(CppAD::sqrt(_door_bottom_rr));
+            auto dist_door_bottom_rr = CppAD::pow(res_rr_[0] - door_bottom_tip_point_world[0], 2) + CppAD::pow(res_rr_[1] - door_bottom_tip_point_world[1], 2);
+            fg[0] += barried_normal_dist_(CppAD::sqrt(dist_door_bottom_rr) - _base_threshold);
 
             //TODO 计算arm_fake_base到handle的距离，三维
             auto dist_arm_fake_base_handle = CppAD::pow(res_arm_base_[12] - door_hanlde_point_world[0], 2) +
                                         CppAD::pow(res_arm_base_[13] - door_hanlde_point_world[1], 2) + CppAD::pow(res_arm_base_[14] - door_hanlde_point_world[2], 2);
-            fg[0] += func_base_(CppAD::sqrt(_arm_fake_base_handle));
+            fg[0] += barried_handle_arm_(CppAD::sqrt(dist_arm_fake_base_handle) - 1.0);
         }
+        */
 
         // ADvector arg_tool_pose(9);
         // arg_tool_pose[0] = vars[_x_start + i];

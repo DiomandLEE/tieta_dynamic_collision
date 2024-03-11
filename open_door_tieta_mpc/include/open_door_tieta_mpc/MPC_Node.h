@@ -76,7 +76,7 @@ public:
 private:
     ros::NodeHandle _nh;
     ros::Subscriber _sub_timed_traj, _sub_robot_state;
-    //ros::Publisher _pub_totalcost, _pub_distx_cost, _pub_etheta_cost, _pub_trackTraj, _pub_twist, _pub_mpctraj;
+
     ros::Publisher _pub_robot_velocity;
 
     //tf作用仅仅是监听当前的行人状态,以及获取每次control的起始障碍物位置。
@@ -113,9 +113,19 @@ private:
     //碰撞安全阈值
     double _base_threshold, _shoulder_threshold, _elbow_threshold, _wrist_threshold, _gripper_threshold;
     //动态障碍物阈值
-    double _pedestrian_threshold, _pedestrian_vel;
-    //对于EE的姿态限制
-    double _tool_x,_tool_y,_tool_z,_tool_roll,_tool_pitch,_tool_yaw;
+    double _pedestrian_threshold, _pedestrian_vel_x, _pedestrian_vel_y;
+
+    double _proj_func_closet_w, _proj_func_closet_r, _proj_func_closet_m, _proj_func_closet_n;
+
+    //AD<double> proj_func_door_(AD<double> distance_); //几字型
+    double _proj_func_door_w1, _proj_func_door_r1, _proj_func_door_m1, _proj_func_door_n1;
+    double _proj_func_door_w2, _proj_func_door_r2, _proj_func_door_m2, _proj_func_door_n2;
+
+    //AD<double> barried_normal_dist_(AD<double> distance_); //以0为分界
+    double _barried_normal_tip_handle_w, _barried_normal_tip_handle_r, _barried_normal_tip_handle_m, _barried_normal_tip_handle_n;
+    //AD<double> barried_tip_door_(AD<double> distance_); //以0为分界
+    //AD<double> barried_handle_arm_(AD<double> distance_); //以0为分界
+    double _w_normal, _w_tip_bottom_door, _w_handle_arm_base;
 
     double _w_distx, _w_disty, _w_etheta, _w_vel,_w_angvel, _w_acc, _w_angacc,
             _w_jnt, _w_jntvel, _w_jntacc,
@@ -127,8 +137,6 @@ private:
     //用来改变 base的sphere和行人的圆柱 的距离惩罚函数的SIGMOD系数
     double _barried_func_base_w, _barried_func_base_r, _barried_func_base_m, _barried_func_base_n;
 
-    double _joint1_upper, _joint1_lower, _joint2_upper, _joint2_lower, _joint3_upper, _joint3_lower, _joint4_upper, _joint4_lower,
-            _joint5_upper, _joint5_lower, _joint6_upper, _joint6_lower;
 
     // double _Lf;
     // 机器人的运动信息
@@ -136,7 +144,7 @@ private:
     double _dt, _angvel, _speed_x, _speed_y, _max_speed, _max_angvel;
     double _jntvel1, _jntvel2, _jntvel3, _jntvel4, _jntvel5, _jntvel6, _max_jntvel;
     Eigen::Vector3d dynamic_pedestrian_pos, base_lf_sphere_pos, base_rf_sphere_pos, base_lr_sphere_pos, base_rr_sphere_pos,
-                        add_doorlink_pos;
+                        add_fake_arm_base_pos;
     std::vector<Eigen::Vector3d> _tf_state;
 
 

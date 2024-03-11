@@ -1,0 +1,4010 @@
+
+===== Parameters =====
+/dynamic_collision_mpc/debug_info: 0
+/dynamic_collision_mpc/delay_mode: 0
+/dynamic_collision_mpc/frequency_dT: 0.1
+/dynamic_collision_mpc/mpc_steps: 40
+/dynamic_collision_mpc/mpc_w_distx: 10000
+/dynamic_collision_mpc/mpc_w_disty: 10000
+/dynamic_collision_mpc/mpc_w_etheta: 1000
+/dynamic_collision_mpc/mpc_max_angvel: 0.3
+/dynamic_collision_mpc/mpc_max_vel: 0.2
+[0m[ INFO] [1710167486.611076453]: Create the record folder: /home/diamondlee/VKConTieta_ws/src/open_door_tieta_mpc/tieta_result_csv/result/sim_plot_20240311_223126[0m
+[0m[ INFO] [1710167486.611436479]: record_csv/csv file has been open ![0m
+[0m[ INFO] [1710167486.611480412]: Create the record folder: /home/diamondlee/VKConTieta_ws/src/open_door_tieta_mpc/tieta_result_csv/debug/sim_debug20240311_223126[0m
+[0m[ INFO] [1710167486.611504216]: debug_csv/csv file has been open ![0m
+[0m[ INFO] [1710167486.611547879]: Class mpc : record_csv/csv file has been open ![0m
+[0m[ INFO] [1710167486.611585129]: Class mpc : debug_csv/csv file has been open ![0m
+
+!! MPC Obj parameters updated !! 
+[0m[ INFO] [1710167486.772678187]: Waiting for reference traj msgs ~[0m
+rcvTrajCB中mpcsteps为 40
+[0m[ INFO] [1710167486.833632859]: Track Traj has received !!! Track Traj real length: 264[0m
+[0m[ INFO] [1710167486.833645202]: Track Traj has received !!! Track Traj subscribed length: 428[0m
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+debug_start
+***********************  开始Control Loop  ************************
+_traj_received为1
+_track_finished为0
+_loop_count为0
+_realTraj_length为264
+_run_loop_traj为 1
+_run_loop_count为 1
+_run_loop为 1
+getTrackTraj用时: 1.00136e-05
+getTrackTraj stamp: 8.79765e-05
+_mpc_trackTraj_size是否正确: 1
+_trackTraj_computed为 1
+_start_mpc_trackTraj为 1
+===================  进入前期计算  =============================
+state position: 0.103956,0.953408,0.396687
+state velocity: 0,0,0
+flag: 0
+terminal_nums: 263
+
+!! MPC Obj Solve Called !! 
+[0m[ INFO] [1710167489.289590301]: Class FG_eval : debug_csv/csv file has been open ! : /home/diamondlee/VKConTieta_ws/src/open_door_tieta_mpc/tieta_result_csv/debug/sim_debug20240311_223126/fg_evalue_segTraj.csv[0m
+FG_eval paramster has been set.
++++++++++++++++++  开始求解  +++++++++++++++
+cppAd input size:
+n_var:237
+n_var_lowb237
+n_var_upb237
+n_con_lowb:120
+n_con_upb:120
+进来几次啊
+track traj angle_0
+0.103956,0.953408,0.396687
+track traj angle_1
+0.10393,0.953378,0.396681
+track traj angle_2
+0.10385,0.95329,0.396662
+track traj angle_3
+0.103718,0.953142,0.396632
+track traj angle_4
+0.103534,0.952935,0.396589
+track traj angle_5
+0.103296,0.952668,0.396533
+track traj angle_6
+0.103006,0.952343,0.396466
+track traj angle_7
+0.102662,0.951958,0.396386
+track traj angle_8
+0.102266,0.951514,0.396293
+track traj angle_9
+0.101817,0.951011,0.396189
+track traj angle_10
+0.101316,0.950449,0.396072
+track traj angle_11
+0.100761,0.949828,0.395943
+track traj angle_12
+0.100154,0.949148,0.395801
+track traj angle_13
+0.099494,0.948408,0.395648
+track traj angle_14
+0.0987812,0.947609,0.395481
+track traj angle_15
+0.0980155,0.946751,0.395303
+track traj angle_16
+0.0971971,0.945834,0.395112
+track traj angle_17
+0.0963258,0.944857,0.394909
+track traj angle_18
+0.0954017,0.943822,0.394694
+track traj angle_19
+0.0944248,0.942727,0.394467
+track traj angle_20
+0.0933952,0.941573,0.394227
+track traj angle_21
+0.0923127,0.94036,0.393975
+track traj angle_22
+0.0911787,0.939087,0.39371
+track traj angle_23
+0.0899945,0.937753,0.393432
+track traj angle_24
+0.0887605,0.936357,0.393142
+track traj angle_25
+0.087477,0.9349,0.392839
+track traj angle_26
+0.0861445,0.933381,0.392523
+track traj angle_27
+0.0847632,0.931799,0.392194
+track traj angle_28
+0.0833337,0.930155,0.391851
+track traj angle_29
+0.0818564,0.928448,0.391496
+track traj angle_30
+0.0803317,0.926678,0.391127
+track traj angle_31
+0.07876,0.924844,0.390745
+track traj angle_32
+0.0771419,0.922947,0.39035
+track traj angle_33
+0.0754777,0.920985,0.389941
+track traj angle_34
+0.0737682,0.918959,0.389518
+track traj angle_35
+0.0720136,0.916867,0.389082
+track traj angle_36
+0.0702147,0.914711,0.388632
+track traj angle_37
+0.0683719,0.912488,0.388168
+track traj angle_38
+0.0664861,0.910199,0.38769
+track traj angle_39
+0.0645577,0.907844,0.387199
+cost_distx: 0,cost_disty: 0,cost_etheta: 0
+cost_distx: 6.97072e-06,cost_disty: 8.75363e-06,cost_etheta: 3.78297e-08
+cost_distx: 0.000111532,cost_disty: 0.000140058,cost_etheta: 6.05275e-07
+cost_distx: 0.000564628,cost_disty: 0.000709044,cost_etheta: 3.06421e-06
+cost_distx: 0.0017845,cost_disty: 0.00224093,cost_etheta: 9.68441e-06
+cost_distx: 0.0043567,cost_disty: 0.00547102,cost_etheta: 2.36436e-05
+cost_distx: 0.00903405,cost_disty: 0.0113447,cost_etheta: 4.90273e-05
+cost_distx: 0.0167367,cost_disty: 0.0210175,cost_etheta: 9.08292e-05
+cost_distx: 0.0285521,cost_disty: 0.0358549,cost_etheta: 0.000154951
+cost_distx: 0.0457349,cost_disty: 0.0574326,cost_etheta: 0.000248201
+cost_distx: 0.0697072,cost_disty: 0.0875363,cost_etheta: 0.000378297
+cost_distx: 0.102058,cost_disty: 0.128162,cost_etheta: 0.000553865
+cost_distx: 0.144545,cost_disty: 0.181515,cost_etheta: 0.000784437
+cost_distx: 0.199091,cost_disty: 0.250013,cost_etheta: 0.00108045
+cost_distx: 0.267787,cost_disty: 0.33628,cost_etheta: 0.00145327
+cost_distx: 0.352893,cost_disty: 0.443153,cost_etheta: 0.00191513
+cost_distx: 0.456833,cost_disty: 0.573678,cost_etheta: 0.00247921
+cost_distx: 0.582201,cost_disty: 0.731112,cost_etheta: 0.00315958
+cost_distx: 0.731758,cost_disty: 0.918922,cost_etheta: 0.00397121
+cost_distx: 0.908431,cost_disty: 1.14078,cost_etheta: 0.00493001
+cost_distx: 1.11532,cost_disty: 1.40058,cost_etheta: 0.00605275
+cost_distx: 1.35567,cost_disty: 1.70242,cost_etheta: 0.00735716
+cost_distx: 1.6326,cost_disty: 2.05086,cost_etheta: 0.00886318
+cost_distx: 1.94924,cost_disty: 2.45083,cost_etheta: 0.0105923
+cost_distx: 2.30904,cost_disty: 2.9073,cost_etheta: 0.0125661
+cost_distx: 2.71557,cost_disty: 3.42552,cost_etheta: 0.0148075
+cost_distx: 3.17251,cost_disty: 4.01098,cost_etheta: 0.0173405
+cost_distx: 3.68362,cost_disty: 4.66947,cost_etheta: 0.0201903
+cost_distx: 4.25278,cost_disty: 5.40702,cost_etheta: 0.0233833
+cost_distx: 4.88392,cost_disty: 6.22997,cost_etheta: 0.0269473
+cost_distx: 5.58109,cost_disty: 7.14494,cost_etheta: 0.0309111
+cost_distx: 6.34839,cost_disty: 8.15882,cost_etheta: 0.0353051
+cost_distx: 7.18998,cost_disty: 9.27882,cost_etheta: 0.0401609
+cost_distx: 8.11011,cost_disty: 10.5125,cost_etheta: 0.0455116
+cost_distx: 9.11306,cost_disty: 11.8675,cost_etheta: 0.0513914
+cost_distx: 10.2032,cost_disty: 13.3522,cost_etheta: 0.0578363
+cost_distx: 11.3848,cost_disty: 14.9749,cost_etheta: 0.0648837
+cost_distx: 12.6623,cost_disty: 16.7445,cost_etheta: 0.0725719
+cost_distx: 14.0399,cost_disty: 18.6699,cost_etheta: 0.0809397
+cost_distx: 15.5222,cost_disty: 20.7607,cost_etheta: 0.0900284
+-----------------------------------------------
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit https://github.com/coin-or/Ipopt
+******************************************************************************
+
+This is Ipopt version 3.14.13, running with linear solver ma27.
+
+Number of nonzeros in equality constraint Jacobian...:      345
+Number of nonzeros in inequality constraint Jacobian.:        0
+Number of nonzeros in Lagrangian Hessian.............:      414
+
+Total number of variables............................:      231
+                     variables with only lower bounds:        0
+                variables with lower and upper bounds:      231
+                     variables with only upper bounds:        0
+Total number of equality constraints.................:      120
+Total number of inequality constraints...............:        0
+        inequality constraints with only lower bounds:        0
+   inequality constraints with lower and upper bounds:        0
+        inequality constraints with only upper bounds:        0
+
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+   0  3.0410517e+02 3.97e-02 1.00e+02  -1.0 0.00e+00    -  0.00e+00 0.00e+00   0
+   1  3.1812995e+02 3.15e-02 7.94e+01  -1.0 9.61e-01    -  1.87e-01 2.06e-01h  1
+   2  4.4396200e+02 2.71e-02 6.84e+01  -1.0 6.12e-01    -  4.73e-01 1.39e-01h  1
+   3  8.8380346e+02 1.94e-02 4.88e+01  -1.0 4.45e-01    -  9.39e-01 2.86e-01h  1
+   4  1.6181738e+03 1.17e-02 2.94e+01  -1.0 3.62e-01    -  9.94e-01 3.97e-01h  1
+   5  2.4107467e+03 5.72e-03 1.44e+01  -1.0 2.60e-01    -  1.00e+00 5.10e-01h  1
+   6  3.2646320e+03 5.69e-04 1.43e+00  -1.0 1.36e-01    -  1.00e+00 9.01e-01h  1
+   7  3.3701482e+03 1.91e-07 1.21e-13  -1.0 4.23e-02    -  1.00e+00 1.00e+00h  1
+   8  3.3558901e+03 5.31e-08 2.44e-01  -2.5 3.70e-02    -  8.90e-01 1.00e+00f  1
+   9  3.3534949e+03 9.08e-09 1.41e-13  -2.5 2.41e-02    -  1.00e+00 1.00e+00f  1
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+  10  3.3527410e+03 1.97e-09 1.85e-13  -3.8 1.52e-02    -  1.00e+00 1.00e+00f  1
+  11  3.3527030e+03 4.50e-10 1.47e-13  -3.8 6.05e-03    -  1.00e+00 1.00e+00f  1
+  12  3.3526729e+03 4.92e-11 1.68e-13  -5.7 1.92e-03    -  1.00e+00 1.00e+00f  1
+  13  3.3526728e+03 4.16e-12 1.61e-13  -5.7 1.88e-04    -  1.00e+00 1.00e+00h  1
+  14  3.3526725e+03 8.16e-14 1.73e-13  -8.0 1.12e-05    -  1.00e+00 1.00e+00f  1
+
+Number of Iterations....: 14
+
+                                   (scaled)                 (unscaled)
+Objective...............:   3.6790877336597930e+02    3.3526724830026033e+03
+Dual infeasibility......:   1.7306307089457603e-13    1.5770860539794547e-12
+Constraint violation....:   8.1615270097756820e-14    8.1615270097756820e-14
+Variable bound violation:   9.7800583187535040e-09    9.7800583187535040e-09
+Complementarity.........:   1.0314494531627791e-08    9.3993741100241599e-08
+Overall NLP error.......:   1.0314494531627791e-08    9.3993741100241599e-08
+
+
+Number of objective function evaluations             = 15
+Number of objective gradient evaluations             = 15
+Number of equality constraint evaluations            = 15
+Number of inequality constraint evaluations          = 0
+Number of equality constraint Jacobian evaluations   = 15
+Number of inequality constraint Jacobian evaluations = 0
+Number of Lagrangian Hessian evaluations             = 14
+Total seconds in IPOPT                               = 0.023
+
+EXIT: Optimal Solution Found.
++++++++++++++++++  结束求解  ++++++++++++++++
+$$$$$$$$$ 结果展示 $$$$$$$$$$
+------ Total Cost(solution): 3352.67-----
+------ solution结果: 1------
+------ solution,size(): 237-----
+CHRONO  MPC solve time: 30ms
+CHRONO  MPC solve index: 1
+$$$$$$ MPC solved successfully! $$$$$$
+MPC solve time: 0.0305314 s
+MPC solve Stamp: 0.0306349
+loop_时间戳: 0.0306494
+***********************  结束Control Loop  ************************
+
+
+pub的时间戳0.0306525
+DEBUG&&&&&
+***********************  开始Control Loop  ************************
+_traj_received为1
+_track_finished为0
+_loop_count为1
+_realTraj_length为264
+_run_loop_traj为 1
+_run_loop_count为 1
+_run_loop为 1
+getTrackTraj用时: 4.52995e-06
+getTrackTraj stamp: 3.38554e-05
+_mpc_trackTraj_size是否正确: 1
+_trackTraj_computed为 1
+_start_mpc_trackTraj为 1
+===================  进入前期计算  =============================
+state position: 0.103956,0.953408,0.396687
+state velocity: 0,0,0
+flag: 0
+terminal_nums: 253
+
+!! MPC Obj Solve Called !! 
+[0m[ INFO] [1710167489.320140334]: Class FG_eval : debug_csv/csv file has been open ! : /home/diamondlee/VKConTieta_ws/src/open_door_tieta_mpc/tieta_result_csv/debug/sim_debug20240311_223126/fg_evalue_segTraj.csv[0m
+FG_eval paramster has been set.
++++++++++++++++++  开始求解  +++++++++++++++
+cppAd input size:
+n_var:237
+n_var_lowb237
+n_var_upb237
+n_con_lowb:120
+n_con_upb:120
+进来几次啊
+track traj angle_0
+0.101316,0.950449,0.396072
+track traj angle_1
+0.100761,0.949828,0.395943
+track traj angle_2
+0.100154,0.949148,0.395801
+track traj angle_3
+0.099494,0.948408,0.395648
+track traj angle_4
+0.0987812,0.947609,0.395481
+track traj angle_5
+0.0980155,0.946751,0.395303
+track traj angle_6
+0.0971971,0.945834,0.395112
+track traj angle_7
+0.0963258,0.944857,0.394909
+track traj angle_8
+0.0954017,0.943822,0.394694
+track traj angle_9
+0.0944248,0.942727,0.394467
+track traj angle_10
+0.0933952,0.941573,0.394227
+track traj angle_11
+0.0923127,0.94036,0.393975
+track traj angle_12
+0.0911787,0.939087,0.39371
+track traj angle_13
+0.0899945,0.937753,0.393432
+track traj angle_14
+0.0887605,0.936357,0.393142
+track traj angle_15
+0.087477,0.9349,0.392839
+track traj angle_16
+0.0861445,0.933381,0.392523
+track traj angle_17
+0.0847632,0.931799,0.392194
+track traj angle_18
+0.0833337,0.930155,0.391851
+track traj angle_19
+0.0818564,0.928448,0.391496
+track traj angle_20
+0.0803317,0.926678,0.391127
+track traj angle_21
+0.07876,0.924844,0.390745
+track traj angle_22
+0.0771419,0.922947,0.39035
+track traj angle_23
+0.0754777,0.920985,0.389941
+track traj angle_24
+0.0737682,0.918959,0.389518
+track traj angle_25
+0.0720136,0.916867,0.389082
+track traj angle_26
+0.0702147,0.914711,0.388632
+track traj angle_27
+0.0683719,0.912488,0.388168
+track traj angle_28
+0.0664861,0.910199,0.38769
+track traj angle_29
+0.0645577,0.907844,0.387199
+track traj angle_30
+0.0625875,0.905422,0.386693
+track traj angle_31
+0.0605761,0.902932,0.386173
+track traj angle_32
+0.058524,0.900375,0.385639
+track traj angle_33
+0.056432,0.897749,0.385091
+track traj angle_34
+0.0543008,0.895055,0.384528
+track traj angle_35
+0.0521309,0.892291,0.38395
+track traj angle_36
+0.0499233,0.889458,0.383358
+track traj angle_37
+0.0476785,0.886554,0.382751
+track traj angle_38
+0.0453976,0.883579,0.382129
+track traj angle_39
+0.0430813,0.880534,0.381493
+cost_distx: 0.0697072,cost_disty: 0.0875363,cost_etheta: 0.000378297
+cost_distx: 0.102058,cost_disty: 0.128162,cost_etheta: 0.000553865
+cost_distx: 0.144545,cost_disty: 0.181515,cost_etheta: 0.000784437
+cost_distx: 0.199091,cost_disty: 0.250013,cost_etheta: 0.00108045
+cost_distx: 0.267787,cost_disty: 0.33628,cost_etheta: 0.00145327
+cost_distx: 0.352893,cost_disty: 0.443153,cost_etheta: 0.00191513
+cost_distx: 0.456833,cost_disty: 0.573678,cost_etheta: 0.00247921
+cost_distx: 0.582201,cost_disty: 0.731112,cost_etheta: 0.00315958
+cost_distx: 0.731758,cost_disty: 0.918922,cost_etheta: 0.00397121
+cost_distx: 0.908431,cost_disty: 1.14078,cost_etheta: 0.00493001
+cost_distx: 1.11532,cost_disty: 1.40058,cost_etheta: 0.00605275
+cost_distx: 1.35567,cost_disty: 1.70242,cost_etheta: 0.00735716
+cost_distx: 1.6326,cost_disty: 2.05086,cost_etheta: 0.00886318
+cost_distx: 1.94924,cost_disty: 2.45083,cost_etheta: 0.0105923
+cost_distx: 2.30904,cost_disty: 2.9073,cost_etheta: 0.0125661
+cost_distx: 2.71557,cost_disty: 3.42552,cost_etheta: 0.0148075
+cost_distx: 3.17251,cost_disty: 4.01098,cost_etheta: 0.0173405
+cost_distx: 3.68362,cost_disty: 4.66947,cost_etheta: 0.0201903
+cost_distx: 4.25278,cost_disty: 5.40702,cost_etheta: 0.0233833
+cost_distx: 4.88392,cost_disty: 6.22997,cost_etheta: 0.0269473
+cost_distx: 5.58109,cost_disty: 7.14494,cost_etheta: 0.0309111
+cost_distx: 6.34839,cost_disty: 8.15882,cost_etheta: 0.0353051
+cost_distx: 7.18998,cost_disty: 9.27882,cost_etheta: 0.0401609
+cost_distx: 8.11011,cost_disty: 10.5125,cost_etheta: 0.0455116
+cost_distx: 9.11306,cost_disty: 11.8675,cost_etheta: 0.0513914
+cost_distx: 10.2032,cost_disty: 13.3522,cost_etheta: 0.0578363
+cost_distx: 11.3848,cost_disty: 14.9749,cost_etheta: 0.0648837
+cost_distx: 12.6623,cost_disty: 16.7445,cost_etheta: 0.0725719
+cost_distx: 14.0399,cost_disty: 18.6699,cost_etheta: 0.0809397
+cost_distx: 15.5222,cost_disty: 20.7607,cost_etheta: 0.0900284
+cost_distx: 17.1135,cost_disty: 23.0266,cost_etheta: 0.0998811
+cost_distx: 18.8182,cost_disty: 25.4778,cost_etheta: 0.110542
+cost_distx: 20.6407,cost_disty: 28.1249,cost_etheta: 0.122059
+cost_distx: 22.5853,cost_disty: 30.9788,cost_etheta: 0.134478
+cost_distx: 24.6564,cost_disty: 34.0508,cost_etheta: 0.14785
+cost_distx: 26.8584,cost_disty: 37.3526,cost_etheta: 0.162227
+cost_distx: 29.1953,cost_disty: 40.8964,cost_etheta: 0.177661
+cost_distx: 31.6715,cost_disty: 44.6947,cost_etheta: 0.194208
+cost_distx: 34.2909,cost_disty: 48.7603,cost_etheta: 0.211921
+cost_distx: 37.0573,cost_disty: 53.1063,cost_etheta: 0.230856
+-----------------------------------------------
+This is Ipopt version 3.14.13, running with linear solver ma27.
+
+Number of nonzeros in equality constraint Jacobian...:      345
+Number of nonzeros in inequality constraint Jacobian.:        0
+Number of nonzeros in Lagrangian Hessian.............:      414
+
+Total number of variables............................:      231
+                     variables with only lower bounds:        0
+                variables with lower and upper bounds:      231
+                     variables with only upper bounds:        0
+Total number of equality constraints.................:      120
+Total number of inequality constraints...............:        0
+        inequality constraints with only lower bounds:        0
+   inequality constraints with lower and upper bounds:        0
+        inequality constraints with only upper bounds:        0
+
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+   0  9.3481192e+02 3.97e-02 1.00e+02  -1.0 0.00e+00    -  0.00e+00 0.00e+00   0
+   1  7.2461524e+02 3.04e-02 7.67e+01  -1.0 8.50e-01    -  2.08e-01 2.33e-01f  1
+   2  8.0891684e+02 2.50e-02 6.29e+01  -1.0 5.61e-01    -  5.24e-01 1.80e-01h  1
+   3  1.2834768e+03 1.63e-02 4.10e+01  -1.0 3.60e-01    -  9.90e-01 3.48e-01h  1
+   4  2.2000795e+03 7.70e-03 1.94e+01  -1.0 3.23e-01    -  1.00e+00 5.27e-01h  1
+   5  3.2204163e+03 1.20e-03 3.03e+00  -1.0 1.73e-01    -  1.00e+00 8.44e-01h  1
+   6  3.4441555e+03 2.53e-07 1.07e-13  -1.0 6.04e-02    -  1.00e+00 1.00e+00h  1
+   7  3.4225649e+03 4.82e-08 2.89e-01  -2.5 4.13e-02    -  8.58e-01 1.00e+00f  1
+   8  3.4181395e+03 9.12e-09 8.61e-14  -2.5 2.93e-02    -  1.00e+00 1.00e+00f  1
+   9  3.4167597e+03 2.00e-09 3.46e-03  -3.8 1.96e-02    -  9.80e-01 1.00e+00f  1
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+  10  3.4166767e+03 3.92e-10 9.25e-14  -3.8 8.28e-03    -  1.00e+00 1.00e+00f  1
+  11  3.4166284e+03 4.64e-11 7.53e-14  -5.7 2.90e-03    -  1.00e+00 1.00e+00f  1
+  12  3.4166282e+03 4.99e-12 8.99e-14  -5.7 3.50e-04    -  1.00e+00 1.00e+00h  1
+  13  3.4166277e+03 8.27e-14 7.59e-14  -8.0 1.83e-05    -  1.00e+00 1.00e+00f  1
+
+Number of Iterations....: 13
+
+                                   (scaled)                 (unscaled)
+Objective...............:   2.3442002067681096e+02    3.4166276597689193e+03
+Dual infeasibility......:   7.5944841586737660e-14    1.1068817656139909e-12
+Constraint violation....:   8.2725493122381977e-14    8.2725493122381977e-14
+Variable bound violation:   9.6602055521533003e-09    9.6602055521533003e-09
+Complementarity.........:   1.1148267896438419e-08    1.6248390535720659e-07
+Overall NLP error.......:   1.1148267896438419e-08    1.6248390535720659e-07
+
+
+Number of objective function evaluations             = 14
+Number of objective gradient evaluations             = 14
+Number of equality constraint evaluations            = 14
+Number of inequality constraint evaluations          = 0
+Number of equality constraint Jacobian evaluations   = 14
+Number of inequality constraint Jacobian evaluations = 0
+Number of Lagrangian Hessian evaluations             = 13
+Total seconds in IPOPT                               = 0.021
+
+EXIT: Optimal Solution Found.
++++++++++++++++++  结束求解  ++++++++++++++++
+$$$$$$$$$ 结果展示 $$$$$$$$$$
+------ Total Cost(solution): 3416.63-----
+------ solution结果: 1------
+------ solution,size(): 237-----
+CHRONO  MPC solve time: 26ms
+CHRONO  MPC solve index: 1
+$$$$$$ MPC solved successfully! $$$$$$
+MPC solve time: 0.0268905 s
+MPC solve Stamp: 0.0269318
+loop_时间戳: 0.0269463
+***********************  结束Control Loop  ************************
+
+
+pub的时间戳0.0269501
+DEBUG&&&&&
+publish joint velocitys: -0.2,-0.0224099,-0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.2,-0.0205609,-0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.1206,-0.0208051,-0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0320722,-0.0215208,-0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0152021,-0.0222209,-0.199081,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.017111,-0.0228887,-0.00153606,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0190528,-0.0235527,0.110419,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0197589,-0.0242214,0.146242,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0201442,-0.0248952,0.146089,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0205243,-0.0255736,0.138612,0,0,0,0,0,0,0,0,0,
+***********************  开始Control Loop  ************************
+_traj_received为1
+_track_finished为0
+_loop_count为2
+_realTraj_length为264
+_run_loop_traj为 1
+_run_loop_count为 1
+_run_loop为 1
+getTrackTraj用时: 1.07288e-05
+getTrackTraj stamp: 9.36985e-05
+_mpc_trackTraj_size是否正确: 1
+_trackTraj_computed为 1
+_start_mpc_trackTraj为 1
+===================  进入前期计算  =============================
+state position: 0.0387409,0.932078,0.302445
+state velocity: -0.0205243,-0.0255736,0.138612
+flag: 0
+terminal_nums: 243
+
+!! MPC Obj Solve Called !! 
+[0m[ INFO] [1710167490.320315862]: Class FG_eval : debug_csv/csv file has been open ! : /home/diamondlee/VKConTieta_ws/src/open_door_tieta_mpc/tieta_result_csv/debug/sim_debug20240311_223126/fg_evalue_segTraj.csv[0m
+FG_eval paramster has been set.
++++++++++++++++++  开始求解  +++++++++++++++
+cppAd input size:
+n_var:237
+n_var_lowb237
+n_var_upb237
+n_con_lowb:120
+n_con_upb:120
+进来几次啊
+track traj angle_0
+0.0933952,0.941573,0.394227
+track traj angle_1
+0.0923127,0.94036,0.393975
+track traj angle_2
+0.0911787,0.939087,0.39371
+track traj angle_3
+0.0899945,0.937753,0.393432
+track traj angle_4
+0.0887605,0.936357,0.393142
+track traj angle_5
+0.087477,0.9349,0.392839
+track traj angle_6
+0.0861445,0.933381,0.392523
+track traj angle_7
+0.0847632,0.931799,0.392194
+track traj angle_8
+0.0833337,0.930155,0.391851
+track traj angle_9
+0.0818564,0.928448,0.391496
+track traj angle_10
+0.0803317,0.926678,0.391127
+track traj angle_11
+0.07876,0.924844,0.390745
+track traj angle_12
+0.0771419,0.922947,0.39035
+track traj angle_13
+0.0754777,0.920985,0.389941
+track traj angle_14
+0.0737682,0.918959,0.389518
+track traj angle_15
+0.0720136,0.916867,0.389082
+track traj angle_16
+0.0702147,0.914711,0.388632
+track traj angle_17
+0.0683719,0.912488,0.388168
+track traj angle_18
+0.0664861,0.910199,0.38769
+track traj angle_19
+0.0645577,0.907844,0.387199
+track traj angle_20
+0.0625875,0.905422,0.386693
+track traj angle_21
+0.0605761,0.902932,0.386173
+track traj angle_22
+0.058524,0.900375,0.385639
+track traj angle_23
+0.056432,0.897749,0.385091
+track traj angle_24
+0.0543008,0.895055,0.384528
+track traj angle_25
+0.0521309,0.892291,0.38395
+track traj angle_26
+0.0499233,0.889458,0.383358
+track traj angle_27
+0.0476785,0.886554,0.382751
+track traj angle_28
+0.0453976,0.883579,0.382129
+track traj angle_29
+0.0430813,0.880534,0.381493
+track traj angle_30
+0.0407305,0.877417,0.380842
+track traj angle_31
+0.0383461,0.874228,0.380176
+track traj angle_32
+0.0359288,0.870966,0.379494
+track traj angle_33
+0.0334794,0.867631,0.378798
+track traj angle_34
+0.0309989,0.864222,0.378086
+track traj angle_35
+0.0284881,0.860738,0.377359
+track traj angle_36
+0.025948,0.85718,0.376616
+track traj angle_37
+0.0233798,0.853547,0.375858
+track traj angle_38
+0.0207845,0.849837,0.375084
+track traj angle_39
+0.018163,0.846052,0.374295
+cost_distx: 29.8708,cost_disty: 0.901718,cost_etheta: 8.42394
+cost_distx: 28.6993,cost_disty: 0.686053,cost_etheta: 8.37772
+cost_distx: 27.4971,cost_disty: 0.491354,cost_etheta: 8.32933
+cost_distx: 26.2693,cost_disty: 0.322098,cost_etheta: 8.27876
+cost_distx: 25.0195,cost_disty: 0.183157,cost_etheta: 8.22602
+cost_distx: 23.752,cost_disty: 0.0796563,cost_etheta: 8.17112
+cost_distx: 22.4709,cost_disty: 0.0169798,cost_etheta: 8.11406
+cost_distx: 21.1805,cost_disty: 0.000775335,cost_etheta: 8.05487
+cost_distx: 19.8852,cost_disty: 0.0369602,cost_etheta: 7.99355
+cost_distx: 18.5894,cost_disty: 0.131727,cost_etheta: 7.93012
+cost_distx: 17.2979,cost_disty: 0.291548,cost_etheta: 7.86459
+cost_distx: 16.0152,cost_disty: 0.523185,cost_etheta: 7.79697
+cost_distx: 14.7463,cost_disty: 0.83369,cost_etheta: 7.72729
+cost_distx: 13.4959,cost_disty: 1.23042,cost_etheta: 7.65556
+cost_distx: 12.2691,cost_disty: 1.72103,cost_etheta: 7.58179
+cost_distx: 11.0707,cost_disty: 2.3135,cost_etheta: 7.50601
+cost_distx: 9.90597,cost_disty: 3.01612,cost_etheta: 7.42824
+cost_distx: 8.77996,cost_disty: 3.83751,cost_etheta: 7.34849
+cost_distx: 7.69793,cost_disty: 4.78657,cost_etheta: 7.26682
+cost_distx: 6.66507,cost_disty: 5.87258,cost_etheta: 7.18323
+cost_distx: 5.6866,cost_disty: 7.10518,cost_etheta: 7.09776
+cost_distx: 4.76772,cost_disty: 8.49434,cost_etheta: 7.01044
+cost_distx: 3.91369,cost_disty: 10.0504,cost_etheta: 6.92128
+cost_distx: 3.12974,cost_disty: 11.7842,cost_etheta: 6.83033
+cost_distx: 2.42108,cost_disty: 13.7067,cost_etheta: 6.7376
+cost_distx: 1.79292,cost_disty: 15.8295,cost_etheta: 6.64314
+cost_distx: 1.25045,cost_disty: 18.1645,cost_etheta: 6.54696
+cost_distx: 0.798804,cost_disty: 20.724,cost_etheta: 6.44912
+cost_distx: 0.443106,cost_disty: 23.5206,cost_etheta: 6.34966
+cost_distx: 0.188388,cost_disty: 26.5674,cost_etheta: 6.24864
+cost_distx: 0.0395851,cost_disty: 29.8779,cost_etheta: 6.1461
+cost_distx: 0.00155912,cost_disty: 33.4661,cost_etheta: 6.04208
+cost_distx: 0.0790835,cost_disty: 37.3465,cost_etheta: 5.93662
+cost_distx: 0.276836,cost_disty: 41.534,cost_etheta: 5.82977
+cost_distx: 0.59939,cost_disty: 46.0441,cost_etheta: 5.72158
+cost_distx: 1.0512,cost_disty: 50.8927,cost_etheta: 5.61209
+cost_distx: 1.63659,cost_disty: 56.0962,cost_etheta: 5.50135
+cost_distx: 2.35965,cost_disty: 61.671,cost_etheta: 5.38947
+cost_distx: 3.22435,cost_disty: 67.6344,cost_etheta: 5.27648
+cost_distx: 4.23453,cost_disty: 74.0044,cost_etheta: 5.16245
+-----------------------------------------------
+This is Ipopt version 3.14.13, running with linear solver ma27.
+
+Number of nonzeros in equality constraint Jacobian...:      345
+Number of nonzeros in inequality constraint Jacobian.:        0
+Number of nonzeros in Lagrangian Hessian.............:      414
+
+Total number of variables............................:      231
+                     variables with only lower bounds:        0
+                variables with lower and upper bounds:      231
+                     variables with only upper bounds:        0
+Total number of equality constraints.................:      120
+Total number of inequality constraints...............:        0
+        inequality constraints with only lower bounds:        0
+   inequality constraints with lower and upper bounds:        0
+        inequality constraints with only upper bounds:        0
+
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+   0  1.3630204e+03 3.02e-02 1.00e+02  -1.0 0.00e+00    -  0.00e+00 0.00e+00   0
+   1  1.1521726e+03 2.05e-02 6.78e+01  -1.0 6.15e-01    -  2.77e-01 3.22e-01f  1
+   2  1.3240613e+03 1.46e-02 4.81e+01  -1.0 4.05e-01    -  7.60e-01 2.90e-01h  1
+   3  1.9236016e+03 6.91e-03 2.28e+01  -1.0 2.76e-01    -  9.91e-01 5.25e-01h  1
+   4  2.6700493e+03 1.24e-03 4.09e+00  -1.0 1.74e-01    -  1.00e+00 8.21e-01h  1
+   5  2.8721387e+03 2.10e-07 8.03e-14  -1.0 5.33e-02    -  1.00e+00 1.00e+00h  1
+   6  2.8465698e+03 3.80e-08 1.28e-01  -2.5 4.35e-02    -  9.23e-01 1.00e+00f  1
+   7  2.8407616e+03 1.03e-08 6.36e-14  -2.5 3.33e-02    -  1.00e+00 1.00e+00f  1
+   8  2.8389878e+03 2.03e-09 1.03e-03  -3.8 2.03e-02    -  9.94e-01 1.00e+00f  1
+   9  2.8388282e+03 3.69e-10 6.46e-14  -3.8 8.61e-03    -  1.00e+00 1.00e+00f  1
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+  10  2.8387599e+03 3.96e-11 1.06e-13  -5.7 2.93e-03    -  1.00e+00 1.00e+00f  1
+  11  2.8387592e+03 3.53e-12 1.08e-13  -5.7 2.86e-04    -  1.00e+00 1.00e+00h  1
+  12  2.8387585e+03 8.87e-14 6.36e-14  -8.0 1.71e-05    -  1.00e+00 1.00e+00f  1
+
+Number of Iterations....: 12
+
+                                   (scaled)                 (unscaled)
+Objective...............:   1.6499454251787441e+02    2.8387584752383354e+03
+Dual infeasibility......:   6.3572488069200956e-14    1.0937752033760850e-12
+Constraint violation....:   8.8706819667550008e-14    8.8706819667550008e-14
+Variable bound violation:   9.4177027842867744e-09    9.4177027842867744e-09
+Complementarity.........:   1.0515790723730507e-08    1.8092592388374725e-07
+Overall NLP error.......:   1.0515790723730507e-08    1.8092592388374725e-07
+
+
+Number of objective function evaluations             = 13
+Number of objective gradient evaluations             = 13
+Number of equality constraint evaluations            = 13
+Number of inequality constraint evaluations          = 0
+Number of equality constraint Jacobian evaluations   = 13
+Number of inequality constraint Jacobian evaluations = 0
+Number of Lagrangian Hessian evaluations             = 12
+Total seconds in IPOPT                               = 0.020
+
+EXIT: Optimal Solution Found.
++++++++++++++++++  结束求解  ++++++++++++++++
+$$$$$$$$$ 结果展示 $$$$$$$$$$
+------ Total Cost(solution): 2838.76-----
+------ solution结果: 1------
+------ solution,size(): 237-----
+CHRONO  MPC solve time: 27ms
+CHRONO  MPC solve index: 1
+$$$$$$ MPC solved successfully! $$$$$$
+MPC solve time: 0.0271499 s
+MPC solve Stamp: 0.0272591
+loop_时间戳: 0.0272717
+***********************  结束Control Loop  ************************
+
+
+pub的时间戳0.0272748
+DEBUG&&&&&
+publish joint velocitys: -0.2,-0.0261535,-0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.2,-0.0269337,-0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.12238,-0.0276415,-0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0358357,-0.028337,-0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0192966,-0.0290381,-0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0211022,-0.0297443,-0.153344,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0229372,-0.0304551,-0.0097277,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.023563,-0.031171,0.0663301,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0238734,-0.0318922,0.0958099,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0241768,-0.032619,0.106894,0,0,0,0,0,0,0,0,0,
+***********************  开始Control Loop  ************************
+_traj_received为1
+_track_finished为0
+_loop_count为3
+_realTraj_length为264
+_run_loop_traj为 1
+_run_loop_count为 1
+_run_loop为 1
+getTrackTraj用时: 9.05991e-06
+getTrackTraj stamp: 0.000111341
+_mpc_trackTraj_size是否正确: 1
+_trackTraj_computed为 1
+_start_mpc_trackTraj为 1
+===================  进入前期计算  =============================
+state position: -0.0303564,0.903102,0.164944
+state velocity: -0.0241768,-0.032619,0.106894
+flag: 0
+terminal_nums: 233
+
+!! MPC Obj Solve Called !! 
+[0m[ INFO] [1710167491.320333315]: Class FG_eval : debug_csv/csv file has been open ! : /home/diamondlee/VKConTieta_ws/src/open_door_tieta_mpc/tieta_result_csv/debug/sim_debug20240311_223126/fg_evalue_segTraj.csv[0m
+FG_eval paramster has been set.
++++++++++++++++++  开始求解  +++++++++++++++
+cppAd input size:
+n_var:237
+n_var_lowb237
+n_var_upb237
+n_con_lowb:120
+n_con_upb:120
+进来几次啊
+track traj angle_0
+0.0803317,0.926678,0.391127
+track traj angle_1
+0.07876,0.924844,0.390745
+track traj angle_2
+0.0771419,0.922947,0.39035
+track traj angle_3
+0.0754777,0.920985,0.389941
+track traj angle_4
+0.0737682,0.918959,0.389518
+track traj angle_5
+0.0720136,0.916867,0.389082
+track traj angle_6
+0.0702147,0.914711,0.388632
+track traj angle_7
+0.0683719,0.912488,0.388168
+track traj angle_8
+0.0664861,0.910199,0.38769
+track traj angle_9
+0.0645577,0.907844,0.387199
+track traj angle_10
+0.0625875,0.905422,0.386693
+track traj angle_11
+0.0605761,0.902932,0.386173
+track traj angle_12
+0.058524,0.900375,0.385639
+track traj angle_13
+0.056432,0.897749,0.385091
+track traj angle_14
+0.0543008,0.895055,0.384528
+track traj angle_15
+0.0521309,0.892291,0.38395
+track traj angle_16
+0.0499233,0.889458,0.383358
+track traj angle_17
+0.0476785,0.886554,0.382751
+track traj angle_18
+0.0453976,0.883579,0.382129
+track traj angle_19
+0.0430813,0.880534,0.381493
+track traj angle_20
+0.0407305,0.877417,0.380842
+track traj angle_21
+0.0383461,0.874228,0.380176
+track traj angle_22
+0.0359288,0.870966,0.379494
+track traj angle_23
+0.0334794,0.867631,0.378798
+track traj angle_24
+0.0309989,0.864222,0.378086
+track traj angle_25
+0.0284881,0.860738,0.377359
+track traj angle_26
+0.025948,0.85718,0.376616
+track traj angle_27
+0.0233798,0.853547,0.375858
+track traj angle_28
+0.0207845,0.849837,0.375084
+track traj angle_29
+0.018163,0.846052,0.374295
+track traj angle_30
+0.0155163,0.842189,0.37349
+track traj angle_31
+0.0128455,0.838249,0.372669
+track traj angle_32
+0.0101515,0.83423,0.371833
+track traj angle_33
+0.00743545,0.830133,0.37098
+track traj angle_34
+0.0046986,0.825956,0.370112
+track traj angle_35
+0.00194227,0.821699,0.369228
+track traj angle_36
+-0.00083244,0.817362,0.368328
+track traj angle_37
+-0.0036244,0.812944,0.367412
+track traj angle_38
+-0.00643248,0.808445,0.366479
+track traj angle_39
+-0.0092555,0.803862,0.365531
+cost_distx: 122.519,cost_disty: 5.55842,cost_etheta: 51.1588
+cost_distx: 119.064,cost_disty: 4.72744,cost_etheta: 50.9861
+cost_distx: 115.559,cost_disty: 3.93831,cost_etheta: 50.8077
+cost_distx: 112.009,cost_disty: 3.19816,cost_etheta: 50.6235
+cost_distx: 108.419,cost_disty: 2.51445,cost_etheta: 50.4335
+cost_distx: 104.796,cost_disty: 1.89493,cost_etheta: 50.2378
+cost_distx: 101.146,cost_disty: 1.34765,cost_etheta: 50.0363
+cost_distx: 97.4729,cost_disty: 0.881021,cost_etheta: 49.829
+cost_distx: 93.7848,cost_disty: 0.503759,cost_etheta: 49.6159
+cost_distx: 90.087,cost_disty: 0.224905,cost_etheta: 49.3971
+cost_distx: 86.3858,cost_disty: 0.0538373,cost_etheta: 49.1726
+cost_distx: 82.6872,cost_disty: 0.000286394,cost_etheta: 48.9423
+cost_distx: 78.9973,cost_disty: 0.0743431,cost_etheta: 48.7062
+cost_distx: 75.3224,cost_disty: 0.286468,cost_etheta: 48.4645
+cost_distx: 71.6684,cost_disty: 0.647498,cost_etheta: 48.2169
+cost_distx: 68.0417,cost_disty: 1.16866,cost_etheta: 47.9637
+cost_distx: 64.4484,cost_disty: 1.86158,cost_etheta: 47.7047
+cost_distx: 60.8946,cost_disty: 2.73829,cost_etheta: 47.4399
+cost_distx: 57.3867,cost_disty: 3.81117,cost_etheta: 47.1695
+cost_distx: 53.931,cost_disty: 5.09303,cost_etheta: 46.8935
+cost_distx: 50.5336,cost_disty: 6.5971,cost_etheta: 46.6118
+cost_distx: 47.2004,cost_disty: 8.3371,cost_etheta: 46.3246
+cost_distx: 43.9373,cost_disty: 10.3272,cost_etheta: 46.0318
+cost_distx: 40.7502,cost_disty: 12.582,cost_etheta: 45.7334
+cost_distx: 37.6448,cost_disty: 15.1165,cost_etheta: 45.4294
+cost_distx: 34.6268,cost_disty: 17.9465,cost_etheta: 45.1199
+cost_distx: 31.7019,cost_disty: 21.0879,cost_etheta: 44.8049
+cost_distx: 28.8758,cost_disty: 24.557,cost_etheta: 44.4846
+cost_distx: 26.1539,cost_disty: 28.3709,cost_etheta: 44.1588
+cost_distx: 23.5413,cost_disty: 32.547,cost_etheta: 43.8278
+cost_distx: 21.0431,cost_disty: 37.1035,cost_etheta: 43.4914
+cost_distx: 18.6641,cost_disty: 42.0591,cost_etheta: 43.1498
+cost_distx: 16.409,cost_disty: 47.4329,cost_etheta: 42.803
+cost_distx: 14.2823,cost_disty: 53.2449,cost_etheta: 42.451
+cost_distx: 12.2886,cost_disty: 59.5148,cost_etheta: 42.0939
+cost_distx: 10.4321,cost_disty: 66.2635,cost_etheta: 41.7318
+cost_distx: 8.71667,cost_disty: 73.5123,cost_etheta: 41.3649
+cost_distx: 7.14602,cost_disty: 81.2834,cost_etheta: 40.9931
+cost_distx: 5.72356,cost_disty: 89.5996,cost_etheta: 40.6165
+cost_distx: 4.4525,cost_disty: 98.4842,cost_etheta: 40.2352
+-----------------------------------------------
+This is Ipopt version 3.14.13, running with linear solver ma27.
+
+Number of nonzeros in equality constraint Jacobian...:      345
+Number of nonzeros in inequality constraint Jacobian.:        0
+Number of nonzeros in Lagrangian Hessian.............:      414
+
+Total number of variables............................:      231
+                     variables with only lower bounds:        0
+                variables with lower and upper bounds:      231
+                     variables with only upper bounds:        0
+Total number of equality constraints.................:      120
+Total number of inequality constraints...............:        0
+        inequality constraints with only lower bounds:        0
+   inequality constraints with lower and upper bounds:        0
+        inequality constraints with only upper bounds:        0
+
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+   0  4.9711057e+03 1.65e-02 1.00e+02  -1.0 0.00e+00    -  0.00e+00 0.00e+00   0
+   1  3.1559672e+03 1.05e-02 6.39e+01  -1.0 5.48e-01    -  3.05e-01 3.61e-01f  1
+   2  2.6293938e+03 7.10e-03 4.30e+01  -1.0 2.74e-01    -  8.62e-01 3.27e-01f  1
+   3  2.5837494e+03 1.92e-03 1.16e+01  -1.0 1.93e-01    -  9.91e-01 7.30e-01h  1
+   4  2.8094421e+03 3.50e-07 5.27e-14  -1.0 8.74e-02    -  1.00e+00 1.00e+00h  1
+   5  2.7709455e+03 2.79e-08 8.63e-02  -2.5 4.60e-02    -  9.23e-01 1.00e+00f  1
+   6  2.7620742e+03 8.81e-09 5.24e-14  -2.5 3.71e-02    -  1.00e+00 1.00e+00f  1
+   7  2.7595308e+03 1.64e-09 2.21e-04  -3.8 2.23e-02    -  9.99e-01 1.00e+00f  1
+   8  2.7593512e+03 6.24e-10 5.11e-14  -3.8 9.37e-03    -  1.00e+00 1.00e+00f  1
+   9  2.7592541e+03 8.41e-11 5.27e-14  -5.7 4.25e-03    -  1.00e+00 1.00e+00f  1
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+  10  2.7592514e+03 2.53e-11 5.07e-14  -5.7 2.02e-03    -  1.00e+00 1.00e+00f  1
+  11  2.7592510e+03 8.80e-12 4.92e-14  -5.7 7.08e-04    -  1.00e+00 1.00e+00h  1
+  12  2.7592498e+03 6.50e-13 5.20e-14  -8.0 1.91e-04    -  1.00e+00 1.00e+00f  1
+  13  2.7592498e+03 3.09e-14 5.00e-14  -8.0 9.39e-06    -  1.00e+00 1.00e+00h  1
+
+Number of Iterations....: 13
+
+                                   (scaled)                 (unscaled)
+Objective...............:   1.2643602527488353e+02    2.7592498136626523e+03
+Dual infeasibility......:   4.9990596707344781e-14    1.0909591973469522e-12
+Constraint violation....:   3.0916241788858656e-14    3.0916241788858656e-14
+Variable bound violation:   9.1189918394185554e-09    9.1189918394185554e-09
+Complementarity.........:   9.5742851170425197e-09    2.0894238305671077e-07
+Overall NLP error.......:   9.5742851170425197e-09    2.0894238305671077e-07
+
+
+Number of objective function evaluations             = 14
+Number of objective gradient evaluations             = 14
+Number of equality constraint evaluations            = 14
+Number of inequality constraint evaluations          = 0
+Number of equality constraint Jacobian evaluations   = 14
+Number of inequality constraint Jacobian evaluations = 0
+Number of Lagrangian Hessian evaluations             = 13
+Total seconds in IPOPT                               = 0.024
+
+EXIT: Optimal Solution Found.
++++++++++++++++++  结束求解  ++++++++++++++++
+$$$$$$$$$ 结果展示 $$$$$$$$$$
+------ Total Cost(solution): 2759.25-----
+------ solution结果: 1------
+------ solution,size(): 237-----
+CHRONO  MPC solve time: 31ms
+CHRONO  MPC solve index: 1
+$$$$$$ MPC solved successfully! $$$$$$
+MPC solve time: 0.0320024 s
+MPC solve Stamp: 0.0321312
+loop_时间戳: 0.032145
+***********************  结束Control Loop  ************************
+
+
+pub的时间戳0.0321481
+DEBUG&&&&&
+publish joint velocitys: -0.2,-0.0332407,-0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.2,-0.0340777,-0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.126365,-0.0348377,-0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0395362,-0.0355841,-0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0225889,-0.0363352,-0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0242359,-0.0370928,-0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0259831,-0.0378567,-0.149118,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.026521,-0.0386268,-0.0294464,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0267373,-0.0394033,0.0367069,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0269435,-0.040186,0.0709833,0,0,0,0,0,0,0,0,0,
+***********************  开始Control Loop  ************************
+_traj_received为1
+_track_finished为0
+_loop_count为4
+_realTraj_length为264
+_run_loop_traj为 1
+_run_loop_count为 1
+_run_loop为 1
+getTrackTraj用时: 1.04904e-05
+getTrackTraj stamp: 0.000118256
+_mpc_trackTraj_size是否正确: 1
+_trackTraj_computed为 1
+_start_mpc_trackTraj为 1
+===================  进入前期计算  =============================
+state position: -0.102082,0.866832,-0.0199886
+state velocity: -0.0269435,-0.040186,0.0709833
+flag: 0
+terminal_nums: 223
+
+!! MPC Obj Solve Called !! 
+[0m[ INFO] [1710167492.320361439]: Class FG_eval : debug_csv/csv file has been open ! : /home/diamondlee/VKConTieta_ws/src/open_door_tieta_mpc/tieta_result_csv/debug/sim_debug20240311_223126/fg_evalue_segTraj.csv[0m
+FG_eval paramster has been set.
++++++++++++++++++  开始求解  +++++++++++++++
+cppAd input size:
+n_var:237
+n_var_lowb237
+n_var_upb237
+n_con_lowb:120
+n_con_upb:120
+进来几次啊
+track traj angle_0
+0.0625875,0.905422,0.386693
+track traj angle_1
+0.0605761,0.902932,0.386173
+track traj angle_2
+0.058524,0.900375,0.385639
+track traj angle_3
+0.056432,0.897749,0.385091
+track traj angle_4
+0.0543008,0.895055,0.384528
+track traj angle_5
+0.0521309,0.892291,0.38395
+track traj angle_6
+0.0499233,0.889458,0.383358
+track traj angle_7
+0.0476785,0.886554,0.382751
+track traj angle_8
+0.0453976,0.883579,0.382129
+track traj angle_9
+0.0430813,0.880534,0.381493
+track traj angle_10
+0.0407305,0.877417,0.380842
+track traj angle_11
+0.0383461,0.874228,0.380176
+track traj angle_12
+0.0359288,0.870966,0.379494
+track traj angle_13
+0.0334794,0.867631,0.378798
+track traj angle_14
+0.0309989,0.864222,0.378086
+track traj angle_15
+0.0284881,0.860738,0.377359
+track traj angle_16
+0.025948,0.85718,0.376616
+track traj angle_17
+0.0233798,0.853547,0.375858
+track traj angle_18
+0.0207845,0.849837,0.375084
+track traj angle_19
+0.018163,0.846052,0.374295
+track traj angle_20
+0.0155163,0.842189,0.37349
+track traj angle_21
+0.0128455,0.838249,0.372669
+track traj angle_22
+0.0101515,0.83423,0.371833
+track traj angle_23
+0.00743545,0.830133,0.37098
+track traj angle_24
+0.0046986,0.825956,0.370112
+track traj angle_25
+0.00194227,0.821699,0.369228
+track traj angle_26
+-0.00083244,0.817362,0.368328
+track traj angle_27
+-0.0036244,0.812944,0.367412
+track traj angle_28
+-0.00643248,0.808445,0.366479
+track traj angle_29
+-0.0092555,0.803862,0.365531
+track traj angle_30
+-0.0120922,0.799197,0.364567
+track traj angle_31
+-0.014941,0.794449,0.363586
+track traj angle_32
+-0.0178006,0.789617,0.362589
+track traj angle_33
+-0.0206696,0.7847,0.361576
+track traj angle_34
+-0.0235469,0.779698,0.360547
+track traj angle_35
+-0.0264311,0.77461,0.359502
+track traj angle_36
+-0.0293209,0.769435,0.35844
+track traj angle_37
+-0.0322145,0.764174,0.357363
+track traj angle_38
+-0.0351104,0.758825,0.356269
+track traj angle_39
+-0.0380073,0.753388,0.355159
+cost_distx: 271.159,cost_disty: 14.8922,cost_etheta: 165.39
+cost_distx: 264.575,cost_disty: 13.0327,cost_etheta: 164.967
+cost_distx: 257.941,cost_disty: 11.2517,cost_etheta: 164.534
+cost_distx: 251.265,cost_disty: 9.55911,cost_etheta: 164.089
+cost_distx: 244.554,cost_disty: 7.96558,cost_etheta: 163.633
+cost_distx: 237.815,cost_disty: 6.48192,cost_etheta: 163.167
+cost_distx: 231.055,cost_disty: 5.1194,cost_etheta: 162.689
+cost_distx: 224.281,cost_disty: 3.88969,cost_etheta: 162.199
+cost_distx: 217.501,cost_disty: 2.8049,cost_etheta: 161.699
+cost_distx: 210.723,cost_disty: 1.87754,cost_etheta: 161.188
+cost_distx: 203.953,cost_disty: 1.12048,cost_etheta: 160.665
+cost_distx: 197.199,cost_disty: 0.547013,cost_etheta: 160.131
+cost_distx: 190.468,cost_disty: 0.170911,cost_etheta: 159.587
+cost_distx: 183.768,cost_disty: 0.00638422,cost_etheta: 159.031
+cost_distx: 177.104,cost_disty: 0.068117,cost_etheta: 158.463
+cost_distx: 170.484,cost_disty: 0.371277,cost_etheta: 157.885
+cost_distx: 163.916,cost_disty: 0.931514,cost_etheta: 157.295
+cost_distx: 157.405,cost_disty: 1.76491,cost_etheta: 156.694
+cost_distx: 150.961,cost_disty: 2.88805,cost_etheta: 156.082
+cost_distx: 144.587,cost_disty: 4.31805,cost_etheta: 155.46
+cost_distx: 138.293,cost_disty: 6.07258,cost_etheta: 154.826
+cost_distx: 132.082,cost_disty: 8.16983,cost_etheta: 154.18
+cost_distx: 125.963,cost_disty: 10.6286,cost_etheta: 153.524
+cost_distx: 119.94,cost_disty: 13.4682,cost_etheta: 152.857
+cost_distx: 114.02,cost_disty: 16.7083,cost_etheta: 152.179
+cost_distx: 108.21,cost_disty: 20.3693,cost_etheta: 151.489
+cost_distx: 102.514,cost_disty: 24.4721,cost_etheta: 150.79
+cost_distx: 96.9381,cost_disty: 29.0383,cost_etheta: 150.079
+cost_distx: 91.4874,cost_disty: 34.0904,cost_etheta: 149.358
+cost_distx: 86.1667,cost_disty: 39.6511,cost_etheta: 148.625
+cost_distx: 80.9808,cost_disty: 45.744,cost_etheta: 147.883
+cost_distx: 75.9347,cost_disty: 52.3927,cost_etheta: 147.129
+cost_distx: 71.0328,cost_disty: 59.6217,cost_etheta: 146.366
+cost_distx: 66.279,cost_disty: 67.4565,cost_etheta: 145.592
+cost_distx: 61.6769,cost_disty: 75.9233,cost_etheta: 144.808
+cost_distx: 57.2298,cost_disty: 85.0489,cost_etheta: 144.013
+cost_distx: 52.9411,cost_disty: 94.861,cost_etheta: 143.208
+cost_distx: 48.814,cost_disty: 105.387,cost_etheta: 142.394
+cost_distx: 44.8513,cost_disty: 116.655,cost_etheta: 141.57
+cost_distx: 41.0551,cost_disty: 128.695,cost_etheta: 140.736
+-----------------------------------------------
+This is Ipopt version 3.14.13, running with linear solver ma27.
+
+Number of nonzeros in equality constraint Jacobian...:      345
+Number of nonzeros in inequality constraint Jacobian.:        0
+Number of nonzeros in Lagrangian Hessian.............:      414
+
+Total number of variables............................:      231
+                     variables with only lower bounds:        0
+                variables with lower and upper bounds:      231
+                     variables with only upper bounds:        0
+Total number of equality constraints.................:      120
+Total number of inequality constraints...............:        0
+        inequality constraints with only lower bounds:        0
+   inequality constraints with lower and upper bounds:        0
+        inequality constraints with only upper bounds:        0
+
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+   0  1.3167230e+04 7.10e-03 1.00e+02  -1.0 0.00e+00    -  0.00e+00 0.00e+00   0
+   1  9.1871017e+03 5.43e-03 7.66e+01  -1.0 8.45e-01    -  2.10e-01 2.34e-01f  1
+   2  7.3142371e+03 4.42e-03 6.23e+01  -1.0 4.18e-01    -  5.52e-01 1.87e-01f  1
+   3  5.1883125e+03 2.78e-03 3.91e+01  -1.0 3.03e-01    -  9.90e-01 3.72e-01f  1
+   4  4.1056098e+03 1.17e-03 1.65e+01  -1.0 2.21e-01    -  1.00e+00 5.78e-01f  1
+   5  3.8482934e+03 3.86e-07 3.53e-14  -1.0 1.34e-01    -  1.00e+00 1.00e+00f  1
+   6  3.7837278e+03 1.88e-08 7.25e-02  -2.5 4.94e-02    -  9.06e-01 1.00e+00f  1
+   7  3.7719237e+03 7.81e-09 3.43e-14  -2.5 4.36e-02    -  1.00e+00 1.00e+00f  1
+   8  3.7681335e+03 1.49e-09 2.34e-03  -3.8 2.66e-02    -  9.78e-01 1.00e+00f  1
+   9  3.7679138e+03 3.81e-10 3.50e-14  -3.8 1.16e-02    -  1.00e+00 1.00e+00f  1
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+  10  3.7677556e+03 7.39e-11 3.84e-04  -5.7 5.14e-03    -  9.93e-01 9.79e-01f  1
+  11  3.7677498e+03 3.19e-11 3.48e-14  -5.7 2.40e-03    -  1.00e+00 1.00e+00f  1
+  12  3.7677497e+03 1.08e-11 3.49e-14  -5.7 8.24e-04    -  1.00e+00 1.00e+00h  1
+  13  3.7677479e+03 6.77e-13 3.45e-14  -8.0 1.96e-04    -  1.00e+00 1.00e+00f  1
+  14  3.7677479e+03 2.78e-14 3.38e-14  -8.0 7.98e-06    -  1.00e+00 1.00e+00h  1
+
+Number of Iterations....: 14
+
+                                   (scaled)                 (unscaled)
+Objective...............:   1.1581837577609150e+02    3.7677478592925750e+03
+Dual infeasibility......:   3.3801417787261457e-14    1.0996115137654899e-12
+Constraint violation....:   2.7811086766860171e-14    2.7811086766860171e-14
+Variable bound violation:   9.6012637007536483e-09    9.6012637007536483e-09
+Complementarity.........:   9.4333026532473759e-09    3.0687967811381450e-07
+Overall NLP error.......:   9.4333026532473759e-09    3.0687967811381450e-07
+
+
+Number of objective function evaluations             = 15
+Number of objective gradient evaluations             = 15
+Number of equality constraint evaluations            = 15
+Number of inequality constraint evaluations          = 0
+Number of equality constraint Jacobian evaluations   = 15
+Number of inequality constraint Jacobian evaluations = 0
+Number of Lagrangian Hessian evaluations             = 14
+Total seconds in IPOPT                               = 0.021
+
+EXIT: Optimal Solution Found.
++++++++++++++++++  结束求解  ++++++++++++++++
+$$$$$$$$$ 结果展示 $$$$$$$$$$
+------ Total Cost(solution): 3767.75-----
+------ solution结果: 1------
+------ solution,size(): 237-----
+CHRONO  MPC solve time: 30ms
+CHRONO  MPC solve index: 1
+$$$$$$ MPC solved successfully! $$$$$$
+MPC solve time: 0.0305169 s
+MPC solve Stamp: 0.0306582
+loop_时间戳: 0.0306706
+***********************  结束Control Loop  ************************
+
+
+pub的时间戳0.0306737
+DEBUG&&&&&
+publish joint velocitys: -0.2,-0.0408556,-0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.2,-0.0417551,-0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.126032,-0.0425701,-0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0413439,-0.0433714,-0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0248736,-0.0441802,-0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0264108,-0.0449975,-0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0280074,-0.0458218,-0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0284203,-0.0466517,-0.188686,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0285162,-0.0474846,-0.0633302,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0285992,-0.048323,0.0196362,0,0,0,0,0,0,0,0,0,
+***********************  开始Control Loop  ************************
+_traj_received为1
+_track_finished为0
+_loop_count为5
+_realTraj_length为264
+_run_loop_traj为 1
+_run_loop_count为 1
+_run_loop为 1
+getTrackTraj用时: 8.82149e-06
+getTrackTraj stamp: 9.58443e-05
+_mpc_trackTraj_size是否正确: 1
+_trackTraj_computed为 1
+_start_mpc_trackTraj为 1
+===================  进入前期计算  =============================
+state position: -0.175202,0.822719,-0.250146
+state velocity: -0.0285992,-0.048323,0.0196362
+flag: 0
+terminal_nums: 213
+
+!! MPC Obj Solve Called !! 
+[0m[ INFO] [1710167493.320308261]: Class FG_eval : debug_csv/csv file has been open ! : /home/diamondlee/VKConTieta_ws/src/open_door_tieta_mpc/tieta_result_csv/debug/sim_debug20240311_223126/fg_evalue_segTraj.csv[0m
+FG_eval paramster has been set.
++++++++++++++++++  开始求解  +++++++++++++++
+cppAd input size:
+n_var:237
+n_var_lowb237
+n_var_upb237
+n_con_lowb:120
+n_con_upb:120
+进来几次啊
+track traj angle_0
+0.0407305,0.877417,0.380842
+track traj angle_1
+0.0383461,0.874228,0.380176
+track traj angle_2
+0.0359288,0.870966,0.379494
+track traj angle_3
+0.0334794,0.867631,0.378798
+track traj angle_4
+0.0309989,0.864222,0.378086
+track traj angle_5
+0.0284881,0.860738,0.377359
+track traj angle_6
+0.025948,0.85718,0.376616
+track traj angle_7
+0.0233798,0.853547,0.375858
+track traj angle_8
+0.0207845,0.849837,0.375084
+track traj angle_9
+0.018163,0.846052,0.374295
+track traj angle_10
+0.0155163,0.842189,0.37349
+track traj angle_11
+0.0128455,0.838249,0.372669
+track traj angle_12
+0.0101515,0.83423,0.371833
+track traj angle_13
+0.00743545,0.830133,0.37098
+track traj angle_14
+0.0046986,0.825956,0.370112
+track traj angle_15
+0.00194227,0.821699,0.369228
+track traj angle_16
+-0.00083244,0.817362,0.368328
+track traj angle_17
+-0.0036244,0.812944,0.367412
+track traj angle_18
+-0.00643248,0.808445,0.366479
+track traj angle_19
+-0.0092555,0.803862,0.365531
+track traj angle_20
+-0.0120922,0.799197,0.364567
+track traj angle_21
+-0.014941,0.794449,0.363586
+track traj angle_22
+-0.0178006,0.789617,0.362589
+track traj angle_23
+-0.0206696,0.7847,0.361576
+track traj angle_24
+-0.0235469,0.779698,0.360547
+track traj angle_25
+-0.0264311,0.77461,0.359502
+track traj angle_26
+-0.0293209,0.769435,0.35844
+track traj angle_27
+-0.0322145,0.764174,0.357363
+track traj angle_28
+-0.0351104,0.758825,0.356269
+track traj angle_29
+-0.0380073,0.753388,0.355159
+track traj angle_30
+-0.0409037,0.747862,0.354033
+track traj angle_31
+-0.0437982,0.742247,0.352891
+track traj angle_32
+-0.0466891,0.736541,0.351733
+track traj angle_33
+-0.0495746,0.730746,0.350559
+track traj angle_34
+-0.0524531,0.724859,0.349369
+track traj angle_35
+-0.0553231,0.718881,0.348164
+track traj angle_36
+-0.0581831,0.71281,0.346943
+track traj angle_37
+-0.0610313,0.706646,0.345706
+track traj angle_38
+-0.0638657,0.70039,0.344454
+track traj angle_39
+-0.0666845,0.694039,0.343186
+cost_distx: 466.271,cost_disty: 29.9189,cost_etheta: 398.145
+cost_distx: 456.03,cost_disty: 26.5317,cost_etheta: 397.305
+cost_distx: 445.764,cost_disty: 23.2777,cost_etheta: 396.447
+cost_distx: 435.481,cost_disty: 20.1708,cost_etheta: 395.57
+cost_distx: 425.19,cost_disty: 17.2249,cost_etheta: 394.675
+cost_distx: 414.899,cost_disty: 14.4549,cost_etheta: 393.762
+cost_distx: 404.615,cost_disty: 11.8759,cost_etheta: 392.83
+cost_distx: 394.349,cost_disty: 9.50359,cost_etheta: 391.88
+cost_distx: 384.109,cost_disty: 7.35419,cost_etheta: 390.912
+cost_distx: 373.902,cost_disty: 5.44426,cost_etheta: 389.926
+cost_distx: 363.737,cost_disty: 3.79091,cost_etheta: 388.922
+cost_distx: 353.62,cost_disty: 2.4118,cost_etheta: 387.899
+cost_distx: 343.561,cost_disty: 1.32512,cost_etheta: 386.858
+cost_distx: 333.566,cost_disty: 0.549655,cost_etheta: 385.798
+cost_distx: 323.644,cost_disty: 0.104787,cost_etheta: 384.72
+cost_distx: 313.803,cost_disty: 0.0103925,cost_etheta: 383.624
+cost_distx: 304.049,cost_disty: 0.286906,cost_etheta: 382.51
+cost_distx: 294.39,cost_disty: 0.95538,cost_etheta: 381.377
+cost_distx: 284.833,cost_disty: 2.0375,cost_etheta: 380.227
+cost_distx: 275.384,cost_disty: 3.55558,cost_etheta: 379.058
+cost_distx: 266.05,cost_disty: 5.53259,cost_etheta: 377.871
+cost_distx: 256.837,cost_disty: 7.99188,cost_etheta: 376.667
+cost_distx: 247.754,cost_disty: 10.9576,cost_etheta: 375.444
+cost_distx: 238.804,cost_disty: 14.4545,cost_etheta: 374.204
+cost_distx: 229.994,cost_disty: 18.5081,cost_etheta: 372.946
+cost_distx: 221.329,cost_disty: 23.1449,cost_etheta: 371.67
+cost_distx: 212.814,cost_disty: 28.3916,cost_etheta: 370.377
+cost_distx: 204.456,cost_disty: 34.2754,cost_etheta: 369.066
+cost_distx: 196.258,cost_disty: 40.8244,cost_etheta: 367.739
+cost_distx: 188.225,cost_disty: 48.0677,cost_etheta: 366.394
+cost_distx: 180.362,cost_disty: 56.0351,cost_etheta: 365.032
+cost_distx: 172.671,cost_disty: 64.7573,cost_etheta: 363.653
+cost_distx: 165.157,cost_disty: 74.2652,cost_etheta: 362.258
+cost_distx: 157.824,cost_disty: 84.5901,cost_etheta: 360.846
+cost_distx: 150.674,cost_disty: 95.7647,cost_etheta: 359.418
+cost_distx: 143.711,cost_disty: 107.823,cost_etheta: 357.975
+cost_distx: 136.935,cost_disty: 120.799,cost_etheta: 356.515
+cost_distx: 130.351,cost_disty: 134.728,cost_etheta: 355.039
+cost_distx: 123.959,cost_disty: 149.644,cost_etheta: 353.549
+cost_distx: 117.761,cost_disty: 165.584,cost_etheta: 352.043
+-----------------------------------------------
+This is Ipopt version 3.14.13, running with linear solver ma27.
+
+Number of nonzeros in equality constraint Jacobian...:      345
+Number of nonzeros in inequality constraint Jacobian.:        0
+Number of nonzeros in Lagrangian Hessian.............:      414
+
+Total number of variables............................:      231
+                     variables with only lower bounds:        0
+                variables with lower and upper bounds:      231
+                     variables with only upper bounds:        0
+Total number of equality constraints.................:      120
+Total number of inequality constraints...............:        0
+        inequality constraints with only lower bounds:        0
+   inequality constraints with lower and upper bounds:        0
+        inequality constraints with only upper bounds:        0
+
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+   0  2.7691749e+04 2.50e-02 1.00e+02  -1.0 0.00e+00    -  0.00e+00 0.00e+00   0
+   1  2.1081366e+04 2.08e-02 8.31e+01  -1.0 1.17e+00    -  1.55e-01 1.69e-01f  1
+   2  1.7653773e+04 1.82e-02 7.26e+01  -1.0 5.96e-01    -  4.06e-01 1.27e-01f  1
+   3  1.3129450e+04 1.37e-02 5.48e+01  -1.0 4.57e-01    -  6.35e-01 2.46e-01f  1
+   4  1.0168513e+04 9.42e-03 3.77e+01  -1.0 3.88e-01    -  8.69e-01 3.12e-01f  1
+   5  8.9987065e+03 6.94e-03 2.78e+01  -1.0 5.72e-01    -  9.94e-01 2.63e-01f  1
+   6  8.1144890e+03 3.99e-03 1.60e+01  -1.0 1.14e+00    -  1.61e-01 4.25e-01f  1
+   7  7.6344658e+03 9.63e-04 6.03e+00  -1.0 5.98e-01    -  2.20e-01 7.59e-01f  1
+   8  7.5882942e+03 5.43e-04 2.17e+00  -1.0 3.78e-01    -  6.97e-01 4.36e-01f  1
+   9  7.5499265e+03 5.68e-08 4.20e-14  -1.0 1.71e-01    -  1.00e+00 1.00e+00f  1
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+  10  7.4465397e+03 4.52e-08 1.37e-01  -2.5 5.68e-02    -  8.94e-01 1.00e+00f  1
+  11  7.4332948e+03 6.66e-09 4.19e-14  -2.5 5.10e-02    -  1.00e+00 1.00e+00f  1
+  12  7.4282991e+03 1.75e-09 6.56e-03  -3.8 3.45e-02    -  9.42e-01 1.00e+00f  1
+  13  7.4279024e+03 4.47e-10 4.78e-14  -3.8 1.19e-02    -  1.00e+00 1.00e+00f  1
+  14  7.4276653e+03 8.07e-11 4.30e-14  -5.7 4.75e-03    -  1.00e+00 1.00e+00f  1
+  15  7.4276630e+03 1.38e-11 3.18e-14  -5.7 9.21e-04    -  1.00e+00 1.00e+00h  1
+  16  7.4276605e+03 3.71e-13 3.99e-14  -8.0 8.26e-05    -  1.00e+00 1.00e+00f  1
+
+Number of Iterations....: 16
+
+                                   (scaled)                 (unscaled)
+Objective...............:   1.7391033583869881e+02    7.4276604586374187e+03
+Dual infeasibility......:   3.9933057013695874e-14    1.7055293875589224e-12
+Constraint violation....:   3.7078673464918666e-13    3.7078673464918666e-13
+Variable bound violation:   9.8166665074561621e-09    9.8166665074561621e-09
+Complementarity.........:   3.5674668862994152e-08    1.5236548535816325e-06
+Overall NLP error.......:   3.5674668862994152e-08    1.5236548535816325e-06
+
+
+Number of objective function evaluations             = 17
+Number of objective gradient evaluations             = 17
+Number of equality constraint evaluations            = 17
+Number of inequality constraint evaluations          = 0
+Number of equality constraint Jacobian evaluations   = 17
+Number of inequality constraint Jacobian evaluations = 0
+Number of Lagrangian Hessian evaluations             = 16
+Total seconds in IPOPT                               = 0.026
+
+EXIT: Optimal Solution Found.
++++++++++++++++++  结束求解  ++++++++++++++++
+$$$$$$$$$ 结果展示 $$$$$$$$$$
+------ Total Cost(solution): 7427.66-----
+------ solution结果: 1------
+------ solution,size(): 237-----
+CHRONO  MPC solve time: 33ms
+CHRONO  MPC solve index: 1
+$$$$$$ MPC solved successfully! $$$$$$
+MPC solve time: 0.0338342 s
+MPC solve Stamp: 0.0339448
+loop_时间戳: 0.0339575
+***********************  结束Control Loop  ************************
+
+
+pub的时间戳0.0339603
+DEBUG&&&&&
+publish joint velocitys: -0.2,-0.0490406,0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.2,-0.0500072,0.283932,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.115603,-0.0508855,-0.260485,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0396163,-0.0517481,-0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0259319,-0.0526145,-0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0274898,-0.053488,-0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0287939,-0.0543691,-0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0290166,-0.0552576,-0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0289696,-0.0561532,-0.255392,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0289115,-0.0570532,-0.143028,0,0,0,0,0,0,0,0,0,
+***********************  开始Control Loop  ************************
+_traj_received为1
+_track_finished为0
+_loop_count为6
+_realTraj_length为264
+_run_loop_traj为 1
+_run_loop_count为 1
+_run_loop为 1
+getTrackTraj用时: 6.67572e-06
+getTrackTraj stamp: 9.13143e-05
+_mpc_trackTraj_size是否正确: 1
+_trackTraj_computed为 1
+_start_mpc_trackTraj为 1
+===================  进入前期计算  =============================
+state position: -0.247617,0.770181,-0.397883
+state velocity: -0.0289115,-0.0570532,-0.143028
+flag: 0
+terminal_nums: 203
+
+!! MPC Obj Solve Called !! 
+[0m[ INFO] [1710167494.320301892]: Class FG_eval : debug_csv/csv file has been open ! : /home/diamondlee/VKConTieta_ws/src/open_door_tieta_mpc/tieta_result_csv/debug/sim_debug20240311_223126/fg_evalue_segTraj.csv[0m
+FG_eval paramster has been set.
++++++++++++++++++  开始求解  +++++++++++++++
+cppAd input size:
+n_var:237
+n_var_lowb237
+n_var_upb237
+n_con_lowb:120
+n_con_upb:120
+进来几次啊
+track traj angle_0
+0.0155163,0.842189,0.37349
+track traj angle_1
+0.0128455,0.838249,0.372669
+track traj angle_2
+0.0101515,0.83423,0.371833
+track traj angle_3
+0.00743545,0.830133,0.37098
+track traj angle_4
+0.0046986,0.825956,0.370112
+track traj angle_5
+0.00194227,0.821699,0.369228
+track traj angle_6
+-0.00083244,0.817362,0.368328
+track traj angle_7
+-0.0036244,0.812944,0.367412
+track traj angle_8
+-0.00643248,0.808445,0.366479
+track traj angle_9
+-0.0092555,0.803862,0.365531
+track traj angle_10
+-0.0120922,0.799197,0.364567
+track traj angle_11
+-0.014941,0.794449,0.363586
+track traj angle_12
+-0.0178006,0.789617,0.362589
+track traj angle_13
+-0.0206696,0.7847,0.361576
+track traj angle_14
+-0.0235469,0.779698,0.360547
+track traj angle_15
+-0.0264311,0.77461,0.359502
+track traj angle_16
+-0.0293209,0.769435,0.35844
+track traj angle_17
+-0.0322145,0.764174,0.357363
+track traj angle_18
+-0.0351104,0.758825,0.356269
+track traj angle_19
+-0.0380073,0.753388,0.355159
+track traj angle_20
+-0.0409037,0.747862,0.354033
+track traj angle_21
+-0.0437982,0.742247,0.352891
+track traj angle_22
+-0.0466891,0.736541,0.351733
+track traj angle_23
+-0.0495746,0.730746,0.350559
+track traj angle_24
+-0.0524531,0.724859,0.349369
+track traj angle_25
+-0.0553231,0.718881,0.348164
+track traj angle_26
+-0.0581831,0.71281,0.346943
+track traj angle_27
+-0.0610313,0.706646,0.345706
+track traj angle_28
+-0.0638657,0.70039,0.344454
+track traj angle_29
+-0.0666845,0.694039,0.343186
+track traj angle_30
+-0.0694862,0.687595,0.341904
+track traj angle_31
+-0.0722691,0.681055,0.340606
+track traj angle_32
+-0.0750313,0.67442,0.339293
+track traj angle_33
+-0.0777706,0.667689,0.337966
+track traj angle_34
+-0.0804853,0.660861,0.336623
+track traj angle_35
+-0.0831736,0.653937,0.335267
+track traj angle_36
+-0.0858337,0.646915,0.333895
+track traj angle_37
+-0.0884635,0.639794,0.33251
+track traj angle_38
+-0.0910607,0.632576,0.331111
+track traj angle_39
+-0.0936235,0.625259,0.329699
+cost_distx: 692.392,cost_disty: 51.8518,cost_etheta: 595.017
+cost_distx: 678.407,cost_disty: 46.3323,cost_etheta: 593.751
+cost_distx: 664.446,cost_disty: 41.0231,cost_etheta: 592.463
+cost_distx: 650.518,cost_disty: 35.9421,cost_etheta: 591.151
+cost_distx: 636.632,cost_disty: 31.1085,cost_etheta: 589.817
+cost_distx: 622.798,cost_disty: 26.5415,cost_etheta: 588.459
+cost_distx: 609.026,cost_disty: 22.261,cost_etheta: 587.079
+cost_distx: 595.324,cost_disty: 18.2872,cost_etheta: 585.676
+cost_distx: 581.7,cost_disty: 14.6412,cost_etheta: 584.25
+cost_distx: 568.162,cost_disty: 11.3445,cost_etheta: 582.801
+cost_distx: 554.719,cost_disty: 8.41953,cost_etheta: 581.33
+cost_distx: 541.381,cost_disty: 5.88935,cost_etheta: 579.835
+cost_distx: 528.156,cost_disty: 3.77746,cost_etheta: 578.318
+cost_distx: 515.051,cost_disty: 2.10798,cost_etheta: 576.779
+cost_distx: 502.074,cost_disty: 0.905697,cost_etheta: 575.217
+cost_distx: 489.232,cost_disty: 0.196141,cost_etheta: 573.632
+cost_distx: 476.532,cost_disty: 0.00556309,cost_etheta: 572.025
+cost_distx: 463.982,cost_disty: 0.360874,cost_etheta: 570.396
+cost_distx: 451.59,cost_disty: 1.2896,cost_etheta: 568.745
+cost_distx: 439.362,cost_disty: 2.82004,cost_etheta: 567.073
+cost_distx: 427.304,cost_disty: 4.98124,cost_etheta: 565.378
+cost_distx: 415.421,cost_disty: 7.80309,cost_etheta: 563.662
+cost_distx: 403.72,cost_disty: 11.3161,cost_etheta: 561.924
+cost_distx: 392.208,cost_disty: 15.5512,cost_etheta: 560.166
+cost_distx: 380.89,cost_disty: 20.5404,cost_etheta: 558.386
+cost_distx: 369.769,cost_disty: 26.3167,cost_etheta: 556.586
+cost_distx: 358.852,cost_disty: 32.9138,cost_etheta: 554.766
+cost_distx: 348.142,cost_disty: 40.3662,cost_etheta: 552.925
+cost_distx: 337.646,cost_disty: 48.708,cost_etheta: 551.064
+cost_distx: 327.366,cost_disty: 57.9751,cost_etheta: 549.184
+cost_distx: 317.306,cost_disty: 68.2045,cost_etheta: 547.285
+cost_distx: 307.469,cost_disty: 79.434,cost_etheta: 545.366
+cost_distx: 297.858,cost_disty: 91.7019,cost_etheta: 543.429
+cost_distx: 288.478,cost_disty: 105.046,cost_etheta: 541.473
+cost_distx: 279.33,cost_disty: 119.507,cost_etheta: 539.5
+cost_distx: 270.416,cost_disty: 135.126,cost_etheta: 537.509
+cost_distx: 261.738,cost_disty: 151.946,cost_etheta: 535.5
+cost_distx: 253.299,cost_disty: 170.006,cost_etheta: 533.474
+cost_distx: 245.099,cost_disty: 189.351,cost_etheta: 531.433
+cost_distx: 237.14,cost_disty: 210.023,cost_etheta: 529.375
+-----------------------------------------------
+This is Ipopt version 3.14.13, running with linear solver ma27.
+
+Number of nonzeros in equality constraint Jacobian...:      345
+Number of nonzeros in inequality constraint Jacobian.:        0
+Number of nonzeros in Lagrangian Hessian.............:      414
+
+Total number of variables............................:      231
+                     variables with only lower bounds:        0
+                variables with lower and upper bounds:      231
+                     variables with only upper bounds:        0
+Total number of equality constraints.................:      120
+Total number of inequality constraints...............:        0
+        inequality constraints with only lower bounds:        0
+   inequality constraints with lower and upper bounds:        0
+        inequality constraints with only upper bounds:        0
+
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+   0  4.2286903e+04 3.98e-02 1.00e+02  -1.0 0.00e+00    -  0.00e+00 0.00e+00   0
+   1  3.2941985e+04 3.38e-02 8.50e+01  -1.0 1.32e+00    -  1.39e-01 1.50e-01f  1
+   2  2.7954746e+04 3.01e-02 7.55e+01  -1.0 6.83e-01    -  3.62e-01 1.12e-01f  1
+   3  2.1329588e+04 2.37e-02 5.96e+01  -1.0 5.68e-01    -  5.46e-01 2.11e-01f  1
+   4  1.7591744e+04 1.87e-02 4.71e+01  -1.0 5.10e-01    -  6.52e-01 2.11e-01f  1
+   5  1.6292340e+04 1.62e-02 4.08e+01  -1.0 2.83e+00    -  2.92e-01 1.33e-01f  1
+   6  1.5342545e+04 1.40e-02 3.52e+01  -1.0 2.78e+00    -  3.31e-01 1.38e-01f  1
+   7  1.4602560e+04 1.18e-02 2.96e+01  -1.0 2.59e+00    -  3.76e-01 1.59e-01f  1
+   8  1.4079276e+04 9.60e-03 2.41e+01  -1.0 2.33e+00    -  4.27e-01 1.84e-01f  1
+   9  1.3755493e+04 7.52e-03 2.25e+01  -1.0 2.02e+00    -  4.94e-01 2.17e-01f  1
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+  10  1.3611054e+04 5.53e-03 2.11e+01  -1.0 1.68e+00    -  5.92e-01 2.65e-01f  1
+  11  1.3625638e+04 3.63e-03 1.81e+01  -1.0 1.31e+00    -  7.55e-01 3.43e-01h  1
+  12  1.3776971e+04 1.84e-03 1.22e+01  -1.0 9.23e-01    -  1.00e+00 4.92e-01h  1
+  13  1.4057874e+04 8.28e-05 6.55e-01  -1.0 4.78e-01    -  1.00e+00 9.55e-01h  1
+  14  1.3951359e+04 4.67e-08 7.63e-02  -1.7 8.06e-02    -  9.59e-01 1.00e+00f  1
+  15  1.3911758e+04 1.42e-08 1.72e-02  -2.5 6.25e-02    -  9.75e-01 1.00e+00f  1
+  16  1.3904141e+04 1.46e-09 8.65e-03  -3.8 3.79e-02    -  9.38e-01 1.00e+00f  1
+  17  1.3903619e+04 4.69e-10 7.42e-14  -3.8 1.40e-02    -  1.00e+00 1.00e+00f  1
+  18  1.3903282e+04 9.18e-11 1.22e-04  -5.7 8.12e-03    -  9.84e-01 9.88e-01f  1
+  19  1.3903268e+04 3.00e-11 9.67e-14  -5.7 3.46e-03    -  1.00e+00 1.00e+00f  1
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+  20  1.3903267e+04 4.96e-12 7.49e-14  -5.7 8.44e-04    -  1.00e+00 1.00e+00h  1
+
+Number of Iterations....: 20
+
+                                   (scaled)                 (unscaled)
+Objective...............:   2.6689574484956938e+02    1.3903267262858255e+04
+Dual infeasibility......:   7.4886813588661042e-14    3.9010415260604320e-12
+Constraint violation....:   4.9553798564527796e-12    4.9553798564527796e-12
+Variable bound violation:   0.0000000000000000e+00    0.0000000000000000e+00
+Complementarity.........:   3.3420209478691996e-06    1.7409423467011609e-04
+Overall NLP error.......:   3.3420209478691996e-06    1.7409423467011609e-04
+
+
+Number of objective function evaluations             = 21
+Number of objective gradient evaluations             = 21
+Number of equality constraint evaluations            = 21
+Number of inequality constraint evaluations          = 0
+Number of equality constraint Jacobian evaluations   = 21
+Number of inequality constraint Jacobian evaluations = 0
+Number of Lagrangian Hessian evaluations             = 20
+Total seconds in IPOPT                               = 0.028
+
+EXIT: Maximum Number of Iterations Exceeded.
++++++++++++++++++  结束求解  ++++++++++++++++
+$$$$$$$$$ 结果展示 $$$$$$$$$$
+------ Total Cost(solution): 13903.3-----
+------ solution结果: 0------
+------ solution,size(): 237-----
+CHRONO  MPC solve time: 35ms
+CHRONO  MPC solve index: 1
+$$$$$$ MPC solved successfully! $$$$$$
+MPC solve time: 0.0360014 s
+MPC solve Stamp: 0.0361097
+loop_时间戳: 0.0361221
+***********************  结束Control Loop  ************************
+
+
+pub的时间戳0.0361252
+DEBUG&&&&&
+publish joint velocitys: -0.199998,-0.0578192,0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.19996,-0.0588512,0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0710402,-0.0597884,0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0280511,-0.0607101,0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0255491,-0.0616374,0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0276359,-0.0625674,0.299999,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0282025,-0.0635032,0.299999,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0280672,-0.0644466,0.299983,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0278403,-0.0653974,-0.158258,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0276209,-0.066353,-0.299992,0,0,0,0,0,0,0,0,0,
+***********************  开始Control Loop  ************************
+_traj_received为1
+_track_finished为0
+_loop_count为7
+_realTraj_length为264
+_run_loop_traj为 1
+_run_loop_count为 1
+_run_loop为 1
+getTrackTraj用时: 9.53674e-06
+getTrackTraj stamp: 0.000103235
+_mpc_trackTraj_size是否正确: 1
+_trackTraj_computed为 1
+_start_mpc_trackTraj为 1
+===================  进入前期计算  =============================
+state position: -0.314091,0.708631,-0.194292
+state velocity: -0.0276209,-0.066353,-0.299992
+flag: 0
+terminal_nums: 193
+
+!! MPC Obj Solve Called !! 
+[0m[ INFO] [1710167495.320315010]: Class FG_eval : debug_csv/csv file has been open ! : /home/diamondlee/VKConTieta_ws/src/open_door_tieta_mpc/tieta_result_csv/debug/sim_debug20240311_223126/fg_evalue_segTraj.csv[0m
+FG_eval paramster has been set.
++++++++++++++++++  开始求解  +++++++++++++++
+cppAd input size:
+n_var:237
+n_var_lowb237
+n_var_upb237
+n_con_lowb:120
+n_con_upb:120
+进来几次啊
+track traj angle_0
+-0.0120922,0.799197,0.364567
+track traj angle_1
+-0.014941,0.794449,0.363586
+track traj angle_2
+-0.0178006,0.789617,0.362589
+track traj angle_3
+-0.0206696,0.7847,0.361576
+track traj angle_4
+-0.0235469,0.779698,0.360547
+track traj angle_5
+-0.0264311,0.77461,0.359502
+track traj angle_6
+-0.0293209,0.769435,0.35844
+track traj angle_7
+-0.0322145,0.764174,0.357363
+track traj angle_8
+-0.0351104,0.758825,0.356269
+track traj angle_9
+-0.0380073,0.753388,0.355159
+track traj angle_10
+-0.0409037,0.747862,0.354033
+track traj angle_11
+-0.0437982,0.742247,0.352891
+track traj angle_12
+-0.0466891,0.736541,0.351733
+track traj angle_13
+-0.0495746,0.730746,0.350559
+track traj angle_14
+-0.0524531,0.724859,0.349369
+track traj angle_15
+-0.0553231,0.718881,0.348164
+track traj angle_16
+-0.0581831,0.71281,0.346943
+track traj angle_17
+-0.0610313,0.706646,0.345706
+track traj angle_18
+-0.0638657,0.70039,0.344454
+track traj angle_19
+-0.0666845,0.694039,0.343186
+track traj angle_20
+-0.0694862,0.687595,0.341904
+track traj angle_21
+-0.0722691,0.681055,0.340606
+track traj angle_22
+-0.0750313,0.67442,0.339293
+track traj angle_23
+-0.0777706,0.667689,0.337966
+track traj angle_24
+-0.0804853,0.660861,0.336623
+track traj angle_25
+-0.0831736,0.653937,0.335267
+track traj angle_26
+-0.0858337,0.646915,0.333895
+track traj angle_27
+-0.0884635,0.639794,0.33251
+track traj angle_28
+-0.0910607,0.632576,0.331111
+track traj angle_29
+-0.0936235,0.625259,0.329699
+track traj angle_30
+-0.0961499,0.617843,0.328273
+track traj angle_31
+-0.098638,0.610326,0.326833
+track traj angle_32
+-0.101085,0.602711,0.325381
+track traj angle_33
+-0.10349,0.594995,0.323917
+track traj angle_34
+-0.105849,0.587179,0.32244
+track traj angle_35
+-0.108161,0.579262,0.320952
+track traj angle_36
+-0.110424,0.571246,0.319452
+track traj angle_37
+-0.112635,0.56313,0.317941
+track traj angle_38
+-0.114791,0.554914,0.31642
+track traj angle_39
+-0.116891,0.546598,0.314889
+cost_distx: 912.033,cost_disty: 82.0217,cost_etheta: 312.323
+cost_distx: 894.907,cost_disty: 73.6462,cost_etheta: 311.228
+cost_distx: 877.88,cost_disty: 65.5858,cost_etheta: 310.117
+cost_distx: 860.961,cost_disty: 57.8638,cost_etheta: 308.99
+cost_distx: 844.159,cost_disty: 50.5041,cost_etheta: 307.847
+cost_distx: 827.482,cost_disty: 43.5312,cost_etheta: 306.688
+cost_distx: 810.94,cost_disty: 36.9707,cost_etheta: 305.513
+cost_distx: 794.543,cost_disty: 30.8493,cost_etheta: 304.323
+cost_distx: 778.301,cost_disty: 25.1937,cost_etheta: 303.118
+cost_distx: 762.222,cost_disty: 20.0314,cost_etheta: 301.897
+cost_distx: 746.313,cost_disty: 15.3905,cost_etheta: 300.661
+cost_distx: 730.582,cost_disty: 11.2999,cost_etheta: 299.41
+cost_distx: 715.038,cost_disty: 7.78969,cost_etheta: 298.143
+cost_distx: 699.689,cost_disty: 4.89048,cost_etheta: 296.863
+cost_distx: 684.544,cost_disty: 2.63344,cost_etheta: 295.568
+cost_distx: 669.608,cost_disty: 1.05054,cost_etheta: 294.259
+cost_distx: 654.889,cost_disty: 0.174626,cost_etheta: 292.935
+cost_distx: 640.392,cost_disty: 0.0394011,cost_etheta: 291.598
+cost_distx: 626.127,cost_disty: 0.679254,cost_etheta: 290.247
+cost_distx: 612.1,cost_disty: 2.12926,cost_etheta: 288.883
+cost_distx: 598.315,cost_disty: 4.42539,cost_etheta: 287.506
+cost_distx: 584.778,cost_disty: 7.60455,cost_etheta: 286.116
+cost_distx: 571.495,cost_disty: 11.7044,cost_etheta: 284.713
+cost_distx: 558.473,cost_disty: 16.7631,cost_etheta: 283.298
+cost_distx: 545.716,cost_disty: 22.8198,cost_etheta: 281.872
+cost_distx: 533.228,cost_disty: 29.9149,cost_etheta: 280.433
+cost_distx: 521.014,cost_disty: 38.0897,cost_etheta: 278.982
+cost_distx: 509.078,cost_disty: 47.3855,cost_etheta: 277.521
+cost_distx: 497.425,cost_disty: 57.8441,cost_etheta: 276.049
+cost_distx: 486.059,cost_disty: 69.5093,cost_etheta: 274.566
+cost_distx: 474.983,cost_disty: 82.4258,cost_etheta: 273.074
+cost_distx: 464.2,cost_disty: 96.6386,cost_etheta: 271.572
+cost_distx: 453.714,cost_disty: 112.192,cost_etheta: 270.061
+cost_distx: 443.529,cost_disty: 129.133,cost_etheta: 268.541
+cost_distx: 433.647,cost_disty: 147.507,cost_etheta: 267.013
+cost_distx: 424.07,cost_disty: 167.364,cost_etheta: 265.476
+cost_distx: 414.803,cost_disty: 188.746,cost_etheta: 263.933
+cost_distx: 405.847,cost_disty: 211.706,cost_etheta: 262.383
+cost_distx: 397.205,cost_disty: 236.289,cost_etheta: 260.827
+cost_distx: 388.878,cost_disty: 262.547,cost_etheta: 259.265
+-----------------------------------------------
+This is Ipopt version 3.14.13, running with linear solver ma27.
+
+Number of nonzeros in equality constraint Jacobian...:      345
+Number of nonzeros in inequality constraint Jacobian.:        0
+Number of nonzeros in Lagrangian Hessian.............:      414
+
+Total number of variables............................:      231
+                     variables with only lower bounds:        0
+                variables with lower and upper bounds:      231
+                     variables with only upper bounds:        0
+Total number of equality constraints.................:      120
+Total number of inequality constraints...............:        0
+        inequality constraints with only lower bounds:        0
+   inequality constraints with lower and upper bounds:        0
+        inequality constraints with only upper bounds:        0
+
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+   0  3.8818040e+04 3.00e-02 1.00e+02  -1.0 0.00e+00    -  0.00e+00 0.00e+00   0
+   1  2.6332377e+04 2.34e-02 7.81e+01  -1.0 9.05e-01    -  1.97e-01 2.19e-01f  1
+   2  1.9928279e+04 1.92e-02 6.39e+01  -1.0 4.83e-01    -  5.33e-01 1.82e-01f  1
+   3  1.3085307e+04 1.29e-02 4.31e+01  -1.0 3.72e-01    -  9.74e-01 3.25e-01f  1
+   4  1.0527472e+04 9.20e-03 3.07e+01  -1.0 2.86e-01    -  3.96e-01 2.88e-01f  1
+   5  9.5612270e+03 7.13e-03 2.38e+01  -1.0 1.63e+00    -  6.84e-01 2.26e-01f  1
+   6  8.8231302e+03 4.82e-03 1.61e+01  -1.0 1.38e+00    -  9.86e-01 3.23e-01f  1
+   7  8.3934807e+03 2.40e-03 7.99e+00  -1.0 9.73e-01    -  1.00e+00 5.03e-01f  1
+   8  8.2840028e+03 4.74e-04 1.58e+00  -1.0 3.03e-01    -  3.57e-01 8.03e-01f  1
+   9  8.2845775e+03 4.29e-08 4.42e-14  -1.0 1.20e-01    -  1.00e+00 1.00e+00f  1
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+  10  8.1293267e+03 4.33e-08 2.00e-01  -2.5 6.79e-02    -  8.45e-01 1.00e+00f  1
+  11  8.1074618e+03 5.51e-09 5.68e-14  -2.5 6.22e-02    -  1.00e+00 1.00e+00f  1
+  12  8.0988609e+03 1.78e-09 4.40e-03  -3.8 3.76e-02    -  9.59e-01 1.00e+00f  1
+  13  8.0982023e+03 5.19e-10 5.60e-14  -3.8 1.48e-02    -  1.00e+00 1.00e+00f  1
+  14  8.0978312e+03 1.00e-10 2.37e-04  -5.7 6.55e-03    -  9.95e-01 9.86e-01f  1
+  15  8.0978179e+03 1.17e-11 5.99e-14  -5.7 1.36e-03    -  1.00e+00 1.00e+00f  1
+  16  8.0978136e+03 2.17e-13 5.35e-14  -8.0 8.37e-05    -  1.00e+00 1.00e+00f  1
+
+Number of Iterations....: 16
+
+                                   (scaled)                 (unscaled)
+Objective...............:   1.3534705054090173e+02    8.0978136202989972e+03
+Dual infeasibility......:   5.3469470850250824e-14    3.1990782775904929e-12
+Constraint violation....:   2.1738166822160565e-13    2.1738166822160565e-13
+Variable bound violation:   9.7645928287537487e-09    9.7645928287537487e-09
+Complementarity.........:   2.3314611394915042e-08    1.3949131285182077e-06
+Overall NLP error.......:   2.3314611394915042e-08    1.3949131285182077e-06
+
+
+Number of objective function evaluations             = 17
+Number of objective gradient evaluations             = 17
+Number of equality constraint evaluations            = 17
+Number of inequality constraint evaluations          = 0
+Number of equality constraint Jacobian evaluations   = 17
+Number of inequality constraint Jacobian evaluations = 0
+Number of Lagrangian Hessian evaluations             = 16
+Total seconds in IPOPT                               = 0.024
+
+EXIT: Optimal Solution Found.
++++++++++++++++++  结束求解  ++++++++++++++++
+$$$$$$$$$ 结果展示 $$$$$$$$$$
+------ Total Cost(solution): 8097.81-----
+------ solution结果: 1------
+------ solution,size(): 237-----
+CHRONO  MPC solve time: 32ms
+CHRONO  MPC solve index: 1
+$$$$$$ MPC solved successfully! $$$$$$
+MPC solve time: 0.0321815 s
+MPC solve Stamp: 0.0323014
+loop_时间戳: 0.0323141
+***********************  结束Control Loop  ************************
+
+
+pub的时间戳0.0323172
+DEBUG&&&&&
+publish joint velocitys: -0.2,-0.0671648,0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.2,-0.0682582,0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0840575,-0.0692506,0.276039,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0297048,-0.0702253,-0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0233127,-0.0712024,-0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.02501,-0.0721826,-0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0255806,-0.0731698,-0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0253159,-0.0741642,-0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0248963,-0.0751621,-0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0244739,-0.0761594,-0.3,0,0,0,0,0,0,0,0,0,
+***********************  开始Control Loop  ************************
+_traj_received为1
+_track_finished为0
+_loop_count为8
+_realTraj_length为264
+_run_loop_traj为 1
+_run_loop_count为 1
+_run_loop为 1
+getTrackTraj用时: 1.00136e-05
+getTrackTraj stamp: 0.000102758
+_mpc_trackTraj_size是否正确: 1
+_trackTraj_computed为 1
+_start_mpc_trackTraj为 1
+===================  进入前期计算  =============================
+state position: -0.380515,0.637526,-0.316688
+state velocity: -0.0244739,-0.0761594,-0.3
+flag: 0
+terminal_nums: 183
+
+!! MPC Obj Solve Called !! 
+[0m[ INFO] [1710167496.320330064]: Class FG_eval : debug_csv/csv file has been open ! : /home/diamondlee/VKConTieta_ws/src/open_door_tieta_mpc/tieta_result_csv/debug/sim_debug20240311_223126/fg_evalue_segTraj.csv[0m
+FG_eval paramster has been set.
++++++++++++++++++  开始求解  +++++++++++++++
+cppAd input size:
+n_var:237
+n_var_lowb237
+n_var_upb237
+n_con_lowb:120
+n_con_upb:120
+进来几次啊
+track traj angle_0
+-0.0409037,0.747862,0.354033
+track traj angle_1
+-0.0437982,0.742247,0.352891
+track traj angle_2
+-0.0466891,0.736541,0.351733
+track traj angle_3
+-0.0495746,0.730746,0.350559
+track traj angle_4
+-0.0524531,0.724859,0.349369
+track traj angle_5
+-0.0553231,0.718881,0.348164
+track traj angle_6
+-0.0581831,0.71281,0.346943
+track traj angle_7
+-0.0610313,0.706646,0.345706
+track traj angle_8
+-0.0638657,0.70039,0.344454
+track traj angle_9
+-0.0666845,0.694039,0.343186
+track traj angle_10
+-0.0694862,0.687595,0.341904
+track traj angle_11
+-0.0722691,0.681055,0.340606
+track traj angle_12
+-0.0750313,0.67442,0.339293
+track traj angle_13
+-0.0777706,0.667689,0.337966
+track traj angle_14
+-0.0804853,0.660861,0.336623
+track traj angle_15
+-0.0831736,0.653937,0.335267
+track traj angle_16
+-0.0858337,0.646915,0.333895
+track traj angle_17
+-0.0884635,0.639794,0.33251
+track traj angle_18
+-0.0910607,0.632576,0.331111
+track traj angle_19
+-0.0936235,0.625259,0.329699
+track traj angle_20
+-0.0961499,0.617843,0.328273
+track traj angle_21
+-0.098638,0.610326,0.326833
+track traj angle_22
+-0.101085,0.602711,0.325381
+track traj angle_23
+-0.10349,0.594995,0.323917
+track traj angle_24
+-0.105849,0.587179,0.32244
+track traj angle_25
+-0.108161,0.579262,0.320952
+track traj angle_26
+-0.110424,0.571246,0.319452
+track traj angle_27
+-0.112635,0.56313,0.317941
+track traj angle_28
+-0.114791,0.554914,0.31642
+track traj angle_29
+-0.116891,0.546598,0.314889
+track traj angle_30
+-0.118932,0.538182,0.313347
+track traj angle_31
+-0.120913,0.529666,0.311797
+track traj angle_32
+-0.12283,0.52105,0.310238
+track traj angle_33
+-0.124682,0.512334,0.30867
+track traj angle_34
+-0.126465,0.503518,0.307094
+track traj angle_35
+-0.128179,0.494602,0.305511
+track traj angle_36
+-0.12982,0.485586,0.30392
+track traj angle_37
+-0.131386,0.476469,0.302323
+track traj angle_38
+-0.132874,0.467253,0.300721
+track traj angle_39
+-0.134284,0.457937,0.299113
+cost_distx: 1153.36,cost_disty: 121.741,cost_etheta: 449.867
+cost_distx: 1133.78,cost_disty: 109.665,cost_etheta: 448.336
+cost_distx: 1114.4,cost_disty: 98.0408,cost_etheta: 446.786
+cost_distx: 1095.22,cost_disty: 86.8997,cost_etheta: 445.218
+cost_distx: 1076.25,cost_disty: 76.2713,cost_etheta: 443.632
+cost_distx: 1057.5,cost_disty: 66.1866,cost_etheta: 442.028
+cost_distx: 1038.98,cost_disty: 56.6774,cost_etheta: 440.406
+cost_distx: 1020.7,cost_disty: 47.7766,cost_etheta: 438.766
+cost_distx: 1002.67,cost_disty: 39.5187,cost_etheta: 437.108
+cost_distx: 984.896,cost_disty: 31.9378,cost_etheta: 435.434
+cost_distx: 967.389,cost_disty: 25.069,cost_etheta: 433.743
+cost_distx: 950.155,cost_disty: 18.9479,cost_etheta: 432.035
+cost_distx: 933.203,cost_disty: 13.6116,cost_etheta: 430.311
+cost_distx: 916.541,cost_disty: 9.09797,cost_etheta: 428.571
+cost_distx: 900.178,cost_disty: 5.44546,cost_etheta: 426.816
+cost_distx: 884.119,cost_disty: 2.69323,cost_etheta: 425.045
+cost_distx: 868.37,cost_disty: 0.881484,cost_etheta: 423.259
+cost_distx: 852.941,cost_disty: 0.0514596,cost_etheta: 421.458
+cost_distx: 837.838,cost_disty: 0.245,cost_etheta: 419.644
+cost_distx: 823.068,cost_disty: 1.50471,cost_etheta: 417.815
+cost_distx: 808.635,cost_disty: 3.87424,cost_etheta: 415.974
+cost_distx: 794.546,cost_disty: 7.39806,cost_etheta: 414.12
+cost_distx: 780.809,cost_disty: 12.121,cost_etheta: 412.253
+cost_distx: 767.43,cost_disty: 18.089,cost_etheta: 410.375
+cost_distx: 754.413,cost_disty: 25.3483,cost_etheta: 408.485
+cost_distx: 741.765,cost_disty: 33.9464,cost_etheta: 406.584
+cost_distx: 729.492,cost_disty: 43.9297,cost_etheta: 404.674
+cost_distx: 717.599,cost_disty: 55.3469,cost_etheta: 402.754
+cost_distx: 706.092,cost_disty: 68.2466,cost_etheta: 400.826
+cost_distx: 694.976,cost_disty: 82.6781,cost_etheta: 398.889
+cost_distx: 684.254,cost_disty: 98.6914,cost_etheta: 396.944
+cost_distx: 673.933,cost_disty: 116.337,cost_etheta: 394.993
+cost_distx: 664.015,cost_disty: 135.666,cost_etheta: 393.036
+cost_distx: 654.507,cost_disty: 156.73,cost_etheta: 391.072
+cost_distx: 645.413,cost_disty: 179.581,cost_etheta: 389.104
+cost_distx: 636.736,cost_disty: 204.273,cost_etheta: 387.131
+cost_distx: 628.481,cost_disty: 230.858,cost_etheta: 385.155
+cost_distx: 620.654,cost_disty: 259.392,cost_etheta: 383.175
+cost_distx: 613.258,cost_disty: 289.928,cost_etheta: 381.193
+cost_distx: 606.299,cost_disty: 322.521,cost_etheta: 379.21
+-----------------------------------------------
+This is Ipopt version 3.14.13, running with linear solver ma27.
+
+Number of nonzeros in equality constraint Jacobian...:      345
+Number of nonzeros in inequality constraint Jacobian.:        0
+Number of nonzeros in Lagrangian Hessian.............:      414
+
+Total number of variables............................:      231
+                     variables with only lower bounds:        0
+                variables with lower and upper bounds:      231
+                     variables with only upper bounds:        0
+Total number of equality constraints.................:      120
+Total number of inequality constraints...............:        0
+        inequality constraints with only lower bounds:        0
+   inequality constraints with lower and upper bounds:        0
+        inequality constraints with only upper bounds:        0
+
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+   0  5.3337067e+04 3.17e-02 1.00e+02  -1.0 0.00e+00    -  0.00e+00 0.00e+00   0
+   1  3.7927072e+04 2.56e-02 8.09e+01  -1.0 1.04e+00    -  1.74e-01 1.91e-01f  1
+   2  2.9796911e+04 2.17e-02 6.85e+01  -1.0 6.20e-01    -  4.65e-01 1.53e-01f  1
+   3  2.1056382e+04 1.62e-02 5.10e+01  -1.0 4.83e-01    -  9.28e-01 2.55e-01f  1
+   4  1.7655815e+04 1.28e-02 4.05e+01  -1.0 1.78e+00    -  1.24e-01 2.06e-01f  1
+   5  1.5805264e+04 1.02e-02 3.23e+01  -1.0 1.81e+00    -  1.18e-01 2.02e-01f  1
+   6  1.5024777e+04 8.74e-03 2.76e+01  -1.0 1.57e+00    -  1.35e-01 1.46e-01f  1
+   7  1.4660816e+04 7.98e-03 2.52e+01  -1.0 1.56e+00    -  3.13e-01 8.78e-02f  1
+   8  1.4161947e+04 6.61e-03 2.09e+01  -1.0 1.93e+00    -  4.66e-01 1.72e-01f  1
+   9  1.3823302e+04 5.11e-03 1.61e+01  -1.0 1.74e+00    -  6.36e-01 2.27e-01f  1
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+  10  1.3684347e+04 3.55e-03 1.58e+01  -1.0 1.43e+00    -  8.71e-01 3.06e-01f  1
+  11  1.3751849e+04 1.99e-03 1.12e+01  -1.0 1.05e+00    -  1.00e+00 4.41e-01h  1
+  12  1.4108242e+04 9.56e-06 2.14e+00  -1.0 4.84e-01    -  4.34e-01 9.96e-01h  1
+  13  1.4115513e+04 1.78e-06 1.46e-01  -1.0 3.00e-01    -  1.00e+00 8.16e-01f  1
+  14  1.3955289e+04 8.30e-08 6.08e-14  -1.7 1.10e-01    -  1.00e+00 1.00e+00f  1
+  15  1.3898640e+04 1.88e-08 3.89e-02  -2.5 9.88e-02    -  9.52e-01 1.00e+00f  1
+  16  1.3893385e+04 2.82e-09 9.99e-14  -2.5 3.39e-02    -  1.00e+00 1.00e+00f  1
+  17  1.3886239e+04 9.54e-10 3.65e-04  -3.8 1.85e-02    -  9.95e-01 1.00e+00f  1
+  18  1.3885632e+04 7.83e-11 5.43e-14  -5.7 5.37e-03    -  1.00e+00 1.00e+00f  1
+  19  1.3885615e+04 1.34e-11 9.84e-14  -5.7 9.86e-04    -  1.00e+00 1.00e+00f  1
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+  20  1.3885610e+04 1.95e-13 7.81e-14  -8.0 4.91e-05    -  1.00e+00 1.00e+00f  1
+
+Number of Iterations....: 20
+
+                                   (scaled)                 (unscaled)
+Objective...............:   2.0619123747200899e+02    1.3885610008015448e+04
+Dual infeasibility......:   7.8050360626823515e-14    5.2561732590414323e-12
+Constraint violation....:   1.9506618542664000e-13    1.9506618542664000e-13
+Variable bound violation:   9.8706534612524877e-09    9.8706534612524877e-09
+Complementarity.........:   2.0576275799043750e-08    1.3856754761543852e-06
+Overall NLP error.......:   2.0576275799043750e-08    1.3856754761543852e-06
+
+
+Number of objective function evaluations             = 21
+Number of objective gradient evaluations             = 21
+Number of equality constraint evaluations            = 21
+Number of inequality constraint evaluations          = 0
+Number of equality constraint Jacobian evaluations   = 21
+Number of inequality constraint Jacobian evaluations = 0
+Number of Lagrangian Hessian evaluations             = 20
+Total seconds in IPOPT                               = 0.030
+
+EXIT: Optimal Solution Found.
++++++++++++++++++  结束求解  ++++++++++++++++
+$$$$$$$$$ 结果展示 $$$$$$$$$$
+------ Total Cost(solution): 13885.6-----
+------ solution结果: 1------
+------ solution,size(): 237-----
+CHRONO  MPC solve time: 37ms
+CHRONO  MPC solve index: 1
+$$$$$$ MPC solved successfully! $$$$$$
+MPC solve time: 0.0381143 s
+MPC solve Stamp: 0.0382411
+loop_时间戳: 0.0382681
+***********************  结束Control Loop  ************************
+
+
+pub的时间戳0.0382729
+DEBUG&&&&&
+publish joint velocitys: -0.2,-0.077007,0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.169022,-0.0781438,0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.048415,-0.0791686,0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0194488,-0.080163,0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0196314,-0.0811601,0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0211462,-0.08216,0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0210575,-0.0831603,0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0204558,-0.0841605,-0.0796867,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0198109,-0.0851607,-0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0191701,-0.0861609,-0.3,0,0,0,0,0,0,0,0,0,
+***********************  开始Control Loop  ************************
+_traj_received为1
+_track_finished为0
+_loop_count为9
+_realTraj_length为264
+_run_loop_traj为 1
+_run_loop_count为 1
+_run_loop为 1
+getTrackTraj用时: 1.16825e-05
+getTrackTraj stamp: 0.000101328
+_mpc_trackTraj_size是否正确: 1
+_trackTraj_computed为 1
+_start_mpc_trackTraj为 1
+===================  进入前期计算  =============================
+state position: -0.436649,0.556481,-0.174657
+state velocity: -0.0191701,-0.0861609,-0.3
+flag: 0
+terminal_nums: 173
+
+!! MPC Obj Solve Called !! 
+[0m[ INFO] [1710167497.320326654]: Class FG_eval : debug_csv/csv file has been open ! : /home/diamondlee/VKConTieta_ws/src/open_door_tieta_mpc/tieta_result_csv/debug/sim_debug20240311_223126/fg_evalue_segTraj.csv[0m
+FG_eval paramster has been set.
++++++++++++++++++  开始求解  +++++++++++++++
+cppAd input size:
+n_var:237
+n_var_lowb237
+n_var_upb237
+n_con_lowb:120
+n_con_upb:120
+进来几次啊
+track traj angle_0
+-0.0694862,0.687595,0.341904
+track traj angle_1
+-0.0722691,0.681055,0.340606
+track traj angle_2
+-0.0750313,0.67442,0.339293
+track traj angle_3
+-0.0777706,0.667689,0.337966
+track traj angle_4
+-0.0804853,0.660861,0.336623
+track traj angle_5
+-0.0831736,0.653937,0.335267
+track traj angle_6
+-0.0858337,0.646915,0.333895
+track traj angle_7
+-0.0884635,0.639794,0.33251
+track traj angle_8
+-0.0910607,0.632576,0.331111
+track traj angle_9
+-0.0936235,0.625259,0.329699
+track traj angle_10
+-0.0961499,0.617843,0.328273
+track traj angle_11
+-0.098638,0.610326,0.326833
+track traj angle_12
+-0.101085,0.602711,0.325381
+track traj angle_13
+-0.10349,0.594995,0.323917
+track traj angle_14
+-0.105849,0.587179,0.32244
+track traj angle_15
+-0.108161,0.579262,0.320952
+track traj angle_16
+-0.110424,0.571246,0.319452
+track traj angle_17
+-0.112635,0.56313,0.317941
+track traj angle_18
+-0.114791,0.554914,0.31642
+track traj angle_19
+-0.116891,0.546598,0.314889
+track traj angle_20
+-0.118932,0.538182,0.313347
+track traj angle_21
+-0.120913,0.529666,0.311797
+track traj angle_22
+-0.12283,0.52105,0.310238
+track traj angle_23
+-0.124682,0.512334,0.30867
+track traj angle_24
+-0.126465,0.503518,0.307094
+track traj angle_25
+-0.128179,0.494602,0.305511
+track traj angle_26
+-0.12982,0.485586,0.30392
+track traj angle_27
+-0.131386,0.476469,0.302323
+track traj angle_28
+-0.132874,0.467253,0.300721
+track traj angle_29
+-0.134284,0.457937,0.299113
+track traj angle_30
+-0.135611,0.448521,0.2975
+track traj angle_31
+-0.136853,0.439005,0.295883
+track traj angle_32
+-0.138009,0.429388,0.294262
+track traj angle_33
+-0.139076,0.419672,0.292638
+track traj angle_34
+-0.140048,0.409886,0.291017
+track traj angle_35
+-0.14092,0.400077,0.289408
+track traj angle_36
+-0.141692,0.390247,0.28781
+track traj angle_37
+-0.142364,0.380392,0.286224
+track traj angle_38
+-0.142936,0.370513,0.28465
+track traj angle_39
+-0.143408,0.360613,0.28309
+cost_distx: 1348.09,cost_disty: 171.907,cost_etheta: 266.835
+cost_distx: 1327.73,cost_disty: 155.186,cost_etheta: 265.496
+cost_distx: 1307.67,cost_disty: 139.094,cost_etheta: 264.144
+cost_distx: 1287.94,cost_disty: 123.671,cost_etheta: 262.781
+cost_distx: 1268.53,cost_disty: 108.952,cost_etheta: 261.407
+cost_distx: 1249.45,cost_disty: 94.9757,cost_etheta: 260.022
+cost_distx: 1230.71,cost_disty: 81.7815,cost_etheta: 258.625
+cost_distx: 1212.33,cost_disty: 69.4104,cost_etheta: 257.218
+cost_distx: 1194.31,cost_disty: 57.904,cost_etheta: 255.801
+cost_distx: 1176.67,cost_disty: 47.3038,cost_etheta: 254.374
+cost_distx: 1159.4,cost_disty: 37.6521,cost_etheta: 252.938
+cost_distx: 1142.51,cost_disty: 28.9929,cost_etheta: 251.492
+cost_distx: 1126.03,cost_disty: 21.3713,cost_etheta: 250.038
+cost_distx: 1109.95,cost_disty: 14.8327,cost_etheta: 248.576
+cost_distx: 1094.29,cost_disty: 9.42325,cost_etheta: 247.105
+cost_distx: 1079.04,cost_disty: 5.18969,cost_etheta: 245.628
+cost_distx: 1064.23,cost_disty: 2.18003,cost_etheta: 244.143
+cost_distx: 1049.85,cost_disty: 0.442084,cost_etheta: 242.653
+cost_distx: 1035.93,cost_disty: 0.0245573,cost_etheta: 241.156
+cost_distx: 1022.45,cost_disty: 0.976759,cost_etheta: 239.654
+cost_distx: 1009.44,cost_disty: 3.34859,cost_etheta: 238.148
+cost_distx: 996.893,cost_disty: 7.19057,cost_etheta: 236.637
+cost_distx: 984.824,cost_disty: 12.5538,cost_etheta: 235.122
+cost_distx: 973.237,cost_disty: 19.49,cost_etheta: 233.604
+cost_distx: 962.14,cost_disty: 28.0514,cost_etheta: 232.083
+cost_distx: 951.539,cost_disty: 38.291,cost_etheta: 230.56
+cost_distx: 941.443,cost_disty: 50.2622,cost_etheta: 229.036
+cost_distx: 931.857,cost_disty: 64.0192,cost_etheta: 227.51
+cost_distx: 922.79,cost_disty: 79.6167,cost_etheta: 225.984
+cost_distx: 914.248,cost_disty: 97.11,cost_etheta: 224.457
+cost_distx: 906.241,cost_disty: 116.555,cost_etheta: 222.932
+cost_distx: 898.775,cost_disty: 138.008,cost_etheta: 221.407
+cost_distx: 891.858,cost_disty: 161.526,cost_etheta: 219.885
+cost_distx: 885.499,cost_disty: 187.168,cost_etheta: 218.365
+cost_distx: 879.724,cost_disty: 214.903,cost_etheta: 216.852
+cost_distx: 874.558,cost_disty: 244.623,cost_etheta: 215.356
+cost_distx: 869.998,cost_disty: 276.34,cost_etheta: 213.875
+cost_distx: 866.037,cost_disty: 310.075,cost_etheta: 212.411
+cost_distx: 862.673,cost_disty: 345.844,cost_etheta: 210.962
+cost_distx: 859.903,cost_disty: 383.646,cost_etheta: 209.532
+-----------------------------------------------
+This is Ipopt version 3.14.13, running with linear solver ma27.
+
+Number of nonzeros in equality constraint Jacobian...:      345
+Number of nonzeros in inequality constraint Jacobian.:        0
+Number of nonzeros in Lagrangian Hessian.............:      414
+
+Total number of variables............................:      231
+                     variables with only lower bounds:        0
+                variables with lower and upper bounds:      231
+                     variables with only upper bounds:        0
+Total number of equality constraints.................:      120
+Total number of inequality constraints...............:        0
+        inequality constraints with only lower bounds:        0
+   inequality constraints with lower and upper bounds:        0
+        inequality constraints with only upper bounds:        0
+
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+   0  5.5367668e+04 3.00e-02 1.00e+02  -1.0 0.00e+00    -  0.00e+00 0.00e+00   0
+   1  3.4294184e+04 2.23e-02 7.45e+01  -1.0 7.76e-01    -  2.26e-01 2.55e-01f  1
+   2  2.4160066e+04 1.75e-02 5.83e+01  -1.0 4.85e-01    -  6.23e-01 2.17e-01f  1
+   3  1.5699264e+04 1.18e-02 3.93e+01  -1.0 3.24e-01    -  9.90e-01 3.27e-01f  1
+   4  1.3121362e+04 8.93e-03 2.98e+01  -1.0 1.54e+00    -  1.50e-01 2.42e-01f  1
+   5  1.1020725e+04 5.21e-03 1.74e+01  -1.0 9.95e-01    -  1.55e-01 4.17e-01f  1
+   6  1.0660843e+04 4.19e-03 1.40e+01  -1.0 5.48e-01    -  2.76e-01 1.96e-01f  1
+   7  1.0313082e+04 2.91e-03 9.70e+00  -1.0 1.01e+00    -  1.00e+00 3.05e-01f  1
+   8  1.0119669e+04 1.07e-03 3.57e+00  -1.0 6.97e-01    -  1.00e+00 6.32e-01f  1
+   9  1.0152098e+04 3.04e-07 7.81e-01  -1.0 2.32e-01    -  6.55e-01 1.00e+00h  1
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+  10  9.9799645e+03 7.99e-08 1.82e-02  -1.7 1.03e-01    -  9.86e-01 1.00e+00f  1
+  11  9.9176544e+03 1.41e-08 1.73e-02  -2.5 8.73e-02    -  9.60e-01 1.00e+00f  1
+  12  9.9051205e+03 1.60e-09 7.16e-03  -3.8 4.76e-02    -  9.46e-01 1.00e+00f  1
+  13  9.9043306e+03 3.27e-10 4.88e-14  -3.8 1.72e-02    -  1.00e+00 1.00e+00f  1
+  14  9.9038832e+03 3.24e-11 7.82e-14  -5.7 4.81e-03    -  1.00e+00 1.00e+00f  1
+  15  9.9038814e+03 2.00e-12 3.41e-14  -5.7 4.04e-04    -  1.00e+00 1.00e+00h  1
+  16  9.9038763e+03 6.98e-14 9.19e-14  -8.0 2.42e-05    -  1.00e+00 1.00e+00f  1
+
+Number of Iterations....: 16
+
+                                   (scaled)                 (unscaled)
+Objective...............:   1.3590040661489897e+02    9.9038763351417092e+03
+Dual infeasibility......:   9.1946675329867275e-14    6.7007047629730716e-12
+Constraint violation....:   6.9777517097691089e-14    6.9777517097691089e-14
+Variable bound violation:   9.7516543173803427e-09    9.7516543173803427e-09
+Complementarity.........:   1.0013110103728479e-08    7.2971528686075927e-07
+Overall NLP error.......:   1.0013110103728479e-08    7.2971528686075927e-07
+
+
+Number of objective function evaluations             = 17
+Number of objective gradient evaluations             = 17
+Number of equality constraint evaluations            = 17
+Number of inequality constraint evaluations          = 0
+Number of equality constraint Jacobian evaluations   = 17
+Number of inequality constraint Jacobian evaluations = 0
+Number of Lagrangian Hessian evaluations             = 16
+Total seconds in IPOPT                               = 0.025
+
+EXIT: Optimal Solution Found.
++++++++++++++++++  结束求解  ++++++++++++++++
+$$$$$$$$$ 结果展示 $$$$$$$$$$
+------ Total Cost(solution): 9903.88-----
+------ solution结果: 1------
+------ solution,size(): 237-----
+CHRONO  MPC solve time: 32ms
+CHRONO  MPC solve index: 1
+$$$$$$ MPC solved successfully! $$$$$$
+MPC solve time: 0.0320849 s
+MPC solve Stamp: 0.032207
+loop_时间戳: 0.0322201
+***********************  结束Control Loop  ************************
+
+
+pub的时间戳0.0322232
+DEBUG&&&&&
+publish joint velocitys: -0.2,-0.0870088,0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.167082,-0.088145,0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0430319,-0.0891673,0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0131345,-0.0901641,0.0986021,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0131207,-0.0911619,-0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0144593,-0.0921616,-0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0141498,-0.0931616,-0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0133133,-0.0941623,-0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0124332,-0.0951679,-0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0115582,-0.0961804,-0.3,0,0,0,0,0,0,0,0,0,
+***********************  开始Control Loop  ************************
+_traj_received为1
+_track_finished为0
+_loop_count为10
+_realTraj_length为264
+_run_loop_traj为 1
+_run_loop_count为 1
+_run_loop为 1
+getTrackTraj用时: 7.15256e-06
+getTrackTraj stamp: 9.2268e-05
+_mpc_trackTraj_size是否正确: 1
+_trackTraj_computed为 1
+_start_mpc_trackTraj为 1
+===================  进入前期计算  =============================
+state position: -0.487334,0.465435,-0.254796
+state velocity: -0.0115582,-0.0961804,-0.3
+flag: 0
+terminal_nums: 163
+
+!! MPC Obj Solve Called !! 
+[0m[ INFO] [1710167498.320311372]: Class FG_eval : debug_csv/csv file has been open ! : /home/diamondlee/VKConTieta_ws/src/open_door_tieta_mpc/tieta_result_csv/debug/sim_debug20240311_223126/fg_evalue_segTraj.csv[0m
+FG_eval paramster has been set.
++++++++++++++++++  开始求解  +++++++++++++++
+cppAd input size:
+n_var:237
+n_var_lowb237
+n_var_upb237
+n_con_lowb:120
+n_con_upb:120
+进来几次啊
+track traj angle_0
+-0.0961499,0.617843,0.328273
+track traj angle_1
+-0.098638,0.610326,0.326833
+track traj angle_2
+-0.101085,0.602711,0.325381
+track traj angle_3
+-0.10349,0.594995,0.323917
+track traj angle_4
+-0.105849,0.587179,0.32244
+track traj angle_5
+-0.108161,0.579262,0.320952
+track traj angle_6
+-0.110424,0.571246,0.319452
+track traj angle_7
+-0.112635,0.56313,0.317941
+track traj angle_8
+-0.114791,0.554914,0.31642
+track traj angle_9
+-0.116891,0.546598,0.314889
+track traj angle_10
+-0.118932,0.538182,0.313347
+track traj angle_11
+-0.120913,0.529666,0.311797
+track traj angle_12
+-0.12283,0.52105,0.310238
+track traj angle_13
+-0.124682,0.512334,0.30867
+track traj angle_14
+-0.126465,0.503518,0.307094
+track traj angle_15
+-0.128179,0.494602,0.305511
+track traj angle_16
+-0.12982,0.485586,0.30392
+track traj angle_17
+-0.131386,0.476469,0.302323
+track traj angle_18
+-0.132874,0.467253,0.300721
+track traj angle_19
+-0.134284,0.457937,0.299113
+track traj angle_20
+-0.135611,0.448521,0.2975
+track traj angle_21
+-0.136853,0.439005,0.295883
+track traj angle_22
+-0.138009,0.429388,0.294262
+track traj angle_23
+-0.139076,0.419672,0.292638
+track traj angle_24
+-0.140048,0.409886,0.291017
+track traj angle_25
+-0.14092,0.400077,0.289408
+track traj angle_26
+-0.141692,0.390247,0.28781
+track traj angle_27
+-0.142364,0.380392,0.286224
+track traj angle_28
+-0.142936,0.370513,0.28465
+track traj angle_29
+-0.143408,0.360613,0.28309
+track traj angle_30
+-0.14378,0.350689,0.281545
+track traj angle_31
+-0.144052,0.34073,0.280012
+track traj angle_32
+-0.144225,0.330739,0.278495
+track traj angle_33
+-0.144297,0.320733,0.276999
+track traj angle_34
+-0.144269,0.310712,0.275524
+track traj angle_35
+-0.144141,0.300663,0.27407
+track traj angle_36
+-0.143914,0.290534,0.272637
+track traj angle_37
+-0.143586,0.28036,0.271232
+track traj angle_38
+-0.143159,0.270159,0.269856
+track traj angle_39
+-0.142632,0.259898,0.268519
+cost_distx: 1530.25,cost_disty: 232.283,cost_etheta: 339.969
+cost_distx: 1510.85,cost_disty: 209.937,cost_etheta: 338.293
+cost_distx: 1491.88,cost_disty: 188.447,cost_etheta: 336.606
+cost_distx: 1473.36,cost_disty: 167.858,cost_etheta: 334.909
+cost_distx: 1455.31,cost_disty: 148.217,cost_etheta: 333.202
+cost_distx: 1437.72,cost_disty: 129.568,cost_etheta: 331.486
+cost_distx: 1420.61,cost_disty: 111.961,cost_etheta: 329.761
+cost_distx: 1404,cost_disty: 95.4448,cost_etheta: 328.029
+cost_distx: 1387.88,cost_disty: 80.0664,cost_etheta: 326.288
+cost_distx: 1372.28,cost_disty: 65.8757,cost_etheta: 324.541
+cost_distx: 1357.2,cost_disty: 52.9224,cost_etheta: 322.787
+cost_distx: 1342.64,cost_disty: 41.2571,cost_etheta: 321.028
+cost_distx: 1328.63,cost_disty: 30.931,cost_etheta: 319.263
+cost_distx: 1315.17,cost_disty: 21.9956,cost_etheta: 317.494
+cost_distx: 1302.26,cost_disty: 14.5034,cost_etheta: 315.72
+cost_distx: 1289.93,cost_disty: 8.50728,cost_etheta: 313.944
+cost_distx: 1278.17,cost_disty: 4.06066,cost_etheta: 312.164
+cost_distx: 1266.99,cost_disty: 1.21769,cost_etheta: 310.382
+cost_distx: 1256.42,cost_disty: 0.0330777,cost_etheta: 308.599
+cost_distx: 1246.45,cost_disty: 0.56212,cost_etheta: 306.815
+cost_distx: 1237.09,cost_disty: 2.86072,cost_etheta: 305.031
+cost_distx: 1228.37,cost_disty: 6.98539,cost_etheta: 303.247
+cost_distx: 1220.28,cost_disty: 12.9932,cost_etheta: 301.465
+cost_distx: 1212.84,cost_disty: 20.9419,cost_etheta: 299.685
+cost_distx: 1206.08,cost_disty: 30.8566,cost_etheta: 297.913
+cost_distx: 1200.03,cost_disty: 42.7159,cost_etheta: 296.158
+cost_distx: 1194.69,cost_disty: 56.5323,cost_etheta: 294.422
+cost_distx: 1190.04,cost_disty: 72.3222,cost_etheta: 292.703
+cost_distx: 1186.1,cost_disty: 90.1017,cost_etheta: 291.002
+cost_distx: 1182.85,cost_disty: 109.876,cost_etheta: 289.322
+cost_distx: 1180.29,cost_disty: 131.666,cost_etheta: 287.662
+cost_distx: 1178.42,cost_disty: 155.513,cost_etheta: 286.02
+cost_distx: 1177.24,cost_disty: 181.428,cost_etheta: 284.4
+cost_distx: 1176.75,cost_disty: 209.385,cost_etheta: 282.807
+cost_distx: 1176.94,cost_disty: 239.391,cost_etheta: 281.24
+cost_distx: 1177.81,cost_disty: 271.497,cost_etheta: 279.7
+cost_distx: 1179.37,cost_disty: 305.902,cost_etheta: 278.186
+cost_distx: 1181.62,cost_disty: 342.525,cost_etheta: 276.705
+cost_distx: 1184.56,cost_disty: 381.326,cost_etheta: 275.261
+cost_distx: 1188.19,cost_disty: 422.452,cost_etheta: 273.859
+-----------------------------------------------
+This is Ipopt version 3.14.13, running with linear solver ma27.
+
+Number of nonzeros in equality constraint Jacobian...:      345
+Number of nonzeros in inequality constraint Jacobian.:        0
+Number of nonzeros in Lagrangian Hessian.............:      414
+
+Total number of variables............................:      231
+                     variables with only lower bounds:        0
+                variables with lower and upper bounds:      231
+                     variables with only upper bounds:        0
+Total number of equality constraints.................:      120
+Total number of inequality constraints...............:        0
+        inequality constraints with only lower bounds:        0
+   inequality constraints with lower and upper bounds:        0
+        inequality constraints with only upper bounds:        0
+
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+   0  6.8271133e+04 3.00e-02 1.00e+02  -1.0 0.00e+00    -  0.00e+00 0.00e+00   0
+   1  4.4161080e+04 2.31e-02 7.69e+01  -1.0 8.55e-01    -  2.07e-01 2.31e-01f  1
+   2  3.2275224e+04 1.87e-02 6.22e+01  -1.0 5.72e-01    -  5.63e-01 1.90e-01f  1
+   3  2.2474048e+04 1.38e-02 4.60e+01  -1.0 3.87e-01    -  6.23e-01 2.61e-01f  1
+   4  2.0081482e+04 1.21e-02 4.03e+01  -1.0 2.28e+00    -  2.99e-01 1.25e-01f  1
+   5  1.8105151e+04 1.04e-02 3.45e+01  -1.0 2.55e+00    -  4.76e-01 1.43e-01f  1
+   6  1.6404116e+04 8.45e-03 2.82e+01  -1.0 2.42e+00    -  6.60e-01 1.84e-01f  1
+   7  1.5164098e+04 6.50e-03 2.17e+01  -1.0 2.09e+00    -  8.46e-01 2.31e-01f  1
+   8  1.4407260e+04 4.57e-03 1.68e+01  -1.0 1.69e+00    -  1.00e+00 2.97e-01f  1
+   9  1.4088040e+04 2.29e-03 7.64e+00  -1.0 1.03e+00    -  1.45e-01 4.99e-01f  1
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+  10  1.4103754e+04 1.70e-03 5.66e+00  -1.0 3.07e-01    -  3.08e-01 2.59e-01h  1
+  11  1.4225932e+04 4.21e-04 1.76e+00  -1.0 5.47e-01    -  1.00e+00 7.52e-01h  1
+  12  1.4317400e+04 2.37e-07 2.31e-01  -1.0 1.70e-01    -  9.06e-01 1.00e+00h  1
+  13  1.4125284e+04 7.85e-08 1.19e-01  -1.7 8.54e-02    -  9.36e-01 1.00e+00f  1
+  14  1.4058504e+04 1.52e-08 3.98e-02  -2.5 7.14e-02    -  9.48e-01 1.00e+00f  1
+  15  1.4052082e+04 1.79e-09 8.88e-14  -2.5 4.40e-02    -  1.00e+00 1.00e+00f  1
+  16  1.4043558e+04 9.01e-10 8.92e-04  -3.8 1.94e-02    -  9.86e-01 1.00e+00f  1
+  17  1.4042822e+04 5.05e-11 5.55e-05  -5.7 1.28e-02    -  9.97e-01 1.00e+00f  1
+  18  1.4042799e+04 1.89e-11 9.31e-14  -5.7 5.67e-03    -  1.00e+00 1.00e+00f  1
+  19  1.4042796e+04 5.18e-12 9.77e-14  -5.7 1.57e-03    -  1.00e+00 1.00e+00f  1
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+  20  1.4042790e+04 1.97e-13 7.67e-14  -8.0 2.12e-04    -  1.00e+00 1.00e+00f  1
+
+Number of Iterations....: 20
+
+                                   (scaled)                 (unscaled)
+Objective...............:   1.8063972470343401e+02    1.4042789537874922e+04
+Dual infeasibility......:   7.6668544834947624e-14    5.9601521263380763e-12
+Constraint violation....:   1.9709234244658091e-13    1.9709234244658091e-13
+Variable bound violation:   9.8365975642611403e-09    9.8365975642611403e-09
+Complementarity.........:   7.8382313097630848e-08    6.0933791176272884e-06
+Overall NLP error.......:   7.8382313097630848e-08    6.0933791176272884e-06
+
+
+Number of objective function evaluations             = 21
+Number of objective gradient evaluations             = 21
+Number of equality constraint evaluations            = 21
+Number of inequality constraint evaluations          = 0
+Number of equality constraint Jacobian evaluations   = 21
+Number of inequality constraint Jacobian evaluations = 0
+Number of Lagrangian Hessian evaluations             = 20
+Total seconds in IPOPT                               = 0.029
+
+EXIT: Optimal Solution Found.
++++++++++++++++++  结束求解  ++++++++++++++++
+$$$$$$$$$ 结果展示 $$$$$$$$$$
+------ Total Cost(solution): 14042.8-----
+------ solution结果: 1------
+------ solution,size(): 237-----
+CHRONO  MPC solve time: 37ms
+CHRONO  MPC solve index: 1
+$$$$$$ MPC solved successfully! $$$$$$
+MPC solve time: 0.0376024 s
+MPC solve Stamp: 0.0377102
+loop_时间戳: 0.0377254
+***********************  结束Control Loop  ************************
+
+
+pub的时间戳0.0377285
+DEBUG&&&&&
+publish joint velocitys: -0.2,-0.0969906,0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.103369,-0.0978028,0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0199964,-0.0981133,0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.00440386,-0.0983196,0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0051354,-0.0985471,0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.00553745,-0.0987855,0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.004779,-0.099002,0.0019377,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.00374793,-0.0992552,-0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.00272437,-0.0995884,-0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.00172061,-0.0998825,-0.3,0,0,0,0,0,0,0,0,0,
+***********************  开始Control Loop  ************************
+_traj_received为1
+_track_finished为0
+_loop_count为11
+_realTraj_length为264
+_run_loop_traj为 1
+_run_loop_count为 1
+_run_loop为 1
+getTrackTraj用时: 7.39098e-06
+getTrackTraj stamp: 0.000104904
+_mpc_trackTraj_size是否正确: 1
+_trackTraj_computed为 1
+_start_mpc_trackTraj为 1
+===================  进入前期计算  =============================
+state position: -0.523066,0.367028,-0.164603
+state velocity: -0.00172061,-0.0998825,-0.3
+flag: 0
+terminal_nums: 153
+
+!! MPC Obj Solve Called !! 
+[0m[ INFO] [1710167499.320331259]: Class FG_eval : debug_csv/csv file has been open ! : /home/diamondlee/VKConTieta_ws/src/open_door_tieta_mpc/tieta_result_csv/debug/sim_debug20240311_223126/fg_evalue_segTraj.csv[0m
+FG_eval paramster has been set.
++++++++++++++++++  开始求解  +++++++++++++++
+cppAd input size:
+n_var:237
+n_var_lowb237
+n_var_upb237
+n_con_lowb:120
+n_con_upb:120
+进来几次啊
+track traj angle_0
+-0.118932,0.538182,0.313347
+track traj angle_1
+-0.120913,0.529666,0.311797
+track traj angle_2
+-0.12283,0.52105,0.310238
+track traj angle_3
+-0.124682,0.512334,0.30867
+track traj angle_4
+-0.126465,0.503518,0.307094
+track traj angle_5
+-0.128179,0.494602,0.305511
+track traj angle_6
+-0.12982,0.485586,0.30392
+track traj angle_7
+-0.131386,0.476469,0.302323
+track traj angle_8
+-0.132874,0.467253,0.300721
+track traj angle_9
+-0.134284,0.457937,0.299113
+track traj angle_10
+-0.135611,0.448521,0.2975
+track traj angle_11
+-0.136853,0.439005,0.295883
+track traj angle_12
+-0.138009,0.429388,0.294262
+track traj angle_13
+-0.139076,0.419672,0.292638
+track traj angle_14
+-0.140048,0.409886,0.291017
+track traj angle_15
+-0.14092,0.400077,0.289408
+track traj angle_16
+-0.141692,0.390247,0.28781
+track traj angle_17
+-0.142364,0.380392,0.286224
+track traj angle_18
+-0.142936,0.370513,0.28465
+track traj angle_19
+-0.143408,0.360613,0.28309
+track traj angle_20
+-0.14378,0.350689,0.281545
+track traj angle_21
+-0.144052,0.34073,0.280012
+track traj angle_22
+-0.144225,0.330739,0.278495
+track traj angle_23
+-0.144297,0.320733,0.276999
+track traj angle_24
+-0.144269,0.310712,0.275524
+track traj angle_25
+-0.144141,0.300663,0.27407
+track traj angle_26
+-0.143914,0.290534,0.272637
+track traj angle_27
+-0.143586,0.28036,0.271232
+track traj angle_28
+-0.143159,0.270159,0.269856
+track traj angle_29
+-0.142632,0.259898,0.268519
+track traj angle_30
+-0.142012,0.249653,0.267237
+track traj angle_31
+-0.141302,0.239461,0.266016
+track traj angle_32
+-0.140505,0.229324,0.264853
+track traj angle_33
+-0.139622,0.219248,0.263743
+track traj angle_34
+-0.138655,0.209234,0.262686
+track traj angle_35
+-0.137607,0.199282,0.261679
+track traj angle_36
+-0.136478,0.189396,0.260717
+track traj angle_37
+-0.135269,0.179579,0.259797
+track traj angle_38
+-0.133984,0.169832,0.258917
+track traj angle_39
+-0.132624,0.160156,0.258077
+cost_distx: 1633.24,cost_disty: 292.938,cost_etheta: 228.436
+cost_distx: 1617.27,cost_disty: 264.512,cost_etheta: 226.957
+cost_distx: 1601.89,cost_disty: 237.228,cost_etheta: 225.473
+cost_distx: 1587.1,cost_disty: 211.139,cost_etheta: 223.987
+cost_distx: 1572.92,cost_disty: 186.295,cost_etheta: 222.497
+cost_distx: 1559.36,cost_disty: 162.751,cost_etheta: 221.006
+cost_distx: 1546.42,cost_disty: 140.559,cost_etheta: 219.514
+cost_distx: 1534.13,cost_disty: 119.774,cost_etheta: 218.02
+cost_distx: 1522.49,cost_disty: 100.451,cost_etheta: 216.526
+cost_distx: 1511.52,cost_disty: 82.6447,cost_etheta: 215.032
+cost_distx: 1501.21,cost_disty: 66.4109,cost_etheta: 213.539
+cost_distx: 1491.6,cost_disty: 51.8064,cost_etheta: 212.047
+cost_distx: 1482.69,cost_disty: 38.8883,cost_etheta: 210.557
+cost_distx: 1474.48,cost_disty: 27.7142,cost_etheta: 209.069
+cost_distx: 1467.03,cost_disty: 18.368,cost_etheta: 207.59
+cost_distx: 1460.36,cost_disty: 10.9225,cost_etheta: 206.125
+cost_distx: 1454.46,cost_disty: 5.39103,cost_etheta: 204.677
+cost_distx: 1449.34,cost_disty: 1.786,cost_etheta: 203.245
+cost_distx: 1444.99,cost_disty: 0.121427,cost_etheta: 201.828
+cost_distx: 1441.4,cost_disty: 0.411569,cost_etheta: 200.429
+cost_distx: 1438.58,cost_disty: 2.66969,cost_etheta: 199.048
+cost_distx: 1436.51,cost_disty: 6.91606,cost_etheta: 197.682
+cost_distx: 1435.21,cost_disty: 13.1688,cost_etheta: 196.336
+cost_distx: 1434.66,cost_disty: 21.432,cost_etheta: 195.012
+cost_distx: 1434.87,cost_disty: 31.7149,cost_etheta: 193.712
+cost_distx: 1435.84,cost_disty: 44.0433,cost_etheta: 192.434
+cost_distx: 1437.56,cost_disty: 58.5133,cost_etheta: 191.178
+cost_distx: 1440.05,cost_disty: 75.1129,cost_etheta: 189.951
+cost_distx: 1443.29,cost_disty: 93.8361,cost_etheta: 188.755
+cost_distx: 1447.3,cost_disty: 114.768,cost_etheta: 187.594
+cost_distx: 1452.02,cost_disty: 137.77,cost_etheta: 186.486
+cost_distx: 1457.43,cost_disty: 162.734,cost_etheta: 185.433
+cost_distx: 1463.52,cost_disty: 189.623,cost_etheta: 184.432
+cost_distx: 1470.29,cost_disty: 218.388,cost_etheta: 183.48
+cost_distx: 1477.71,cost_disty: 248.989,cost_etheta: 182.575
+cost_distx: 1485.79,cost_disty: 281.387,cost_etheta: 181.716
+cost_distx: 1494.5,cost_disty: 315.532,cost_etheta: 180.897
+cost_distx: 1503.86,cost_disty: 351.371,cost_etheta: 180.115
+cost_distx: 1513.85,cost_disty: 388.861,cost_etheta: 179.369
+cost_distx: 1524.45,cost_disty: 427.961,cost_etheta: 178.658
+-----------------------------------------------
+This is Ipopt version 3.14.13, running with linear solver ma27.
+
+Number of nonzeros in equality constraint Jacobian...:      345
+Number of nonzeros in inequality constraint Jacobian.:        0
+Number of nonzeros in Lagrangian Hessian.............:      414
+
+Total number of variables............................:      231
+                     variables with only lower bounds:        0
+                variables with lower and upper bounds:      231
+                     variables with only upper bounds:        0
+Total number of equality constraints.................:      120
+Total number of inequality constraints...............:        0
+        inequality constraints with only lower bounds:        0
+   inequality constraints with lower and upper bounds:        0
+        inequality constraints with only upper bounds:        0
+
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+   0  7.2829749e+04 3.00e-02 1.00e+02  -1.0 0.00e+00    -  0.00e+00 0.00e+00   0
+   1  4.1750139e+04 2.15e-02 7.16e+01  -1.0 6.97e-01    -  2.48e-01 2.84e-01f  1
+   2  2.7779739e+04 1.62e-02 5.41e+01  -1.0 4.76e-01    -  6.86e-01 2.44e-01f  1
+   3  1.8954291e+04 1.15e-02 3.84e+01  -1.0 3.70e-01    -  4.99e-01 2.91e-01f  1
+   4  1.6820950e+04 9.87e-03 3.29e+01  -1.0 1.73e+00    -  3.81e-01 1.43e-01f  1
+   5  1.4758659e+04 7.87e-03 2.62e+01  -1.0 1.91e+00    -  8.05e-01 2.03e-01f  1
+   6  1.3082154e+04 5.55e-03 1.85e+01  -1.0 1.63e+00    -  9.97e-01 2.94e-01f  1
+   7  1.1905751e+04 2.18e-03 7.28e+00  -1.0 8.49e-01    -  1.19e-01 6.07e-01f  1
+   8  1.1844475e+04 1.64e-03 5.46e+00  -1.0 2.83e-01    -  3.35e-01 2.50e-01f  1
+   9  1.1795002e+04 2.48e-04 8.26e-01  -1.0 4.89e-01    -  1.00e+00 8.49e-01f  1
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+  10  1.1614544e+04 2.36e-08 5.87e-14  -1.7 4.41e-02    -  1.00e+00 1.00e+00f  1
+  11  1.1555237e+04 8.20e-09 2.79e-02  -2.5 8.17e-02    -  9.21e-01 1.00e+00f  1
+  12  1.1541940e+04 1.50e-09 5.69e-03  -3.8 4.91e-02    -  9.60e-01 1.00e+00f  1
+  13  1.1540940e+04 2.91e-10 8.32e-14  -3.8 1.46e-02    -  1.00e+00 1.00e+00f  1
+  14  1.1540397e+04 3.25e-11 3.22e-05  -5.7 3.04e-03    -  9.97e-01 1.00e+00f  1
+  15  1.1540392e+04 1.90e-12 3.95e-14  -5.7 2.01e-04    -  1.00e+00 1.00e+00h  1
+  16  1.1540386e+04 5.10e-14 4.86e-14  -8.0 1.93e-05    -  1.00e+00 1.00e+00f  1
+
+Number of Iterations....: 16
+
+                                   (scaled)                 (unscaled)
+Objective...............:   1.4348259407122652e+02    1.1540386347371617e+04
+Dual infeasibility......:   4.8562717801795858e-14    3.9059269114754083e-12
+Constraint violation....:   5.0959236830294685e-14    5.0959236830294685e-14
+Variable bound violation:   9.7539600840690355e-09    9.7539600840690355e-09
+Complementarity.........:   9.8336075037186479e-09    7.9092262386189586e-07
+Overall NLP error.......:   9.8336075037186479e-09    7.9092262386189586e-07
+
+
+Number of objective function evaluations             = 17
+Number of objective gradient evaluations             = 17
+Number of equality constraint evaluations            = 17
+Number of inequality constraint evaluations          = 0
+Number of equality constraint Jacobian evaluations   = 17
+Number of inequality constraint Jacobian evaluations = 0
+Number of Lagrangian Hessian evaluations             = 16
+Total seconds in IPOPT                               = 0.024
+
+EXIT: Optimal Solution Found.
++++++++++++++++++  结束求解  ++++++++++++++++
+$$$$$$$$$ 结果展示 $$$$$$$$$$
+------ Total Cost(solution): 11540.4-----
+------ solution结果: 1------
+------ solution,size(): 237-----
+CHRONO  MPC solve time: 31ms
+CHRONO  MPC solve index: 1
+$$$$$$ MPC solved successfully! $$$$$$
+MPC solve time: 0.0318921 s
+MPC solve Stamp: 0.0320125
+loop_时间戳: 0.0320253
+***********************  结束Control Loop  ************************
+
+
+pub的时间戳0.0320284
+DEBUG&&&&&
+publish joint velocitys: -0.2,-0.100008,0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0786021,-0.100213,0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.00559229,-0.100562,0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0.0057355,-0.101231,0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0.00460679,-0.101723,-0.137078,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0.00438573,-0.102093,-0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0.00520258,-0.102529,-0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0.00617785,-0.102434,-0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0.00709545,-0.101943,-0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0.0079723,-0.101367,-0.3,0,0,0,0,0,0,0,0,0,
+***********************  开始Control Loop  ************************
+_traj_received为1
+_track_finished为0
+_loop_count为12
+_realTraj_length为264
+_run_loop_traj为 1
+_run_loop_count为 1
+_run_loop为 1
+getTrackTraj用时: 1.26362e-05
+getTrackTraj stamp: 0.000106096
+_mpc_trackTraj_size是否正确: 1
+_trackTraj_computed为 1
+_start_mpc_trackTraj为 1
+===================  进入前期计算  =============================
+state position: -0.547949,0.265707,-0.20831
+state velocity: 0.0079723,-0.101367,-0.3
+flag: 0
+terminal_nums: 143
+
+!! MPC Obj Solve Called !! 
+[0m[ INFO] [1710167500.320340114]: Class FG_eval : debug_csv/csv file has been open ! : /home/diamondlee/VKConTieta_ws/src/open_door_tieta_mpc/tieta_result_csv/debug/sim_debug20240311_223126/fg_evalue_segTraj.csv[0m
+FG_eval paramster has been set.
++++++++++++++++++  开始求解  +++++++++++++++
+cppAd input size:
+n_var:237
+n_var_lowb237
+n_var_upb237
+n_con_lowb:120
+n_con_upb:120
+进来几次啊
+track traj angle_0
+-0.135611,0.448521,0.2975
+track traj angle_1
+-0.136853,0.439005,0.295883
+track traj angle_2
+-0.138009,0.429388,0.294262
+track traj angle_3
+-0.139076,0.419672,0.292638
+track traj angle_4
+-0.140048,0.409886,0.291017
+track traj angle_5
+-0.14092,0.400077,0.289408
+track traj angle_6
+-0.141692,0.390247,0.28781
+track traj angle_7
+-0.142364,0.380392,0.286224
+track traj angle_8
+-0.142936,0.370513,0.28465
+track traj angle_9
+-0.143408,0.360613,0.28309
+track traj angle_10
+-0.14378,0.350689,0.281545
+track traj angle_11
+-0.144052,0.34073,0.280012
+track traj angle_12
+-0.144225,0.330739,0.278495
+track traj angle_13
+-0.144297,0.320733,0.276999
+track traj angle_14
+-0.144269,0.310712,0.275524
+track traj angle_15
+-0.144141,0.300663,0.27407
+track traj angle_16
+-0.143914,0.290534,0.272637
+track traj angle_17
+-0.143586,0.28036,0.271232
+track traj angle_18
+-0.143159,0.270159,0.269856
+track traj angle_19
+-0.142632,0.259898,0.268519
+track traj angle_20
+-0.142012,0.249653,0.267237
+track traj angle_21
+-0.141302,0.239461,0.266016
+track traj angle_22
+-0.140505,0.229324,0.264853
+track traj angle_23
+-0.139622,0.219248,0.263743
+track traj angle_24
+-0.138655,0.209234,0.262686
+track traj angle_25
+-0.137607,0.199282,0.261679
+track traj angle_26
+-0.136478,0.189396,0.260717
+track traj angle_27
+-0.135269,0.179579,0.259797
+track traj angle_28
+-0.133984,0.169832,0.258917
+track traj angle_29
+-0.132624,0.160156,0.258077
+track traj angle_30
+-0.131192,0.15055,0.25728
+track traj angle_31
+-0.129691,0.141016,0.256525
+track traj angle_32
+-0.128123,0.131553,0.255813
+track traj angle_33
+-0.12649,0.122162,0.255141
+track traj angle_34
+-0.124792,0.11285,0.254503
+track traj angle_35
+-0.123033,0.103618,0.253898
+track traj angle_36
+-0.121213,0.0944642,0.253324
+track traj angle_37
+-0.119335,0.0853909,0.252781
+track traj angle_38
+-0.117401,0.0764,0.252265
+track traj angle_39
+-0.115412,0.0674919,0.251778
+cost_distx: 1700.23,cost_disty: 334.21,cost_etheta: 255.844
+cost_distx: 1690,cost_disty: 300.322,cost_etheta: 254.211
+cost_distx: 1680.51,cost_disty: 267.917,cost_etheta: 252.579
+cost_distx: 1671.78,cost_disty: 237.054,cost_etheta: 250.95
+cost_distx: 1663.84,cost_disty: 207.876,cost_etheta: 249.328
+cost_distx: 1656.73,cost_disty: 180.554,cost_etheta: 247.723
+cost_distx: 1650.45,cost_disty: 155.102,cost_etheta: 246.135
+cost_distx: 1644.99,cost_disty: 131.527,cost_etheta: 244.564
+cost_distx: 1640.36,cost_disty: 109.843,cost_etheta: 243.01
+cost_distx: 1636.53,cost_disty: 90.0712,cost_etheta: 241.475
+cost_distx: 1633.53,cost_disty: 72.2194,cost_etheta: 239.958
+cost_distx: 1631.33,cost_disty: 56.2842,cost_etheta: 238.459
+cost_distx: 1629.94,cost_disty: 42.2921,cost_etheta: 236.98
+cost_distx: 1629.35,cost_disty: 30.2791,cost_etheta: 235.525
+cost_distx: 1629.58,cost_disty: 20.2547,cost_etheta: 234.096
+cost_distx: 1630.61,cost_disty: 12.2193,cost_etheta: 232.691
+cost_distx: 1632.45,cost_disty: 6.16391,cost_etheta: 231.31
+cost_distx: 1635.09,cost_disty: 2.14725,cost_etheta: 229.961
+cost_distx: 1638.55,cost_disty: 0.198218,cost_etheta: 228.644
+cost_distx: 1642.82,cost_disty: 0.337388,cost_etheta: 227.366
+cost_distx: 1647.85,cost_disty: 2.57735,cost_etheta: 226.146
+cost_distx: 1653.62,cost_disty: 6.88852,cost_etheta: 224.986
+cost_distx: 1660.1,cost_disty: 13.2368,cost_etheta: 223.884
+cost_distx: 1667.31,cost_disty: 21.5837,cost_etheta: 222.835
+cost_distx: 1675.21,cost_disty: 31.8915,cost_etheta: 221.837
+cost_distx: 1683.81,cost_disty: 44.1223,cost_etheta: 220.89
+cost_distx: 1693.09,cost_disty: 58.2336,cost_etheta: 219.987
+cost_distx: 1703.05,cost_disty: 74.1797,cost_etheta: 219.125
+cost_distx: 1713.67,cost_disty: 91.9192,cost_etheta: 218.302
+cost_distx: 1724.95,cost_disty: 111.41,cost_etheta: 217.517
+cost_distx: 1736.86,cost_disty: 132.611,cost_etheta: 216.774
+cost_distx: 1749.4,cost_disty: 155.479,cost_etheta: 216.072
+cost_distx: 1762.54,cost_disty: 179.974,cost_etheta: 215.41
+cost_distx: 1776.28,cost_disty: 206.05,cost_etheta: 214.787
+cost_distx: 1790.62,cost_disty: 233.651,cost_etheta: 214.197
+cost_distx: 1805.54,cost_disty: 262.729,cost_etheta: 213.636
+cost_distx: 1821.04,cost_disty: 293.24,cost_etheta: 213.106
+cost_distx: 1837.1,cost_disty: 325.138,cost_etheta: 212.605
+cost_distx: 1853.72,cost_disty: 358.371,cost_etheta: 212.13
+cost_distx: 1870.88,cost_disty: 392.892,cost_etheta: 211.681
+-----------------------------------------------
+This is Ipopt version 3.14.13, running with linear solver ma27.
+
+Number of nonzeros in equality constraint Jacobian...:      345
+Number of nonzeros in inequality constraint Jacobian.:        0
+Number of nonzeros in Lagrangian Hessian.............:      414
+
+Total number of variables............................:      231
+                     variables with only lower bounds:        0
+                variables with lower and upper bounds:      231
+                     variables with only upper bounds:        0
+Total number of equality constraints.................:      120
+Total number of inequality constraints...............:        0
+        inequality constraints with only lower bounds:        0
+   inequality constraints with lower and upper bounds:        0
+        inequality constraints with only upper bounds:        0
+
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+   0  8.2227510e+04 3.00e-02 1.00e+02  -1.0 0.00e+00    -  0.00e+00 0.00e+00   0
+   1  4.7777681e+04 2.17e-02 7.25e+01  -1.0 7.19e-01    -  2.42e-01 2.75e-01f  1
+   2  3.2255339e+04 1.67e-02 5.57e+01  -1.0 5.13e-01    -  6.59e-01 2.32e-01f  1
+   3  2.2691006e+04 1.24e-02 4.12e+01  -1.0 6.66e-01    -  3.46e-01 2.60e-01f  1
+   4  2.0467357e+04 1.10e-02 3.65e+01  -1.0 1.38e+00    -  2.03e-01 1.14e-01f  1
+   5  1.8557398e+04 9.54e-03 3.18e+01  -1.0 2.16e+00    -  4.10e-01 1.29e-01f  1
+   6  1.6594061e+04 7.71e-03 2.57e+01  -1.0 2.19e+00    -  7.31e-01 1.92e-01f  1
+   7  1.5090598e+04 5.74e-03 1.91e+01  -1.0 1.87e+00    -  9.95e-01 2.56e-01f  1
+   8  1.4147418e+04 3.60e-03 1.22e+01  -1.0 1.36e+00    -  9.76e-01 3.72e-01f  1
+   9  1.3845162e+04 1.79e-03 6.79e+00  -1.0 1.01e+00    -  1.00e+00 5.04e-01f  1
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+  10  1.3878911e+04 6.43e-04 2.14e+00  -1.0 2.06e-01    -  4.30e-01 6.40e-01h  1
+  11  1.3972295e+04 1.45e-07 5.04e-14  -1.0 2.44e-01    -  1.00e+00 1.00e+00h  1
+  12  1.3707926e+04 3.78e-08 1.11e-01  -2.5 5.49e-02    -  9.22e-01 1.00e+00f  1
+  13  1.3678112e+04 5.30e-09 3.84e-03  -2.5 6.24e-02    -  9.86e-01 1.00e+00f  1
+  14  1.3665752e+04 1.32e-09 5.10e-03  -3.8 4.16e-02    -  9.52e-01 1.00e+00f  1
+  15  1.3664974e+04 3.57e-10 4.57e-14  -3.8 1.35e-02    -  1.00e+00 1.00e+00f  1
+  16  1.3664385e+04 7.40e-11 3.42e-04  -5.7 6.68e-03    -  9.85e-01 1.00e+00f  1
+  17  1.3664370e+04 3.42e-11 3.70e-14  -5.7 3.43e-03    -  1.00e+00 1.00e+00f  1
+  18  1.3664367e+04 1.69e-11 8.67e-14  -5.7 1.70e-03    -  1.00e+00 1.00e+00f  1
+  19  1.3664360e+04 2.44e-12 8.99e-14  -8.0 9.18e-04    -  1.00e+00 1.00e+00f  1
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+  20  1.3664360e+04 1.16e-12 5.50e-14  -8.0 4.36e-04    -  1.00e+00 1.00e+00h  1
+
+Number of Iterations....: 20
+
+                                   (scaled)                 (unscaled)
+Objective...............:   1.5795603740789804e+02    1.3664359787160502e+04
+Dual infeasibility......:   5.4986640109721742e-14    4.7567490694013797e-12
+Constraint violation....:   1.1638467967145516e-12    1.1638467967145516e-12
+Variable bound violation:   9.7947332466929993e-09    9.7947332466929993e-09
+Complementarity.........:   6.1370289804157140e-07    5.3089817514273778e-05
+Overall NLP error.......:   6.1370289804157140e-07    5.3089817514273778e-05
+
+
+Number of objective function evaluations             = 21
+Number of objective gradient evaluations             = 21
+Number of equality constraint evaluations            = 21
+Number of inequality constraint evaluations          = 0
+Number of equality constraint Jacobian evaluations   = 21
+Number of inequality constraint Jacobian evaluations = 0
+Number of Lagrangian Hessian evaluations             = 20
+Total seconds in IPOPT                               = 0.029
+
+EXIT: Maximum Number of Iterations Exceeded.
++++++++++++++++++  结束求解  ++++++++++++++++
+$$$$$$$$$ 结果展示 $$$$$$$$$$
+------ Total Cost(solution): 13664.4-----
+------ solution结果: 0------
+------ solution,size(): 237-----
+CHRONO  MPC solve time: 36ms
+CHRONO  MPC solve index: 1
+$$$$$$ MPC solved successfully! $$$$$$
+MPC solve time: 0.0369618 s
+MPC solve Stamp: 0.0370896
+loop_时间戳: 0.0371029
+***********************  结束Control Loop  ************************
+
+
+pub的时间戳0.0371058
+DEBUG&&&&&
+publish joint velocitys: -0.199773,-0.100849,0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0302741,-0.100154,0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0.0141142,-0.099515,0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0.0148472,-0.0988586,0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0.0127454,-0.0981689,0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0.0127868,-0.0974691,0.245097,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0.0135395,-0.0967654,-0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0.0143063,-0.0960573,-0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0.0150105,-0.0953462,-0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0.0156816,-0.0946305,-0.3,0,0,0,0,0,0,0,0,0,
+***********************  开始Control Loop  ************************
+_traj_received为1
+_track_finished为0
+_loop_count为13
+_realTraj_length为264
+_run_loop_traj为 1
+_run_loop_count为 1
+_run_loop为 1
+getTrackTraj用时: 9.29832e-06
+getTrackTraj stamp: 8.53539e-05
+_mpc_trackTraj_size是否正确: 1
+_trackTraj_computed为 1
+_start_mpc_trackTraj为 1
+===================  进入前期计算  =============================
+state position: -0.560113,0.167521,-0.153801
+state velocity: 0.0156816,-0.0946305,-0.3
+flag: 0
+terminal_nums: 133
+
+!! MPC Obj Solve Called !! 
+[0m[ INFO] [1710167501.320291493]: Class FG_eval : debug_csv/csv file has been open ! : /home/diamondlee/VKConTieta_ws/src/open_door_tieta_mpc/tieta_result_csv/debug/sim_debug20240311_223126/fg_evalue_segTraj.csv[0m
+FG_eval paramster has been set.
++++++++++++++++++  开始求解  +++++++++++++++
+cppAd input size:
+n_var:237
+n_var_lowb237
+n_var_upb237
+n_con_lowb:120
+n_con_upb:120
+进来几次啊
+track traj angle_0
+-0.14378,0.350689,0.281545
+track traj angle_1
+-0.144052,0.34073,0.280012
+track traj angle_2
+-0.144225,0.330739,0.278495
+track traj angle_3
+-0.144297,0.320733,0.276999
+track traj angle_4
+-0.144269,0.310712,0.275524
+track traj angle_5
+-0.144141,0.300663,0.27407
+track traj angle_6
+-0.143914,0.290534,0.272637
+track traj angle_7
+-0.143586,0.28036,0.271232
+track traj angle_8
+-0.143159,0.270159,0.269856
+track traj angle_9
+-0.142632,0.259898,0.268519
+track traj angle_10
+-0.142012,0.249653,0.267237
+track traj angle_11
+-0.141302,0.239461,0.266016
+track traj angle_12
+-0.140505,0.229324,0.264853
+track traj angle_13
+-0.139622,0.219248,0.263743
+track traj angle_14
+-0.138655,0.209234,0.262686
+track traj angle_15
+-0.137607,0.199282,0.261679
+track traj angle_16
+-0.136478,0.189396,0.260717
+track traj angle_17
+-0.135269,0.179579,0.259797
+track traj angle_18
+-0.133984,0.169832,0.258917
+track traj angle_19
+-0.132624,0.160156,0.258077
+track traj angle_20
+-0.131192,0.15055,0.25728
+track traj angle_21
+-0.129691,0.141016,0.256525
+track traj angle_22
+-0.128123,0.131553,0.255813
+track traj angle_23
+-0.12649,0.122162,0.255141
+track traj angle_24
+-0.124792,0.11285,0.254503
+track traj angle_25
+-0.123033,0.103618,0.253898
+track traj angle_26
+-0.121213,0.0944642,0.253324
+track traj angle_27
+-0.119335,0.0853909,0.252781
+track traj angle_28
+-0.117401,0.0764,0.252265
+track traj angle_29
+-0.115412,0.0674919,0.251778
+track traj angle_30
+-0.113371,0.0586666,0.251317
+track traj angle_31
+-0.11128,0.0499244,0.250883
+track traj angle_32
+-0.109141,0.0412663,0.250475
+track traj angle_33
+-0.106957,0.0326925,0.250095
+track traj angle_34
+-0.104729,0.0242029,0.249741
+track traj angle_35
+-0.102459,0.0157978,0.249413
+track traj angle_36
+-0.10015,0.00747622,0.249114
+track traj angle_37
+-0.0978047,-0.000761883,0.248846
+track traj angle_38
+-0.0954248,-0.00891649,0.248606
+track traj angle_39
+-0.0930119,-0.0169876,0.248396
+cost_distx: 1733.33,cost_disty: 335.504,cost_etheta: 189.526
+cost_distx: 1731.07,cost_disty: 300.011,cost_etheta: 188.193
+cost_distx: 1729.63,cost_disty: 266.401,cost_etheta: 186.88
+cost_distx: 1729.03,cost_disty: 234.739,cost_etheta: 185.589
+cost_distx: 1729.27,cost_disty: 205.036,cost_etheta: 184.32
+cost_distx: 1730.33,cost_disty: 177.267,cost_etheta: 183.073
+cost_distx: 1732.22,cost_disty: 151.321,cost_etheta: 181.849
+cost_distx: 1734.95,cost_disty: 127.327,cost_etheta: 180.652
+cost_distx: 1738.51,cost_disty: 105.345,cost_etheta: 179.485
+cost_distx: 1742.9,cost_disty: 85.3352,cost_etheta: 178.354
+cost_distx: 1748.09,cost_disty: 67.4557,cost_etheta: 177.273
+cost_distx: 1754.02,cost_disty: 51.753,cost_etheta: 176.246
+cost_distx: 1760.71,cost_disty: 38.1963,cost_etheta: 175.271
+cost_distx: 1768.13,cost_disty: 26.7571,cost_etheta: 174.343
+cost_distx: 1776.27,cost_disty: 17.3998,cost_etheta: 173.461
+cost_distx: 1785.12,cost_disty: 10.0876,cost_etheta: 172.623
+cost_distx: 1794.67,cost_disty: 4.785,cost_etheta: 171.825
+cost_distx: 1804.92,cost_disty: 1.45393,cost_etheta: 171.063
+cost_distx: 1815.86,cost_disty: 0.0534099,cost_etheta: 170.336
+cost_distx: 1827.47,cost_disty: 0.542506,cost_etheta: 169.643
+cost_distx: 1839.73,cost_disty: 2.88022,cost_etheta: 168.987
+cost_distx: 1852.63,cost_disty: 7.02553,cost_etheta: 168.367
+cost_distx: 1866.16,cost_disty: 12.9375,cost_etheta: 167.783
+cost_distx: 1880.29,cost_disty: 20.5743,cost_etheta: 167.233
+cost_distx: 1895.04,cost_disty: 29.8891,cost_etheta: 166.712
+cost_distx: 1910.39,cost_disty: 40.8368,cost_etheta: 166.218
+cost_distx: 1926.33,cost_disty: 53.3733,cost_etheta: 165.75
+cost_distx: 1942.85,cost_disty: 67.4539,cost_etheta: 165.308
+cost_distx: 1959.94,cost_disty: 83.0308,cost_etheta: 164.89
+cost_distx: 1977.59,cost_disty: 100.059,cost_etheta: 164.494
+cost_distx: 1995.78,cost_disty: 118.493,cost_etheta: 164.12
+cost_distx: 2014.51,cost_disty: 138.29,cost_etheta: 163.769
+cost_distx: 2033.76,cost_disty: 159.403,cost_etheta: 163.439
+cost_distx: 2053.51,cost_disty: 181.788,cost_etheta: 163.132
+cost_distx: 2073.75,cost_disty: 205.401,cost_etheta: 162.846
+cost_distx: 2094.48,cost_disty: 230.2,cost_etheta: 162.581
+cost_distx: 2115.66,cost_disty: 256.144,cost_etheta: 162.34
+cost_distx: 2137.29,cost_disty: 283.192,cost_etheta: 162.124
+cost_distx: 2159.35,cost_disty: 311.303,cost_etheta: 161.932
+cost_distx: 2181.84,cost_disty: 340.435,cost_etheta: 161.762
+-----------------------------------------------
+This is Ipopt version 3.14.13, running with linear solver ma27.
+
+Number of nonzeros in equality constraint Jacobian...:      345
+Number of nonzeros in inequality constraint Jacobian.:        0
+Number of nonzeros in Lagrangian Hessian.............:      414
+
+Total number of variables............................:      231
+                     variables with only lower bounds:        0
+                variables with lower and upper bounds:      231
+                     variables with only upper bounds:        0
+Total number of equality constraints.................:      120
+Total number of inequality constraints...............:        0
+        inequality constraints with only lower bounds:        0
+   inequality constraints with lower and upper bounds:        0
+        inequality constraints with only upper bounds:        0
+
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+   0  8.6792930e+04 3.00e-02 1.00e+02  -1.0 0.00e+00    -  0.00e+00 0.00e+00   0
+   1  4.4675423e+04 2.02e-02 6.75e+01  -1.0 6.68e-01    -  2.79e-01 3.25e-01f  1
+   2  2.7615358e+04 1.45e-02 4.83e+01  -1.0 4.37e-01    -  7.53e-01 2.83e-01f  1
+   3  1.9342340e+04 1.04e-02 3.45e+01  -1.0 9.12e-01    -  2.89e-01 2.86e-01f  1
+   4  1.7484063e+04 9.02e-03 3.01e+01  -1.0 1.25e+00    -  1.72e-01 1.29e-01f  1
+   5  1.6049169e+04 7.84e-03 2.61e+01  -1.0 1.58e+00    -  4.26e-01 1.32e-01f  1
+   6  1.4244768e+04 5.92e-03 1.97e+01  -1.0 1.70e+00    -  9.92e-01 2.45e-01f  1
+   7  1.2920000e+04 3.66e-03 1.22e+01  -1.0 1.28e+00    -  1.00e+00 3.81e-01f  1
+   8  1.2355197e+04 1.02e-03 3.41e+00  -1.0 7.08e-01    -  2.39e-01 7.20e-01f  1
+   9  1.2351770e+04 6.03e-04 2.01e+00  -1.0 3.12e-01    -  5.45e-01 4.11e-01h  1
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+  10  1.2392799e+04 1.03e-07 5.61e-14  -1.0 2.04e-01    -  1.00e+00 1.00e+00h  1
+  11  1.2116498e+04 3.81e-08 1.75e-01  -2.5 5.96e-02    -  8.64e-01 1.00e+00f  1
+  12  1.2082210e+04 5.42e-09 2.32e-02  -2.5 6.70e-02    -  9.26e-01 1.00e+00f  1
+  13  1.2068590e+04 1.26e-09 1.26e-02  -3.8 5.01e-02    -  8.98e-01 1.00e+00f  1
+  14  1.2067666e+04 3.49e-10 5.12e-14  -3.8 1.67e-02    -  1.00e+00 1.00e+00f  1
+  15  1.2067048e+04 6.84e-11 2.33e-04  -5.7 1.08e-02    -  9.89e-01 1.00e+00f  1
+  16  1.2067037e+04 2.31e-11 4.12e-14  -5.7 5.64e-03    -  1.00e+00 1.00e+00f  1
+  17  1.2067035e+04 8.10e-12 4.29e-14  -5.7 2.82e-03    -  1.00e+00 1.00e+00h  1
+  18  1.2067028e+04 1.15e-12 5.43e-14  -8.0 1.51e-03    -  1.00e+00 1.00e+00f  1
+  19  1.2067028e+04 5.38e-13 6.66e-14  -8.0 7.11e-04    -  1.00e+00 1.00e+00h  1
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+  20  1.2067028e+04 2.13e-13 3.29e-14  -8.0 2.82e-04    -  1.00e+00 1.00e+00h  1
+
+Number of Iterations....: 20
+
+                                   (scaled)                 (unscaled)
+Objective...............:   1.2916927063010198e+02    1.2067027748989492e+04
+Dual infeasibility......:   3.2935008999718603e-14    3.0767973340263286e-12
+Constraint violation....:   2.1310730957679880e-13    2.1310730957679880e-13
+Variable bound violation:   9.7196158344026173e-09    9.7196158344026173e-09
+Complementarity.........:   1.0940878098518726e-07    1.0220997530535691e-05
+Overall NLP error.......:   1.0940878098518726e-07    1.0220997530535691e-05
+
+
+Number of objective function evaluations             = 21
+Number of objective gradient evaluations             = 21
+Number of equality constraint evaluations            = 21
+Number of inequality constraint evaluations          = 0
+Number of equality constraint Jacobian evaluations   = 21
+Number of inequality constraint Jacobian evaluations = 0
+Number of Lagrangian Hessian evaluations             = 20
+Total seconds in IPOPT                               = 0.029
+
+EXIT: Maximum Number of Iterations Exceeded.
++++++++++++++++++  结束求解  ++++++++++++++++
+$$$$$$$$$ 结果展示 $$$$$$$$$$
+------ Total Cost(solution): 12067-----
+------ solution结果: 0------
+------ solution,size(): 237-----
+CHRONO  MPC solve time: 36ms
+CHRONO  MPC solve index: 1
+$$$$$$ MPC solved successfully! $$$$$$
+MPC solve time: 0.0365977 s
+MPC solve Stamp: 0.0366974
+loop_时间戳: 0.0367107
+***********************  结束Control Loop  ************************
+
+
+pub的时间戳0.0367138
+DEBUG&&&&&
+publish joint velocitys: -0.182539,-0.0940059,0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.0192604,-0.0931328,0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0.0215211,-0.092325,0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0.0215837,-0.0915321,0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0.0193794,-0.0907306,0.108717,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0.0192708,-0.0899097,-0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0.0198277,-0.0890821,-0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0.020399,-0.0882532,-0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0.0209123,-0.087421,-0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0.0213893,-0.0865811,-0.3,0,0,0,0,0,0,0,0,0,
+***********************  开始Control Loop  ************************
+_traj_received为1
+_track_finished为0
+_loop_count为14
+_realTraj_length为264
+_run_loop_traj为 1
+_run_loop_count为 1
+_run_loop为 1
+getTrackTraj用时: 7.62939e-06
+getTrackTraj stamp: 9.65595e-05
+_mpc_trackTraj_size是否正确: 1
+_trackTraj_computed为 1
+_start_mpc_trackTraj为 1
+===================  进入前期计算  =============================
+state position: -0.564207,0.0767409,-0.172929
+state velocity: 0.0213893,-0.0865811,-0.3
+flag: 0
+terminal_nums: 123
+
+!! MPC Obj Solve Called !! 
+[0m[ INFO] [1710167502.320307335]: Class FG_eval : debug_csv/csv file has been open ! : /home/diamondlee/VKConTieta_ws/src/open_door_tieta_mpc/tieta_result_csv/debug/sim_debug20240311_223126/fg_evalue_segTraj.csv[0m
+FG_eval paramster has been set.
++++++++++++++++++  开始求解  +++++++++++++++
+cppAd input size:
+n_var:237
+n_var_lowb237
+n_var_upb237
+n_con_lowb:120
+n_con_upb:120
+进来几次啊
+track traj angle_0
+-0.142012,0.249653,0.267237
+track traj angle_1
+-0.141302,0.239461,0.266016
+track traj angle_2
+-0.140505,0.229324,0.264853
+track traj angle_3
+-0.139622,0.219248,0.263743
+track traj angle_4
+-0.138655,0.209234,0.262686
+track traj angle_5
+-0.137607,0.199282,0.261679
+track traj angle_6
+-0.136478,0.189396,0.260717
+track traj angle_7
+-0.135269,0.179579,0.259797
+track traj angle_8
+-0.133984,0.169832,0.258917
+track traj angle_9
+-0.132624,0.160156,0.258077
+track traj angle_10
+-0.131192,0.15055,0.25728
+track traj angle_11
+-0.129691,0.141016,0.256525
+track traj angle_12
+-0.128123,0.131553,0.255813
+track traj angle_13
+-0.12649,0.122162,0.255141
+track traj angle_14
+-0.124792,0.11285,0.254503
+track traj angle_15
+-0.123033,0.103618,0.253898
+track traj angle_16
+-0.121213,0.0944642,0.253324
+track traj angle_17
+-0.119335,0.0853909,0.252781
+track traj angle_18
+-0.117401,0.0764,0.252265
+track traj angle_19
+-0.115412,0.0674919,0.251778
+track traj angle_20
+-0.113371,0.0586666,0.251317
+track traj angle_21
+-0.11128,0.0499244,0.250883
+track traj angle_22
+-0.109141,0.0412663,0.250475
+track traj angle_23
+-0.106957,0.0326925,0.250095
+track traj angle_24
+-0.104729,0.0242029,0.249741
+track traj angle_25
+-0.102459,0.0157978,0.249413
+track traj angle_26
+-0.10015,0.00747622,0.249114
+track traj angle_27
+-0.0978047,-0.000761883,0.248846
+track traj angle_28
+-0.0954248,-0.00891649,0.248606
+track traj angle_29
+-0.0930119,-0.0169876,0.248396
+track traj angle_30
+-0.0905675,-0.0249731,0.248211
+track traj angle_31
+-0.0880932,-0.0328699,0.248048
+track traj angle_32
+-0.0855906,-0.040678,0.247906
+track traj angle_33
+-0.0830614,-0.0483975,0.247784
+track traj angle_34
+-0.0805074,-0.0560284,0.247681
+track traj angle_35
+-0.0779305,-0.0635693,0.247597
+track traj angle_36
+-0.0753324,-0.0710198,0.24753
+track traj angle_37
+-0.0727147,-0.0783799,0.247479
+track traj angle_38
+-0.0700792,-0.0856498,0.247445
+track traj angle_39
+-0.0674273,-0.0928297,0.247427
+cost_distx: 1782.49,cost_disty: 298.985,cost_etheta: 193.747
+cost_distx: 1788.49,cost_disty: 264.778,cost_etheta: 192.673
+cost_distx: 1795.23,cost_disty: 232.817,cost_etheta: 191.653
+cost_distx: 1802.72,cost_disty: 203.084,cost_etheta: 190.683
+cost_distx: 1810.94,cost_disty: 175.545,cost_etheta: 189.76
+cost_distx: 1819.88,cost_disty: 150.164,cost_etheta: 188.884
+cost_distx: 1829.53,cost_disty: 126.911,cost_etheta: 188.049
+cost_distx: 1839.88,cost_disty: 105.757,cost_etheta: 187.252
+cost_distx: 1850.92,cost_disty: 86.66,cost_etheta: 186.491
+cost_distx: 1862.64,cost_disty: 69.5803,cost_etheta: 185.766
+cost_distx: 1875.02,cost_disty: 54.4778,cost_etheta: 185.079
+cost_distx: 1888.04,cost_disty: 41.3122,cost_etheta: 184.431
+cost_distx: 1901.69,cost_disty: 30.0431,cost_etheta: 183.82
+cost_distx: 1915.97,cost_disty: 20.631,cost_etheta: 183.244
+cost_distx: 1930.86,cost_disty: 13.0389,cost_etheta: 182.698
+cost_distx: 1946.35,cost_disty: 7.22354,cost_etheta: 182.181
+cost_distx: 1962.44,cost_disty: 3.14115,cost_etheta: 181.692
+cost_distx: 1979.11,cost_disty: 0.748222,cost_etheta: 181.229
+cost_distx: 1996.36,cost_disty: 0.00116227,cost_etheta: 180.79
+cost_distx: 2014.17,cost_disty: 0.85545,cost_etheta: 180.376
+cost_distx: 2032.53,cost_disty: 3.26682,cost_etheta: 179.985
+cost_distx: 2051.43,cost_disty: 7.19128,cost_etheta: 179.616
+cost_distx: 2070.85,cost_disty: 12.5845,cost_etheta: 179.271
+cost_distx: 2090.78,cost_disty: 19.4027,cost_etheta: 178.949
+cost_distx: 2111.2,cost_disty: 27.6024,cost_etheta: 178.65
+cost_distx: 2132.12,cost_disty: 37.1407,cost_etheta: 178.373
+cost_distx: 2153.49,cost_disty: 47.976,cost_etheta: 178.12
+cost_distx: 2175.31,cost_disty: 60.0668,cost_etheta: 177.894
+cost_distx: 2197.57,cost_disty: 73.3719,cost_etheta: 177.692
+cost_distx: 2220.25,cost_disty: 87.8503,cost_etheta: 177.515
+cost_distx: 2243.35,cost_disty: 103.457,cost_etheta: 177.359
+cost_distx: 2266.85,cost_disty: 120.145,cost_etheta: 177.222
+cost_distx: 2290.74,cost_disty: 137.872,cost_etheta: 177.102
+cost_distx: 2315.01,cost_disty: 156.596,cost_etheta: 176.999
+cost_distx: 2339.66,cost_disty: 176.277,cost_etheta: 176.913
+cost_distx: 2364.65,cost_disty: 196.87,cost_etheta: 176.842
+cost_distx: 2389.99,cost_disty: 218.332,cost_etheta: 176.786
+cost_distx: 2415.65,cost_disty: 240.625,cost_etheta: 176.743
+cost_distx: 2441.63,cost_disty: 263.707,cost_etheta: 176.715
+cost_distx: 2467.9,cost_disty: 287.542,cost_etheta: 176.699
+-----------------------------------------------
+This is Ipopt version 3.14.13, running with linear solver ma27.
+
+Number of nonzeros in equality constraint Jacobian...:      345
+Number of nonzeros in inequality constraint Jacobian.:        0
+Number of nonzeros in Lagrangian Hessian.............:      414
+
+Total number of variables............................:      231
+                     variables with only lower bounds:        0
+                variables with lower and upper bounds:      231
+                     variables with only upper bounds:        0
+Total number of equality constraints.................:      120
+Total number of inequality constraints...............:        0
+        inequality constraints with only lower bounds:        0
+   inequality constraints with lower and upper bounds:        0
+        inequality constraints with only upper bounds:        0
+
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+   0  9.3805586e+04 3.00e-02 1.00e+02  -1.0 0.00e+00    -  0.00e+00 0.00e+00   0
+   1  4.7953338e+04 2.02e-02 6.74e+01  -1.0 6.92e-01    -  2.80e-01 3.26e-01f  1
+   2  2.9805343e+04 1.46e-02 4.88e+01  -1.0 4.48e-01    -  7.66e-01 2.77e-01f  1
+   3  2.1716043e+04 1.10e-02 3.65e+01  -1.0 1.17e+00    -  2.61e-01 2.50e-01f  1
+   4  1.8643443e+04 9.01e-03 3.00e+01  -1.0 1.80e+00    -  1.49e-01 1.79e-01f  1
+   5  1.5625249e+04 6.29e-03 2.10e+01  -1.0 1.32e+00    -  1.36e-01 3.02e-01f  1
+   6  1.4684833e+04 5.05e-03 1.68e+01  -1.0 8.82e-01    -  1.96e-01 1.97e-01f  1
+   7  1.4069851e+04 4.07e-03 1.36e+01  -1.0 1.20e+00    -  7.77e-01 1.95e-01f  1
+   8  1.3492326e+04 2.54e-03 8.45e+00  -1.0 1.09e+00    -  9.96e-01 3.76e-01f  1
+   9  1.3388466e+04 2.38e-04 1.77e+00  -1.0 5.23e-01    -  3.15e-01 9.06e-01f  1
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+  10  1.3415603e+04 8.31e-05 3.97e-01  -1.0 3.04e-01    -  7.30e-01 6.52e-01h  1
+  11  1.3185438e+04 6.71e-08 9.58e-14  -1.7 1.14e-01    -  1.00e+00 1.00e+00f  1
+  12  1.3098645e+04 1.51e-08 6.71e-14  -2.5 7.47e-02    -  1.00e+00 1.00e+00f  1
+  13  1.3081046e+04 1.67e-09 2.12e-03  -3.8 5.65e-02    -  9.82e-01 1.00e+00f  1
+  14  1.3079971e+04 2.88e-10 5.32e-14  -3.8 1.57e-02    -  1.00e+00 1.00e+00f  1
+  15  1.3079320e+04 2.55e-11 3.48e-06  -5.7 5.00e-03    -  1.00e+00 1.00e+00f  1
+  16  1.3079315e+04 1.07e-12 5.00e-14  -5.7 4.05e-04    -  1.00e+00 1.00e+00h  1
+  17  1.3079307e+04 6.01e-14 5.33e-14  -8.0 2.26e-05    -  1.00e+00 1.00e+00f  1
+
+Number of Iterations....: 17
+
+                                   (scaled)                 (unscaled)
+Objective...............:   1.3164087043613063e+02    1.3079307465580852e+04
+Dual infeasibility......:   5.3335527518598251e-14    5.2992035144066593e-12
+Constraint violation....:   6.0063065632220969e-14    6.0063065632220969e-14
+Variable bound violation:   9.7442243163214926e-09    9.7442243163214926e-09
+Complementarity.........:   1.0049120999251091e-08    9.9844024786967544e-07
+Overall NLP error.......:   1.0049120999251091e-08    9.9844024786967544e-07
+
+
+Number of objective function evaluations             = 18
+Number of objective gradient evaluations             = 18
+Number of equality constraint evaluations            = 18
+Number of inequality constraint evaluations          = 0
+Number of equality constraint Jacobian evaluations   = 18
+Number of inequality constraint Jacobian evaluations = 0
+Number of Lagrangian Hessian evaluations             = 17
+Total seconds in IPOPT                               = 0.026
+
+EXIT: Optimal Solution Found.
++++++++++++++++++  结束求解  ++++++++++++++++
+$$$$$$$$$ 结果展示 $$$$$$$$$$
+------ Total Cost(solution): 13079.3-----
+------ solution结果: 1------
+------ solution,size(): 237-----
+CHRONO  MPC solve time: 33ms
+CHRONO  MPC solve index: 1
+$$$$$$ MPC solved successfully! $$$$$$
+MPC solve time: 0.034004 s
+MPC solve Stamp: 0.0341163
+loop_时间戳: 0.0341289
+***********************  结束Control Loop  ************************
+
+
+pub的时间戳0.0341318
+DEBUG&&&&&
+publish joint velocitys: -0.155312,-0.0858661,0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.00806503,-0.0849084,0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0.0266856,-0.0840476,0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0.026101,-0.0832132,0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0.0239543,-0.0823809,0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0.0237279,-0.0815473,0.0167282,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0.0240779,-0.0807095,-0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0.0244351,-0.0798524,-0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0.0247442,-0.0789695,-0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0.0250267,-0.0780818,-0.3,0,0,0,0,0,0,0,0,0,
+***********************  开始Control Loop  ************************
+_traj_received为1
+_track_finished为0
+_loop_count为15
+_realTraj_length为264
+_run_loop_traj为 1
+_run_loop_count为 1
+_run_loop为 1
+getTrackTraj用时: 1.04904e-05
+getTrackTraj stamp: 9.2268e-05
+_mpc_trackTraj_size是否正确: 1
+_trackTraj_computed为 1
+_start_mpc_trackTraj为 1
+===================  进入前期计算  =============================
+state position: -0.560888,-0.00572674,-0.141256
+state velocity: 0.0250267,-0.0780818,-0.3
+flag: 0
+terminal_nums: 113
+
+!! MPC Obj Solve Called !! 
+[0m[ INFO] [1710167503.320319541]: Class FG_eval : debug_csv/csv file has been open ! : /home/diamondlee/VKConTieta_ws/src/open_door_tieta_mpc/tieta_result_csv/debug/sim_debug20240311_223126/fg_evalue_segTraj.csv[0m
+FG_eval paramster has been set.
++++++++++++++++++  开始求解  +++++++++++++++
+cppAd input size:
+n_var:237
+n_var_lowb237
+n_var_upb237
+n_con_lowb:120
+n_con_upb:120
+进来几次啊
+track traj angle_0
+-0.131192,0.15055,0.25728
+track traj angle_1
+-0.129691,0.141016,0.256525
+track traj angle_2
+-0.128123,0.131553,0.255813
+track traj angle_3
+-0.12649,0.122162,0.255141
+track traj angle_4
+-0.124792,0.11285,0.254503
+track traj angle_5
+-0.123033,0.103618,0.253898
+track traj angle_6
+-0.121213,0.0944642,0.253324
+track traj angle_7
+-0.119335,0.0853909,0.252781
+track traj angle_8
+-0.117401,0.0764,0.252265
+track traj angle_9
+-0.115412,0.0674919,0.251778
+track traj angle_10
+-0.113371,0.0586666,0.251317
+track traj angle_11
+-0.11128,0.0499244,0.250883
+track traj angle_12
+-0.109141,0.0412663,0.250475
+track traj angle_13
+-0.106957,0.0326925,0.250095
+track traj angle_14
+-0.104729,0.0242029,0.249741
+track traj angle_15
+-0.102459,0.0157978,0.249413
+track traj angle_16
+-0.10015,0.00747622,0.249114
+track traj angle_17
+-0.0978047,-0.000761883,0.248846
+track traj angle_18
+-0.0954248,-0.00891649,0.248606
+track traj angle_19
+-0.0930119,-0.0169876,0.248396
+track traj angle_20
+-0.0905675,-0.0249731,0.248211
+track traj angle_21
+-0.0880932,-0.0328699,0.248048
+track traj angle_22
+-0.0855906,-0.040678,0.247906
+track traj angle_23
+-0.0830614,-0.0483975,0.247784
+track traj angle_24
+-0.0805074,-0.0560284,0.247681
+track traj angle_25
+-0.0779305,-0.0635693,0.247597
+track traj angle_26
+-0.0753324,-0.0710198,0.24753
+track traj angle_27
+-0.0727147,-0.0783799,0.247479
+track traj angle_28
+-0.0700792,-0.0856498,0.247445
+track traj angle_29
+-0.0674273,-0.0928297,0.247427
+track traj angle_30
+-0.0647612,-0.0999195,0.247424
+track traj angle_31
+-0.0620823,-0.106919,0.247437
+track traj angle_32
+-0.0593923,-0.113829,0.247465
+track traj angle_33
+-0.0566927,-0.120649,0.247507
+track traj angle_34
+-0.0539851,-0.12738,0.247563
+track traj angle_35
+-0.0512718,-0.13402,0.247634
+track traj angle_36
+-0.0485548,-0.140571,0.247721
+track traj angle_37
+-0.0458354,-0.147033,0.247824
+track traj angle_38
+-0.0431151,-0.153405,0.247941
+track traj angle_39
+-0.0403953,-0.159688,0.248072
+cost_distx: 1846.39,cost_disty: 244.224,cost_etheta: 158.831
+cost_distx: 1859.31,cost_disty: 215.333,cost_etheta: 158.23
+cost_distx: 1872.86,cost_disty: 188.456,cost_etheta: 157.664
+cost_distx: 1887.02,cost_disty: 163.556,cost_etheta: 157.131
+cost_distx: 1901.79,cost_disty: 140.605,cost_etheta: 156.626
+cost_distx: 1917.17,cost_disty: 119.562,cost_etheta: 156.147
+cost_distx: 1933.14,cost_disty: 100.382,cost_etheta: 155.693
+cost_distx: 1949.69,cost_disty: 83.0242,cost_etheta: 155.265
+cost_distx: 1966.81,cost_disty: 67.448,cost_etheta: 154.859
+cost_distx: 1984.49,cost_disty: 53.6096,cost_etheta: 154.476
+cost_distx: 2002.71,cost_disty: 41.465,cost_etheta: 154.114
+cost_distx: 2021.47,cost_disty: 30.9704,cost_etheta: 153.773
+cost_distx: 2040.75,cost_disty: 22.0834,cost_etheta: 153.454
+cost_distx: 2060.53,cost_disty: 14.7603,cost_etheta: 153.156
+cost_distx: 2080.81,cost_disty: 8.95786,cost_etheta: 152.879
+cost_distx: 2101.57,cost_disty: 4.63304,cost_etheta: 152.622
+cost_distx: 2122.8,cost_disty: 1.74318,cost_etheta: 152.389
+cost_distx: 2144.46,cost_disty: 0.246498,cost_etheta: 152.179
+cost_distx: 2166.56,cost_disty: 0.101745,cost_etheta: 151.993
+cost_distx: 2189.08,cost_disty: 1.26806,cost_etheta: 151.829
+cost_distx: 2212.01,cost_disty: 3.70423,cost_etheta: 151.685
+cost_distx: 2235.35,cost_disty: 7.36751,cost_etheta: 151.558
+cost_distx: 2259.08,cost_disty: 12.2159,cost_etheta: 151.447
+cost_distx: 2283.18,cost_disty: 18.2079,cost_etheta: 151.352
+cost_distx: 2307.65,cost_disty: 25.3026,cost_etheta: 151.272
+cost_distx: 2332.48,cost_disty: 33.4577,cost_etheta: 151.207
+cost_distx: 2357.64,cost_disty: 42.6318,cost_etheta: 151.154
+cost_distx: 2383.13,cost_disty: 52.7848,cost_etheta: 151.115
+cost_distx: 2408.93,cost_disty: 63.877,cost_etheta: 151.089
+cost_distx: 2435.03,cost_disty: 75.8693,cost_etheta: 151.075
+cost_distx: 2461.42,cost_disty: 88.7228,cost_etheta: 151.073
+cost_distx: 2488.07,cost_disty: 102.399,cost_etheta: 151.083
+cost_distx: 2514.98,cost_disty: 116.861,cost_etheta: 151.104
+cost_distx: 2542.13,cost_disty: 132.071,cost_etheta: 151.137
+cost_distx: 2569.51,cost_disty: 147.994,cost_etheta: 151.18
+cost_distx: 2597.09,cost_disty: 164.592,cost_etheta: 151.236
+cost_distx: 2624.85,cost_disty: 181.831,cost_etheta: 151.304
+cost_distx: 2652.79,cost_disty: 199.674,cost_etheta: 151.383
+cost_distx: 2680.89,cost_disty: 218.089,cost_etheta: 151.475
+cost_distx: 2709.13,cost_disty: 237.041,cost_etheta: 151.577
+-----------------------------------------------
+This is Ipopt version 3.14.13, running with linear solver ma27.
+
+Number of nonzeros in equality constraint Jacobian...:      345
+Number of nonzeros in inequality constraint Jacobian.:        0
+Number of nonzeros in Lagrangian Hessian.............:      414
+
+Total number of variables............................:      231
+                     variables with only lower bounds:        0
+                variables with lower and upper bounds:      231
+                     variables with only upper bounds:        0
+Total number of equality constraints.................:      120
+Total number of inequality constraints...............:        0
+        inequality constraints with only lower bounds:        0
+   inequality constraints with lower and upper bounds:        0
+        inequality constraints with only upper bounds:        0
+
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+   0  9.8652892e+04 3.00e-02 1.00e+02  -1.0 0.00e+00    -  0.00e+00 0.00e+00   0
+   1  4.6240114e+04 1.92e-02 6.40e+01  -1.0 6.69e-01    -  3.04e-01 3.60e-01f  1
+   2  2.7632375e+04 1.34e-02 4.47e+01  -1.0 4.04e-01    -  8.36e-01 3.01e-01f  1
+   3  2.1447499e+04 1.06e-02 3.53e+01  -1.0 1.31e+00    -  2.99e-01 2.12e-01f  1
+   4  1.8265070e+04 8.64e-03 2.88e+01  -1.0 1.74e+00    -  1.78e-01 1.83e-01f  1
+   5  1.4670005e+04 5.42e-03 1.80e+01  -1.0 1.14e+00    -  1.42e-01 3.74e-01f  1
+   6  1.3929143e+04 4.35e-03 1.45e+01  -1.0 7.86e-01    -  2.03e-01 1.97e-01f  1
+   7  1.3275460e+04 3.21e-03 1.07e+01  -1.0 1.02e+00    -  9.92e-01 2.61e-01f  1
+   8  1.2789721e+04 1.42e-03 4.72e+00  -1.0 7.69e-01    -  8.68e-01 5.59e-01f  1
+   9  1.2814855e+04 3.52e-07 1.09e+00  -1.0 3.19e-01    -  5.54e-01 1.00e+00h  1
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+  10  1.2805481e+04 4.61e-08 3.33e-14  -1.0 1.12e-01    -  1.00e+00 1.00e+00f  1
+  11  1.2507984e+04 3.87e-08 1.57e-01  -2.5 6.99e-02    -  8.91e-01 1.00e+00f  1
+  12  1.2467425e+04 7.70e-09 4.99e-14  -2.5 8.38e-02    -  1.00e+00 1.00e+00f  1
+  13  1.2451839e+04 1.83e-09 2.19e-03  -3.8 5.05e-02    -  9.86e-01 1.00e+00f  1
+  14  1.2450904e+04 8.30e-10 4.88e-14  -3.8 1.32e-02    -  1.00e+00 1.00e+00f  1
+  15  1.2450238e+04 8.18e-11 7.10e-05  -5.7 3.05e-03    -  1.00e+00 9.97e-01f  1
+  16  1.2450231e+04 3.62e-12 5.56e-14  -5.7 2.60e-04    -  1.00e+00 1.00e+00f  1
+  17  1.2450223e+04 1.19e-13 3.67e-14  -8.0 1.90e-05    -  1.00e+00 1.00e+00f  1
+
+Number of Iterations....: 17
+
+                                   (scaled)                 (unscaled)
+Objective...............:   1.1960038196807133e+02    1.2450223471006542e+04
+Dual infeasibility......:   3.6737667306508207e-14    3.8243370150073954e-12
+Constraint violation....:   1.1877998584708394e-13    1.1877998584708394e-13
+Variable bound violation:   9.6956603579112510e-09    9.6956603579112510e-09
+Complementarity.........:   1.0131510223742738e-08    1.0546752803687445e-06
+Overall NLP error.......:   1.0131510223742738e-08    1.0546752803687445e-06
+
+
+Number of objective function evaluations             = 18
+Number of objective gradient evaluations             = 18
+Number of equality constraint evaluations            = 18
+Number of inequality constraint evaluations          = 0
+Number of equality constraint Jacobian evaluations   = 18
+Number of inequality constraint Jacobian evaluations = 0
+Number of Lagrangian Hessian evaluations             = 17
+Total seconds in IPOPT                               = 0.026
+
+EXIT: Optimal Solution Found.
++++++++++++++++++  结束求解  ++++++++++++++++
+$$$$$$$$$ 结果展示 $$$$$$$$$$
+------ Total Cost(solution): 12450.2-----
+------ solution结果: 1------
+------ solution,size(): 237-----
+CHRONO  MPC solve time: 33ms
+CHRONO  MPC solve index: 1
+$$$$$$ MPC solved successfully! $$$$$$
+MPC solve time: 0.0332162 s
+MPC solve Stamp: 0.0333343
+loop_时间戳: 0.0333502
+***********************  结束Control Loop  ************************
+
+
+pub的时间戳0.0333536
+DEBUG&&&&&
+publish joint velocitys: -0.158634,-0.0773307,0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.00628497,-0.0763221,0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0.0298277,-0.0754038,0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0.0291105,-0.0745025,0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0.0267028,-0.073601,0.265474,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0.0262826,-0.0726997,-0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0.0264644,-0.071799,-0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0.0266527,-0.0708977,-0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0.0267898,-0.069997,-0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0.0269009,-0.069098,-0.3,0,0,0,0,0,0,0,0,0,
+***********************  开始Control Loop  ************************
+_traj_received为1
+_track_finished为0
+_loop_count为16
+_realTraj_length为264
+_run_loop_traj为 1
+_run_loop_count为 1
+_run_loop为 1
+getTrackTraj用时: 8.10623e-06
+getTrackTraj stamp: 9.10759e-05
+_mpc_trackTraj_size是否正确: 1
+_trackTraj_computed为 1
+_start_mpc_trackTraj为 1
+===================  进入前期计算  =============================
+state position: -0.555619,-0.0794309,-0.144709
+state velocity: 0.0269009,-0.069098,-0.3
+flag: 0
+terminal_nums: 103
+
+!! MPC Obj Solve Called !! 
+[0m[ INFO] [1710167504.320301962]: Class FG_eval : debug_csv/csv file has been open ! : /home/diamondlee/VKConTieta_ws/src/open_door_tieta_mpc/tieta_result_csv/debug/sim_debug20240311_223126/fg_evalue_segTraj.csv[0m
+FG_eval paramster has been set.
++++++++++++++++++  开始求解  +++++++++++++++
+cppAd input size:
+n_var:237
+n_var_lowb237
+n_var_upb237
+n_con_lowb:120
+n_con_upb:120
+进来几次啊
+track traj angle_0
+-0.113371,0.0586666,0.251317
+track traj angle_1
+-0.11128,0.0499244,0.250883
+track traj angle_2
+-0.109141,0.0412663,0.250475
+track traj angle_3
+-0.106957,0.0326925,0.250095
+track traj angle_4
+-0.104729,0.0242029,0.249741
+track traj angle_5
+-0.102459,0.0157978,0.249413
+track traj angle_6
+-0.10015,0.00747622,0.249114
+track traj angle_7
+-0.0978047,-0.000761883,0.248846
+track traj angle_8
+-0.0954248,-0.00891649,0.248606
+track traj angle_9
+-0.0930119,-0.0169876,0.248396
+track traj angle_10
+-0.0905675,-0.0249731,0.248211
+track traj angle_11
+-0.0880932,-0.0328699,0.248048
+track traj angle_12
+-0.0855906,-0.040678,0.247906
+track traj angle_13
+-0.0830614,-0.0483975,0.247784
+track traj angle_14
+-0.0805074,-0.0560284,0.247681
+track traj angle_15
+-0.0779305,-0.0635693,0.247597
+track traj angle_16
+-0.0753324,-0.0710198,0.24753
+track traj angle_17
+-0.0727147,-0.0783799,0.247479
+track traj angle_18
+-0.0700792,-0.0856498,0.247445
+track traj angle_19
+-0.0674273,-0.0928297,0.247427
+track traj angle_20
+-0.0647612,-0.0999195,0.247424
+track traj angle_21
+-0.0620823,-0.106919,0.247437
+track traj angle_22
+-0.0593923,-0.113829,0.247465
+track traj angle_23
+-0.0566927,-0.120649,0.247507
+track traj angle_24
+-0.0539851,-0.12738,0.247563
+track traj angle_25
+-0.0512718,-0.13402,0.247634
+track traj angle_26
+-0.0485548,-0.140571,0.247721
+track traj angle_27
+-0.0458354,-0.147033,0.247824
+track traj angle_28
+-0.0431151,-0.153405,0.247941
+track traj angle_29
+-0.0403953,-0.159688,0.248072
+track traj angle_30
+-0.0376779,-0.165883,0.248219
+track traj angle_31
+-0.0349652,-0.171991,0.248384
+track traj angle_32
+-0.0322586,-0.178012,0.248568
+track traj angle_33
+-0.0295593,-0.183947,0.24877
+track traj angle_34
+-0.0268686,-0.189796,0.248988
+track traj angle_35
+-0.0241878,-0.195558,0.249223
+track traj angle_36
+-0.0215191,-0.201235,0.249477
+track traj angle_37
+-0.0188653,-0.206832,0.249758
+track traj angle_38
+-0.0162276,-0.212348,0.250064
+track traj angle_39
+-0.013607,-0.217782,0.250394
+cost_distx: 1955.83,cost_disty: 190.709,cost_etheta: 156.836
+cost_distx: 1974.37,cost_disty: 167.328,cost_etheta: 156.492
+cost_distx: 1993.42,cost_disty: 145.678,cost_etheta: 156.171
+cost_distx: 2012.98,cost_disty: 125.716,cost_etheta: 155.87
+cost_distx: 2033.02,cost_disty: 107.4,cost_etheta: 155.591
+cost_distx: 2053.54,cost_disty: 90.685,cost_etheta: 155.332
+cost_distx: 2074.52,cost_disty: 75.5285,cost_etheta: 155.096
+cost_distx: 2095.94,cost_disty: 61.8882,cost_etheta: 154.885
+cost_distx: 2117.79,cost_disty: 49.7228,cost_etheta: 154.697
+cost_distx: 2140.06,cost_disty: 38.9917,cost_etheta: 154.531
+cost_distx: 2162.73,cost_disty: 29.6565,cost_etheta: 154.386
+cost_distx: 2185.81,cost_disty: 21.6793,cost_etheta: 154.258
+cost_distx: 2209.27,cost_disty: 15.0179,cost_etheta: 154.146
+cost_distx: 2233.11,cost_disty: 9.63074,cost_etheta: 154.05
+cost_distx: 2257.31,cost_disty: 5.47677,cost_etheta: 153.97
+cost_distx: 2281.86,cost_disty: 2.5159,cost_etheta: 153.904
+cost_distx: 2306.75,cost_disty: 0.707476,cost_etheta: 153.851
+cost_distx: 2331.97,cost_disty: 0.0110472,cost_etheta: 153.812
+cost_distx: 2357.49,cost_disty: 0.386746,cost_etheta: 153.785
+cost_distx: 2383.31,cost_disty: 1.79528,cost_etheta: 153.77
+cost_distx: 2409.42,cost_disty: 4.19782,cost_etheta: 153.768
+cost_distx: 2435.79,cost_disty: 7.55606,cost_etheta: 153.779
+cost_distx: 2462.41,cost_disty: 11.8323,cost_etheta: 153.8
+cost_distx: 2489.28,cost_disty: 16.9894,cost_etheta: 153.833
+cost_distx: 2516.37,cost_disty: 22.9907,cost_etheta: 153.877
+cost_distx: 2543.66,cost_disty: 29.8,cost_etheta: 153.933
+cost_distx: 2571.14,cost_disty: 37.3815,cost_etheta: 154.001
+cost_distx: 2598.8,cost_disty: 45.7002,cost_etheta: 154.082
+cost_distx: 2626.6,cost_disty: 54.7218,cost_etheta: 154.174
+cost_distx: 2654.56,cost_disty: 64.4123,cost_etheta: 154.277
+cost_distx: 2682.63,cost_disty: 74.7395,cost_etheta: 154.392
+cost_distx: 2710.81,cost_disty: 85.6734,cost_etheta: 154.522
+cost_distx: 2739.06,cost_disty: 97.1828,cost_etheta: 154.667
+cost_distx: 2767.39,cost_disty: 109.236,cost_etheta: 154.826
+cost_distx: 2795.77,cost_disty: 121.804,cost_etheta: 154.998
+cost_distx: 2824.19,cost_disty: 134.854,cost_etheta: 155.182
+cost_distx: 2852.63,cost_disty: 148.363,cost_etheta: 155.382
+cost_distx: 2881.05,cost_disty: 162.311,cost_etheta: 155.604
+cost_distx: 2909.43,cost_disty: 176.669,cost_etheta: 155.845
+cost_distx: 2937.77,cost_disty: 191.411,cost_etheta: 156.106
+-----------------------------------------------
+This is Ipopt version 3.14.13, running with linear solver ma27.
+
+Number of nonzeros in equality constraint Jacobian...:      345
+Number of nonzeros in inequality constraint Jacobian.:        0
+Number of nonzeros in Lagrangian Hessian.............:      414
+
+Total number of variables............................:      231
+                     variables with only lower bounds:        0
+                variables with lower and upper bounds:      231
+                     variables with only upper bounds:        0
+Total number of equality constraints.................:      120
+Total number of inequality constraints...............:        0
+        inequality constraints with only lower bounds:        0
+   inequality constraints with lower and upper bounds:        0
+        inequality constraints with only upper bounds:        0
+
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+   0  1.0549688e+05 3.00e-02 1.00e+02  -1.0 0.00e+00    -  0.00e+00 0.00e+00   0
+   1  4.8891362e+04 1.91e-02 6.37e+01  -1.0 6.84e-01    -  3.07e-01 3.63e-01f  1
+   2  2.9527462e+04 1.35e-02 4.49e+01  -1.0 4.05e-01    -  8.38e-01 2.95e-01f  1
+   3  2.3652914e+04 1.10e-02 3.66e+01  -1.0 1.41e+00    -  3.17e-01 1.85e-01f  1
+   4  2.0589165e+04 9.35e-03 3.12e+01  -1.0 1.98e+00    -  5.06e-01 1.49e-01f  1
+   5  1.7652745e+04 7.35e-03 2.45e+01  -1.0 1.99e+00    -  9.36e-01 2.13e-01f  1
+   6  1.5426759e+04 5.19e-03 1.73e+01  -1.0 1.66e+00    -  1.00e+00 2.94e-01f  1
+   7  1.3778206e+04 1.65e-03 5.49e+00  -1.0 7.55e-01    -  1.29e-01 6.83e-01f  1
+   8  1.3735023e+04 1.12e-03 3.73e+00  -1.0 3.15e-01    -  3.58e-01 3.21e-01f  1
+   9  1.3721713e+04 1.65e-04 5.50e-01  -1.0 4.22e-01    -  1.00e+00 8.53e-01h  1
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+  10  1.3480452e+04 1.87e-08 5.14e-14  -1.7 4.47e-02    -  1.00e+00 1.00e+00f  1
+  11  1.3400701e+04 8.02e-09 2.55e-02  -2.5 3.51e-02    -  9.11e-01 9.94e-01f  1
+  12  1.3382941e+04 1.64e-09 1.80e-02  -3.8 4.93e-02    -  8.62e-01 1.00e+00f  1
+  13  1.3381455e+04 2.88e-10 3.48e-14  -3.8 1.90e-02    -  1.00e+00 1.00e+00f  1
+  14  1.3380714e+04 2.98e-11 2.51e-05  -5.7 4.34e-03    -  9.96e-01 1.00e+00f  1
+  15  1.3380708e+04 1.06e-12 6.59e-14  -5.7 3.02e-04    -  1.00e+00 1.00e+00h  1
+  16  1.3380701e+04 5.67e-14 4.72e-14  -8.0 2.22e-05    -  1.00e+00 1.00e+00f  1
+
+Number of Iterations....: 16
+
+                                   (scaled)                 (unscaled)
+Objective...............:   1.2343542097986867e+02    1.3380700688742794e+04
+Dual infeasibility......:   4.7205464638179048e-14    5.1171874991986446e-12
+Constraint violation....:   5.6732396558345499e-14    5.6732396558345499e-14
+Variable bound violation:   9.7158807943475978e-09    9.7158807943475978e-09
+Complementarity.........:   9.6117572635999261e-09    1.0419379301023786e-06
+Overall NLP error.......:   9.6117572635999261e-09    1.0419379301023786e-06
+
+
+Number of objective function evaluations             = 17
+Number of objective gradient evaluations             = 17
+Number of equality constraint evaluations            = 17
+Number of inequality constraint evaluations          = 0
+Number of equality constraint Jacobian evaluations   = 17
+Number of inequality constraint Jacobian evaluations = 0
+Number of Lagrangian Hessian evaluations             = 16
+Total seconds in IPOPT                               = 0.025
+
+EXIT: Optimal Solution Found.
++++++++++++++++++  结束求解  ++++++++++++++++
+$$$$$$$$$ 结果展示 $$$$$$$$$$
+------ Total Cost(solution): 13380.7-----
+------ solution结果: 1------
+------ solution,size(): 237-----
+CHRONO  MPC solve time: 32ms
+CHRONO  MPC solve index: 1
+$$$$$$ MPC solved successfully! $$$$$$
+MPC solve time: 0.03265 s
+MPC solve Stamp: 0.0327554
+loop_时间戳: 0.032768
+***********************  结束Control Loop  ************************
+
+
+pub的时间戳0.0327709
+DEBUG&&&&&
+publish joint velocitys: -0.145562,-0.0683377,0.3,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: -0.00174103,-0.0673192,0.3,0,0,0,0,0,0,0,0,0,
