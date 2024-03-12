@@ -6,6 +6,12 @@
 #include <vector>
 #include <std_msgs/Float64MultiArray.h>
 
+//用于创建文件夹和获取当前的时间信息
+#include <iomanip>
+#include <chrono>
+#include <ctime>
+#include <boost/filesystem.hpp>
+
 enum JointName
 {
     base_y_base_x = 0,
@@ -45,59 +51,7 @@ void velocityCallback(const std_msgs::Float64MultiArray::ConstPtr& velocity_msg)
     }
 }
 
-std::vector<double> updateSinglePosition(JointName joint_name, double velocity, const std::vector<double>& last_position) {
-    std::vector<double> new_Position = last_position;
 
-    switch (joint_name) {
-        case base_y_base_x:
-            new_Position[0] += velocity * 1 / pub_rate;
-            break;
-
-        case base_theta_base_y:
-            new_Position[1] += velocity * 1 / pub_rate;
-            break;
-
-        case base_link_base_theta:
-            new_Position[2] += velocity * 1 / pub_rate;
-            break;
-
-        case right_arm_shoulder_pan_joint:
-            new_Position[3] += velocity * 1 / pub_rate;
-            break;
-
-        case right_arm_shoulder_lift_joint:
-            new_Position[4] += velocity * 1 / pub_rate;
-            break;
-
-        case right_arm_elbow_joint:
-            new_Position[5] += velocity * 1 / pub_rate;
-            break;
-
-        case right_arm_wrist_1_joint:
-            new_Position[6] += velocity * 1 / pub_rate;
-            break;
-
-        case right_arm_wrist_2_joint:
-            new_Position[7] += velocity * 1 / pub_rate;
-            break;
-
-        case right_arm_wrist_3_joint:
-            new_Position[8] += velocity * 1 / pub_rate;
-            break;
-
-        case dynamic_pedestrian_joint:
-            new_Position[9] += velocity * 1 / pub_rate;
-            break;
-
-            // Add more cases for other joint names
-
-        default:
-            //std::cout << "Invalid joint name." << std::endl;
-            break;
-    }
-
-    return new_Position;
-}
 
 bool start_door_flag = false;
 //publish thread
@@ -159,24 +113,7 @@ int main(int argc, char *argv[]) {
     ros::Subscriber joint_veloctiy_sub = n.subscribe("joint_velocity", 1, velocityCallback);
 
     ros::Rate loop_rate(pub_rate);
-    // std::string urdf_file_name;
-    // urdf::Model model;
-    // if (n.getParam("robot_description", urdf_file_name)) {
-    //     //std::cout << "urdf_file_name:" << urdf_file_name << std::endl;
-    //     if (!model.initString(urdf_file_name)) {
-    //         ROS_ERROR("Failed to parse urdf file");
-    //         return -1;
-    //     }
-    // }
-    // std::cout << "joint name:";
-    // std::vector<urdf::JointSharedPtr> joints;
-    // for (auto it = model.joints_.begin(); it != model.joints_.end(); it++) {
-    //     urdf::JointSharedPtr joint = it->second;
-    //     if (urdf::Joint::FIXED != joint->type) {
-    //         joints.push_back(joint);
-    //         std::cout << joint->name << " , ";
-    //     }
-    // }
+
     //把这里做成param的参数，给到tieta的初始位置
     //std::vector<double> joint_positions = {-1.2,2.4,-5.99132e-10,1.57,-0.8678,-2.2043,-0.0347,1.6315,-4.37875e-11, -1.0};
     std::vector<double> joint_positions = {0.103956,0.953408,0.396687,1.84723,-0.0777131,-0.976665,0.77764,1.5597,-1.60804, 0.0, /*-0.1*/1.0, -5.5};
@@ -240,6 +177,33 @@ int main(int argc, char *argv[]) {
         //ROS_INFO("Publishing: %s", position_msg.data[0].c_str());
         //ROS_INFO("Publishing: %s", position_msg.data[1].c_str());
     }
+    fs1.close();
+
+    auto _time_now = std::chrono::system_clock::now();
+    auto _in_time_t = std::chrono::system_clock::to_time_t(_time_now);
+    //使用put_time 格式化日期和身体的
+    std::stringstream _folder_ss;
+    _folder_ss << std::put_time(std::localtime(&_in_time_t), "%Y%m%d_%H%M%S");
+
+    //构建文件夹的名称
+    std::string
+        start_foldername = "/home/diamondlee/VKConTieta_ws/src/open_door_tieta_mpc/positon_results";
+    const std::string foldername = start_foldername + "/mpc_position_" + _folder_ss.str();
+    //创建文件夹,并检验文件夹是否创建
+    if(!boost::filesystem::create_directory(foldername))
+        ROS_ERROR("can`t creat the record folder: %s", foldername.c_str());
+    else
+        ROS_INFO("Create the mpc_positions_result record folder: %s", foldername.c_str());
+    //创建CSV文件名
+    const std::string record_filename = foldername + "/mpc_all_joints_positions.csv";
+    //打开文件
+    std::ofstream file_out;
+    file_out = std::ofstream(record_filename);
+    //file.open(record_filename,ios::app);
+    if(file_out.is_open())
+        ROS_INFO("mpc_resluts_positions file has been open !");
+    else
+        ROS_ERROR("Cannot open record file: %s", record_filename.c_str());
 
     int door_velocity_num = 3;
     int door_position_num = 3;
@@ -263,10 +227,18 @@ int main(int argc, char *argv[]) {
             {
                 //joint_positions[9] += door_velocitys_vector[door_velocity_num] * (1 / pub_rate) /10;
                 joint_positions[9] = door_position_vector[door_position_num];
+                if(num_ == 0)
+                    file_out << joint_positions[0] << "," << joint_positions[1] << "," //<< joint_positions[2] << ","
+                                << joint_positions[9] << "," << joint_positions[10] << "," << joint_positions[11] << std::endl;
                 num_++;
                 if(num_ >= 10)
                 {
                     //door_velocity_num++;
+                    file_out << joint_positions[0] << "," << joint_positions[1] << "," //<< joint_positions[2] << ","
+                                // << joint_positions[3] << "," << joint_positions[4] << "," << joint_positions[5] << ","
+                                // << joint_positions[6] << "," << joint_positions[7] << "," << joint_positions[8] << ","
+                                << joint_positions[9] << "," << joint_positions[10] << "," << joint_positions[11] << std::endl;
+
                     door_position_num++;
                     num_ = 0;
                 }
@@ -280,78 +252,5 @@ int main(int argc, char *argv[]) {
     }
     return 0;
     }
-    //! 需要/tf的，即在世界系下的坐标的：行人，底盘（但是这回发送的就是世界系下的速度了），///机械臂就是订阅joint_state就可以了
-    //! 那些碰撞体就是需要一个Position，利用的是正向运动学
-    //! 速度就是用差分来表示
-    //todo 明天来搞定的就是正向运动学计算，计算ee的位置，计算机械臂的碰撞体的位置，对于底盘上的碰撞体，不需要正运动学，需要的是一个坐标转换矩阵到world系中。
-    //! 这个cpp文件，就可以是一个单独的节点，用来接收mpc的输出，可视化，和发布机器人的状态。
-/*
-//用来做试验的，如何在多个joint中发布指定的joint信息
-#include <ros/ros.h>
-#include <sensor_msgs/JointState.h>
 
-int main(int argc, char** argv) {
-    ros::init(argc, argv, "test_joint_state_publisher");
-  ros::NodeHandle nh;
 
-  ros::Publisher joint_state_pub = nh.advertise<sensor_msgs::JointState>("joint_states", 10);
-
-  ros::Rate loop_rate(10); // 设置发布频率为10Hz
-  int t = 0;
-
-  while (ros::ok()) {
-    sensor_msgs::JointState joint_state_msg;
-
-    // 填充关节名称
-    joint_state_msg.name.push_back("dynamic_pedestrian_joint");
-
-    joint_state_msg.position = {0.0 + 0.1*0.1*t};
-    joint_state_msg.effort = {};
-
-    // 填充关节速度
-    //joint_state_msg.velocity.push_back(0.1); // 设置joint3的速度为0.3 m/s
-
-    // 设置时间戳为当前时间
-    joint_state_msg.header.stamp = ros::Time::now();
-
-    joint_state_msg.header.frame_id = "world"; // 设置坐标系ID
-
-    // 发布关节状态消息
-    joint_state_pub.publish(joint_state_msg);
-
-    t++;
-
-    ros::spinOnce();
-    loop_rate.sleep();
-  }
-
-  return 0;
-}
-*/
-/*
-//试验读取所有的active joint，发现moveit还是得配置group
-#include <ros/ros.h>
-#include <moveit/robot_model/robot_model.h>
-#include <moveit/robot_model_loader/robot_model_loader.h>
-
-int main(int argc, char** argv) {
-  ros::init(argc, argv, "get_active_joints");
-  ros::NodeHandle nh;
-
-  // 创建RobotModelLoader加载robot_description参数并构建RobotModel
-  robot_model_loader::RobotModelLoader robot_model_loader("robot_description");
-  const robot_model::RobotModelPtr& robot_model = robot_model_loader.getModel();
-
-  // 获取RobotModel中的所有活动关节
-  const robot_model::JointModelGroup* joint_model_group = robot_model->getJointModelGroup("manipulator");
-  std::vector<std::string> active_joint_names = joint_model_group->getActiveJointModelNames();
-
-  // 打印所有活动关节的名称
-  ROS_INFO_STREAM("Active Joints:");
-  for (const std::string& joint_name : active_joint_names) {
-    ROS_INFO_STREAM("\t" << joint_name);
-  }
-
-  return 0;
-}
-*/

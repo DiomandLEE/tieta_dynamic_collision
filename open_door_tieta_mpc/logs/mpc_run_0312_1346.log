@@ -1,0 +1,231 @@
+
+===== Parameters =====
+/dynamic_collision_mpc/debug_info: 0
+/dynamic_collision_mpc/delay_mode: 0
+/dynamic_collision_mpc/frequency_dT: 0.1
+/dynamic_collision_mpc/mpc_steps: 40
+/dynamic_collision_mpc/mpc_w_distx: 100000
+/dynamic_collision_mpc/mpc_w_disty: 100000
+/dynamic_collision_mpc/mpc_w_etheta: 1e+06
+/dynamic_collision_mpc/mpc_max_angvel: 0.3
+/dynamic_collision_mpc/mpc_max_vel: 0.2
+[0m[ INFO] [1710222390.465169840]: Create the record folder: /home/diamondlee/VKConTieta_ws/src/open_door_tieta_mpc/tieta_result_csv/result/sim_plot_20240312_134630[0m
+[0m[ INFO] [1710222390.465523801]: record_csv/csv file has been open ![0m
+[0m[ INFO] [1710222390.465566168]: Create the record folder: /home/diamondlee/VKConTieta_ws/src/open_door_tieta_mpc/tieta_result_csv/debug/sim_debug20240312_134630[0m
+[0m[ INFO] [1710222390.465596102]: debug_csv/csv file has been open ![0m
+[0m[ INFO] [1710222390.465642206]: Class mpc : record_csv/csv file has been open ![0m
+[0m[ INFO] [1710222390.465680395]: Class mpc : debug_csv/csv file has been open ![0m
+
+!! MPC Obj parameters updated !! 
+[0m[ INFO] [1710222390.657138363]: Waiting for reference traj msgs ~[0m
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+debug_start
+***********************  开始Control Loop  ************************
+_traj_received为0
+_track_finished为0
+_loop_count为0
+_realTraj_length为0
+_run_loop_traj为 0
+_run_loop_count为 0
+_run_loop为 0
+pub的时间戳8.65459e-05
+DEBUG&&&&&
+***********************  开始Control Loop  ************************
+_traj_received为0
+_track_finished为0
+_loop_count为0
+_realTraj_length为0
+_run_loop_traj为 0
+_run_loop_count为 0
+_run_loop为 0
+pub的时间戳1.78814e-05
+DEBUG&&&&&
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+***********************  开始Control Loop  ************************
+_traj_received为0
+_track_finished为0
+_loop_count为0
+_realTraj_length为0
+_run_loop_traj为 0
+_run_loop_count为 0
+_run_loop为 0
+pub的时间戳9.2268e-05
+DEBUG&&&&&
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+***********************  开始Control Loop  ************************
+_traj_received为0
+_track_finished为0
+_loop_count为0
+_realTraj_length为0
+_run_loop_traj为 0
+_run_loop_count为 0
+_run_loop为 0
+pub的时间戳8.86917e-05
+DEBUG&&&&&
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+***********************  开始Control Loop  ************************
+_traj_received为0
+_track_finished为0
+_loop_count为0
+_realTraj_length为0
+_run_loop_traj为 0
+_run_loop_count为 0
+_run_loop为 0
+pub的时间戳7.70092e-05
+DEBUG&&&&&
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+***********************  开始Control Loop  ************************
+_traj_received为0
+_track_finished为0
+_loop_count为0
+_realTraj_length为0
+_run_loop_traj为 0
+_run_loop_count为 0
+_run_loop为 0
+pub的时间戳8.41618e-05
+DEBUG&&&&&
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+***********************  开始Control Loop  ************************
+_traj_received为0
+_track_finished为0
+_loop_count为0
+_realTraj_length为0
+_run_loop_traj为 0
+_run_loop_count为 0
+_run_loop为 0
+pub的时间戳7.34329e-05
+DEBUG&&&&&
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+***********************  开始Control Loop  ************************
+_traj_received为0
+_track_finished为0
+_loop_count为0
+_realTraj_length为0
+_run_loop_traj为 0
+_run_loop_count为 0
+_run_loop为 0
+pub的时间戳9.2268e-05
+DEBUG&&&&&
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+***********************  开始Control Loop  ************************
+_traj_received为0
+_track_finished为0
+_loop_count为0
+_realTraj_length为0
+_run_loop_traj为 0
+_run_loop_count为 0
+_run_loop为 0
+pub的时间戳9.2268e-05
+DEBUG&&&&&
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+***********************  开始Control Loop  ************************
+_traj_received为0
+_track_finished为0
+_loop_count为0
+_realTraj_length为0
+_run_loop_traj为 0
+_run_loop_count为 0
+_run_loop为 0
+pub的时间戳9.20296e-05
+DEBUG&&&&&
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+***********************  开始Control Loop  ************************
+_traj_received为0
+_track_finished为0
+_loop_count为0
+_realTraj_length为0
+_run_loop_traj为 0
+_run_loop_count为 0
+_run_loop为 0
+pub的时间戳0.000100136
+DEBUG&&&&&
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
+publish joint velocitys: 0,0,0,0,0,0,0,0,0,0,0,0,
