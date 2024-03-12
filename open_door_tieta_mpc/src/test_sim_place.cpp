@@ -179,7 +179,7 @@ int main(int argc, char *argv[]) {
     // }
     //把这里做成param的参数，给到tieta的初始位置
     //std::vector<double> joint_positions = {-1.2,2.4,-5.99132e-10,1.57,-0.8678,-2.2043,-0.0347,1.6315,-4.37875e-11, -1.0};
-    std::vector<double> joint_positions = {0.103956,0.953408,0.396687,1.84723,-0.0777131,-0.976665,0.77764,1.5597,-1.60804, 0.0, -0.1, 0.0};
+    std::vector<double> joint_positions = {0.103956,0.953408,0.396687,1.84723,-0.0777131,-0.976665,0.77764,1.5597,-1.60804, 0.0, /*-0.1*/1.0, -5.5};
     // std::vector<std::string> joint_names = {"base_y_base_x", "base_theta_base_y", "base_link_base_theta", "right_arm_shoulder_pan_joint",
     //                                         "right_arm_shoulder_lift_joint", "right_arm_elbow_joint", "right_arm_wrist_1_joint",
     //                                         "right_arm_wrist_2_joint", "right_arm_wrist_3_joint", "dynamic_pedestrian_joint"};
@@ -213,7 +213,36 @@ int main(int argc, char *argv[]) {
         //ROS_INFO("Publishing: %s", position_msg.data[0].c_str());
         //ROS_INFO("Publishing: %s", position_msg.data[1].c_str());
     }
-    int door_velocity_num = 0;
+    fs.close();
+        std::string file_in1 = "/home/diamondlee/VKConTieta_ws/src/tieta_mpc_sim_demo/tieta_track_traj/place/retimed_placeTraj_15_36_51.csv";
+    std::ifstream fs1;
+    fs1.open(file_in1);
+    if (!fs1.is_open())
+    {
+        ROS_ERROR("Cannot open file: %s", file_in.c_str());
+        //return {};
+    }
+    std::vector<double> door_position_vector;
+
+    std::string lineStr1;
+    while (std::getline(fs1, lineStr1))
+    {
+        std::stringstream ss(lineStr1);
+        std::string item;
+        std::vector<double> position_vector;
+
+        while (std::getline(ss, item, ','))
+        {
+            position_vector.push_back(std::stod(item));
+        }
+        door_position_vector.push_back(-1 * position_vector[10]);
+        //positions_vector.push_back(position_vector);
+        //ROS_INFO("Publishing: %s", position_msg.data[0].c_str());
+        //ROS_INFO("Publishing: %s", position_msg.data[1].c_str());
+    }
+
+    int door_velocity_num = 3;
+    int door_position_num = 3;
     int num_ = 0;
     // double position = 0.0;
     while (ros::ok()) {
@@ -226,20 +255,22 @@ int main(int argc, char *argv[]) {
             for (int i = 0; i < joint_positions.size(); i++) {
                 joint_positions[i] += current_velocity[i] * (1 / pub_rate);
             }
-            // bool start_move = current_velocity[0] != 0.0 || current_velocity[1] != 0.0 || current_velocity[2] != 0.0 || current_velocity[3] != 0.0 ||
-            //                     current_velocity[4] != 0.0 || current_velocity[5] != 0.0 || current_velocity[6] != 0.0 || current_velocity[7] != 0.0 ||
-            //                     current_velocity[8] != 0.0;
-            // // bool start_move = true;
-            // if (start_move && (door_velocity_num < door_velocitys_vector.size()))
-            // {
-            //     joint_positions[9] += door_velocitys_vector[door_velocity_num] * (1 / pub_rate) /10;
-            //     num_++;
-            //     if(num_ >= 10)
-            //     {
-            //         door_velocity_num++;
-            //         num_ = 0;
-            //     }
-            // }
+            bool start_move = current_velocity[0] != 0.0 || current_velocity[1] != 0.0 || current_velocity[2] != 0.0 || current_velocity[3] != 0.0 ||
+                                current_velocity[4] != 0.0 || current_velocity[5] != 0.0 || current_velocity[6] != 0.0 || current_velocity[7] != 0.0 ||
+                                current_velocity[8] != 0.0;
+            // bool start_move = true;
+            if (start_move && (door_position_num < door_position_vector.size()))
+            {
+                //joint_positions[9] += door_velocitys_vector[door_velocity_num] * (1 / pub_rate) /10;
+                joint_positions[9] = door_position_vector[door_position_num];
+                num_++;
+                if(num_ >= 10)
+                {
+                    //door_velocity_num++;
+                    door_position_num++;
+                    num_ = 0;
+                }
+            }
             joint_msg.position = joint_positions; //这个代码块我觉得挺妙的
             joint_msg.velocity = current_velocity;
         }

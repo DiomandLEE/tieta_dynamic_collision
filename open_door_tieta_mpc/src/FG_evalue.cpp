@@ -150,7 +150,7 @@ void FG_eval::LoadParams(const std::map<string, double> &params)
     _theta_start = _y_start + _mpc_steps;
 
     //9个速度变量，(9 * (mpc_step - 1)) * 1
-    _vx_start = _vx_start + _mpc_steps;
+    _vx_start = _theta_start + _mpc_steps;
     _vy_start = _vx_start + _mpc_steps - 1;
     _angvel_start = _vy_start + _mpc_steps - 1;
 
@@ -212,7 +212,7 @@ AD<double> FG_eval::barried_tip_door_(AD<double> distance_)
 
 AD<double> FG_eval::barried_handle_arm_(AD<double> distance_)
 {
-    distance_ = _barried_normal_tip_handle_w / (_barried_normal_tip_handle_n + CppAD::exp(-_barried_normal_tip_handle_m * (distance_ - _barried_normal_tip_handle_r + 0.9)));
+    distance_ = 10.0 / (1 + CppAD::exp(-9.6 * (distance_ - 0.8)));
     return _w_handle_arm_base * distance_;
 }
 
@@ -1957,7 +1957,7 @@ void FG_eval::operator()(ADvector& fg, const ADvector& vars)
 
         // }
         // else
-        /*
+
         {
             //for(int j = 1; j < _mpc_steps; j++)
             //从第二个开始是预测的，需要自己计算
@@ -2185,9 +2185,9 @@ void FG_eval::operator()(ADvector& fg, const ADvector& vars)
             //TODO 计算arm_fake_base到handle的距离，三维
             auto dist_arm_fake_base_handle = CppAD::pow(res_arm_base_[12] - door_hanlde_point_world[0], 2) +
                                         CppAD::pow(res_arm_base_[13] - door_hanlde_point_world[1], 2) + CppAD::pow(res_arm_base_[14] - door_hanlde_point_world[2], 2);
-            fg[0] += barried_handle_arm_(CppAD::sqrt(dist_arm_fake_base_handle) - 1.0);
+            fg[0] += barried_handle_arm_(CppAD::sqrt(dist_arm_fake_base_handle));
         }
-        */
+
 
         // ADvector arg_tool_pose(9);
         // arg_tool_pose[0] = vars[_x_start + i];

@@ -6,12 +6,12 @@ mpc_max_vel: 0.2
 mpc_max_angvel: 0.3
 mpc_max_jntvel: 0.5
 #控制频率
-controller_freq: 10
+controller_freq: 1
 _dt: 0.1
 #pid到初始位姿频率
 pid_freq: 10
 #urdf——file 这个就先不填了，cpp里有写
-mpc_freq_int: 1
+mpc_freq_int: 10
 #需要增加的重复轨迹长度
 increase_length: 166 #int #这个必须小于最近的mpc_step的倍数
 #mpc的预测范围/时间步长
@@ -20,22 +20,22 @@ mpc_steps: 40 #int
 delay_steps: 6
 #mpc的目标函数的各项权重
 #运动学
-mpc_w_distx: 10000.0 # 50.0
-mpc_w_disty: 10000.0 # 50.0
-mpc_w_etheta: 1000.0 # 50.0
+mpc_w_distx: 100000.0 # 50.0
+mpc_w_disty: 100000.0 # 50.0
+mpc_w_etheta: 1000000.0 # 50.0
 
 mpc_w_vel: 100.0
-mpc_w_angvel: 1000.0
+mpc_w_angvel: 100.0
 
 mpc_w_acc: 10.0 # 100.0
-mpc_w_angacc: 1000.0 # 100.0
+mpc_w_angacc: 10.0 # 100.0
 
 #碰撞
-collision_base_weight: 300000.0 # 200
+collision_base_weight: 9000.0 # 200
 
-collision_normal_vector_weight: 10000.0
-collision_tip_bottom_door_weight: 10000.0
-collision_handle_arm_base_weight: 200000.0
+collision_normal_vector_weight: 500.0
+collision_tip_bottom_door_weight: 50.0
+collision_handle_arm_base_weight: 10000000000000000000.0
 #碰撞的阈值
 base_threshold: 0.5 # 0.8 #0.4 urdf
 shoulder_threshold: 0.3 #0.15 urdf
@@ -44,8 +44,8 @@ wrist_threshold: 0.3 #0.15 urdf
 gripper_threshold: 0.3 #0.15 urdf
 #行人的参数
 pedestrian_threshold: 0.3 # # 0.2 urdf
-pedestrian_velocity_y: 0.0 #-0.11
-pedestrian_velocity_x: 0.0
+pedestrian_velocity_y: 0.08 # 0.05 #-0.11
+pedestrian_velocity_x: -0.1
 
 #对于惩罚函数 barried function
 barried_arm_n: 0.2 # 1.0
@@ -61,7 +61,7 @@ barried_base_r: 0.3 # 0.0 #1.0
 proj_closet_n: 1.2
 proj_closet_w: 1.2
 proj_closet_m: 80.0
-proj_closet_r: 0.0
+publish joint velocitys: -2.91167e-06,-2.08557e-06,-3.53753e-06,0,0,0,0,0,0,0,0,0,
 
 proj_door_n1: 1.2
 proj_door_w1: 1.1
