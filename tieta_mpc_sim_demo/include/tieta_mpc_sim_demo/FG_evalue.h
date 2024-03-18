@@ -67,7 +67,7 @@ class FG_eval
         double _dt;
         double _obs_vel;
         double _w_distx, _w_disty, _w_etheta, _w_vel, _w_angvel, _w_acc, _w_angacc,
-                _w_jnt, _w_jntvel, _w_jntacc,
+                _w_jnt, _w_jnt2, _w_jntvel, _w_jntacc,
                 _w_base_collision, _w_shoulder_collision, _w_elbow_collision, _w_wrist_collision, _w_gripper_collision;
         //用来改变 机械臂的sphere和行人的圆柱 的距离惩罚函数的SIGMOD系数
         double _barried_func_arm_w, _barried_func_arm_r, _barried_func_arm_m, _barried_func_arm_n;
@@ -84,7 +84,7 @@ class FG_eval
         //碰撞安全阈值
         double _base_threshold, _shoulder_threshold, _elbow_threshold, _wrist_threshold, _gripper_threshold;
         //动态障碍物阈值
-        double _pedestrian_threshold, _pedestrian_vel;
+        double _pedestrian_threshold, _pedestrian_vel_x, _pedestrian_vel_y;
         vector<Eigen::Vector3d> _init_sphere;
 
         //terminal flag

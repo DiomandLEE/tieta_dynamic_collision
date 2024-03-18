@@ -36,6 +36,7 @@ MPCNode::MPCNode()
     pn.param("/dynamic_collision_mpc/mpc_w_vel", _w_vel, 1.0); //底盘的速度
     pn.param("/dynamic_collision_mpc/mpc_w_angvel", _w_angvel, 100.0); //底盘的角速度
     pn.param("/dynamic_collision_mpc/mpc_w_jnt", _w_jnt, 5000.0); //关节角的位置差，权重系数
+    pn.param("/dynamic_collision_mpc/mpc_w_jnt2", _w_jnt2, 5000.0);
     pn.param("/dynamic_collision_mpc/mpc_w_jntvel", _w_jntvel, 100.0); //关节角的速度，惩罚系数
 
     //加速度惩罚
@@ -57,7 +58,9 @@ MPCNode::MPCNode()
     pn.param("/dynamic_collision_mpc/wrist_threshold", _wrist_threshold, 0.05);
     pn.param("/dynamic_collision_mpc/gripper_threshold", _gripper_threshold, 0.05);
     pn.param("/dynamic_collision_mpc/pedestrian_threshold", _pedestrian_threshold, 0.05);
-    pn.param("/dynamic_collision_mpc/pedestrian_velocity", _pedestrian_vel, 0.0);
+    //pn.param("/dynamic_collision_mpc/pedestrian_velocity", _pedestrian_vel, 0.0);
+    pn.param("/dynamic_collision_mpc/pedestrian_velocity_x", _pedestrian_vel_x, 0.0);
+    pn.param("/dynamic_collision_mpc/pedestrian_velocity_y", _pedestrian_vel_y, 0.0);
 
     //sigmod
     pn.param("/dynamic_collision_mpc/barried_arm_n", _barried_func_arm_n, 1.0);
@@ -170,6 +173,7 @@ MPCNode::MPCNode()
     _mpc_params["W_VEL"] = _w_vel;
     _mpc_params["W_ANGVEL"] = _w_angvel;
     _mpc_params["W_JOINT"] = _w_jnt;
+    _mpc_params["W_JOINT2"] = _w_jnt2;
     _mpc_params["W_JNTVEL"] = _w_jntvel;
     _mpc_params["W_ACC"] = _w_acc;
     _mpc_params["W_ANGACC"] = _w_angacc;
@@ -186,7 +190,9 @@ MPCNode::MPCNode()
     _mpc_params["WRIST_THRESHOLD"] = _wrist_threshold;
     _mpc_params["GRIPPER_THRESHOLD"] = _gripper_threshold;
     _mpc_params["PEDESTRIAN_THRESHOLD"] = _pedestrian_threshold;
-    _mpc_params["PEDESTRIAN_VELOCITY"] = _pedestrian_vel;
+    //_mpc_params["PEDESTRIAN_VELOCITY"] = _pedestrian_vel;
+    _mpc_params["PEDESTRIAN_VELOCITY_X"] = _pedestrian_vel_x;
+    _mpc_params["PEDESTRIAN_VELOCITY_Y"] = _pedestrian_vel_y;
 
     //for sigmod
     _mpc_params["BARRIED_ARM_n"] = _barried_func_arm_n;
@@ -753,9 +759,10 @@ std::vector<joints_velocity<double>> MPCNode::controlLoop(bool &track_continue_f
             //debug solve函数
             //todo 需要一个bool 判断是否计算终端约束
             //写一个 ？ ： 的判断
-            bool terminal_flag = ((_loop_count + 1) * _mpc_freq) >= _realTraj_length ? true : false; //TODO
+            //bool terminal_flag = ((_loop_count + 1) * _mpc_freq) >= _realTraj_length ? true : false; //TODO
+            bool terminal_flag = ((_loop_count) * _mpc_freq + _mpc_steps) >= _realTraj_length ? true : false; //TODO
             int terminal_nums =
-                ((_realTraj_length - _loop_count * _mpc_freq) - 1); // < 0 ? _mpc_steps - 1 : ((_realTraj_length - _loop_count * _mpc_steps) - 1);
+                ((_realTraj_length - (_loop_count+10) * _mpc_freq) - 1); // < 0 ? _mpc_steps - 1 : ((_realTraj_length - _loop_count * _mpc_steps) - 1);
             // 这是计算在terminal中，从第几个开始 //TODO
 
             std::cout << "flag: " << terminal_flag << std::endl;
@@ -787,7 +794,7 @@ std::vector<joints_velocity<double>> MPCNode::controlLoop(bool &track_continue_f
                 _jntvel6 = range_jntvel_MAX(mpc_results[k][8]);
 
                 //而后将这些放到新的速度容器当中
-                joints_velocity<double> temp_vel(10);
+                joints_velocity<double> temp_vel(11);
                 temp_vel[0] = (_speed_x);
                 temp_vel[1] = (_speed_y);
                 temp_vel[2] = (_angvel);
@@ -798,7 +805,8 @@ std::vector<joints_velocity<double>> MPCNode::controlLoop(bool &track_continue_f
                 temp_vel[6] = (_jntvel4);
                 temp_vel[7] = (_jntvel5);
                 temp_vel[8] = (_jntvel6);
-                temp_vel[9] = (_pedestrian_vel);
+                temp_vel[9] = (_pedestrian_vel_x);
+                temp_vel[10] = (_pedestrian_vel_y);
 
                 //放到Solution当中
                 velocity_solutions.push_back(temp_vel);

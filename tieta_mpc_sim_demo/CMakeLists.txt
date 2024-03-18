@@ -153,16 +153,20 @@ link_directories(/usr/local/lib)
 # # With catkin_make all packages are built within a single CMake context
 # # The recommended prefix ensures that target names across packages don't collide
 add_executable(${PROJECT_NAME}_node src/test_sim.cpp)
+add_executable(${PROJECT_NAME}_save_node src/test_sim_save.cpp)
 add_executable(tieta_state_observe_node src/test_observe_state.cpp)
 add_executable(tieta_mpc_node src/tieta_mpc_rate_node.cpp src/MPC_Node.cpp src/MPC_Controller.cpp src/FG_evalue.cpp src/Collision_Check.cpp)
 target_link_libraries(${PROJECT_NAME}_node ${catkin_LIBRARIES})
+target_link_libraries(${PROJECT_NAME}_save_node ${catkin_LIBRARIES})
 target_link_libraries(tieta_state_observe_node ${catkin_LIBRARIES} ${orocos_kdl_INCLUDE_DIRS} ${Eigen3_LIBRARIES})
 TARGET_LINK_LIBRARIES(tieta_mpc_node ipopt ${catkin_LIBRARIES} ${orocos_kdl_INCLUDE_DIRS} ${Eigen3_LIBRARIES})
 
 add_executable(csv_test_pub_node src/test_csv_pos_pub.cpp)
 add_executable(csv_test_sub_node src/test_csv_pos_sub.cpp)
+add_executable(new_test_pub_node src/new_csv_pos_pub.cpp)
 target_link_libraries(csv_test_pub_node ${catkin_LIBRARIES})
 target_link_libraries(csv_test_sub_node ${catkin_LIBRARIES})
+target_link_libraries(new_test_pub_node ${catkin_LIBRARIES})
 
 # # Rename C++ executable without prefix
 # # The above recommended prefix causes long target names, the following renames the

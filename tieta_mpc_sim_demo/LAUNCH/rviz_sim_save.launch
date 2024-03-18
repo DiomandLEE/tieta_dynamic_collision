@@ -1,0 +1,9 @@
+<launch>
+
+    <node name="tieta_mpc_sim_and_save_rviz" pkg="tieta_mpc_sim_demo" type="tieta_mpc_sim_demo_save_node" output="screen" >
+        <!--rosparam file="$(find mpc_ros)/params/mpc_local_square_params.yaml" command="load" /-->
+        <rosparam file="$(find tieta_mpc_sim_demo)/config/mpc_params.yaml" command="load" ns="dynamic_collision_mpc"/>
+        <!--rosparam file="$(find mpc_ros)//params/mpc_local_epitrochoid_params.yaml" command="load" /-->
+    </node>
+
+</launch>

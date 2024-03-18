@@ -285,6 +285,7 @@ int main(int argc, char** argv) {
         for (unsigned int i = 0; i < kdl_chain_vkc.getNrOfJoints(); i++) {
             jointpositions(i) = q_init_(i);
         }
+        jointpositions(0) = jointpositions(0) + 0.0013;
         KDL::JntArray last_jntpos = jointpositions;
 
 

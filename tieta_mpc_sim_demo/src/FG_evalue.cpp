@@ -101,6 +101,7 @@ void FG_eval::LoadParams(const std::map<string, double> &params)
     _w_angvel = params.find("W_ANGVEL") != params.end() ? params.at("W_ANGVEL") : _w_angvel;
 
     _w_jnt = params.find("W_JOINT") != params.end()     ? params.at("W_JOINT") : _w_jnt;
+    _w_jnt2 = params.find("W_JOINT2") != params.end()     ? params.at("W_JOINT2") : _w_jnt2;
     _w_jntvel = params.find("W_JNTVEL") != params.end() ? params.at("W_JNTVEL") : _w_jntvel;
 
     _w_acc = params.find("W_ACC") != params.end()     ? params.at("W_ACC") : _w_acc;
@@ -119,7 +120,9 @@ void FG_eval::LoadParams(const std::map<string, double> &params)
     _wrist_threshold = params.find("WRIST_THRESHOLD") != params.end() ? params.at("WRIST_THRESHOLD") : _wrist_threshold;
     _gripper_threshold = params.find("GRIPPER_THRESHOLD") != params.end() ? params.at("GRIPPER_THRESHOLD") : _gripper_threshold;
     _pedestrian_threshold = params.find("PEDESTRIAN_THRESHOLD") != params.end() ? params.at("PEDESTRIAN_THRESHOLD") : _pedestrian_threshold;
-    _pedestrian_vel = params.find("PEDESTRIAN_VELOCITY") != params.end() ? params.at("PEDESTRIAN_VELOCITY") : _pedestrian_vel;
+    //_pedestrian_vel = params.find("PEDESTRIAN_VELOCITY") != params.end() ? params.at("PEDESTRIAN_VELOCITY") : _pedestrian_vel;
+    _pedestrian_vel_x = params.find("PEDESTRIAN_VELOCITY_X") != params.end() ? params.at("PEDESTRIAN_VELOCITY_X") : _pedestrian_vel_x;
+    _pedestrian_vel_y = params.find("PEDESTRIAN_VELOCITY_Y") != params.end() ? params.at("PEDESTRIAN_VELOCITY_Y") : _pedestrian_vel_y;
 
     //for sigmod
     _barried_func_arm_n = params.find("BARRIED_ARM_n") != params.end() ? params.at("BARRIED_ARM_n") : _barried_func_arm_n;
@@ -169,7 +172,7 @@ void FG_eval::LoadParams(const std::map<string, double> &params)
         _w_vector_terminal.push_back(0.0);
     }//设置了 终端约束的大小
 
-    cout << "terminal_constraint weights: ";
+    cout << "terminal_constraint weights: " << _w_hard_EE_tool << endl;
 
     if(_terminal_flag){
         for (int w = 0; w < _mpc_steps; w++){
@@ -1791,45 +1794,46 @@ void FG_eval::operator()(ADvector& fg, const ADvector& vars)
         fg[0] += _w_distx * CppAD::pow(vars[_x_start + i] - _mpc_trackTraj.AnglesList[i].base_x, 2); // x error
 
         cost_distx =  _w_distx * CppAD::pow(vars[_x_start + i] - _mpc_trackTraj.AnglesList[i].base_x, 2); // x error
-        cout << "cost_distx: " << cost_distx << ",";
+        //cout << "cost_distx: " << cost_distx << ",";
 
         fg[0] += _w_disty * CppAD::pow(vars[_y_start + i] - _mpc_trackTraj.AnglesList[i].base_y, 2); // y error
 
         cost_disty =  _w_disty * CppAD::pow(vars[_y_start + i] - _mpc_trackTraj.AnglesList[i].base_y, 2); // y error
-        cout << "cost_disty: " << cost_disty << ",";
+        //cout << "cost_disty: " << cost_disty << ",";
         fg[0] += _w_etheta * CppAD::pow(vars[_theta_start + i] - _mpc_trackTraj.AnglesList[i].base_theta, 2); // theta error
 
         cost_etheta =  _w_etheta * CppAD::pow(vars[_theta_start + i] - _mpc_trackTraj.AnglesList[i].base_theta, 2); // theta error
-        cout << "cost_etheta: " << cost_etheta << ",";
+        //cout << "cost_etheta: " << cost_etheta << ",";
 
         fg[0] += _w_jnt * CppAD::pow(vars[_joint1_start + i] - _mpc_trackTraj.AnglesList[i].joint1, 2); // joint1 error
 
         cost_jnt1 =  _w_jnt * CppAD::pow(vars[_joint1_start + i] - _mpc_trackTraj.AnglesList[i].joint1, 2); // joint1 error
-        cout << "cost_joint1: " << cost_jnt1 << ",";
-        fg[0] +=  1000 * _w_jnt * CppAD::pow(vars[_joint2_start + i] - _mpc_trackTraj.AnglesList[i].joint2, 2); // joint2 error
-        cost_jnt2 =  _w_jnt * CppAD::pow(vars[_joint2_start + i] - _mpc_trackTraj.AnglesList[i].joint2, 2); // joint2 error
-        cout << "cost_joint2: " << cost_jnt2 << ",";
+        //cout << "cost_joint1: " << cost_jnt1 << ",";
+        //todo
+        fg[0] +=  _w_jnt2 * CppAD::pow(vars[_joint2_start + i] - _mpc_trackTraj.AnglesList[i].joint2, 2); // joint2 error
+        cost_jnt2 =  _w_jnt2 * CppAD::pow(vars[_joint2_start + i] - _mpc_trackTraj.AnglesList[i].joint2, 2); // joint2 error
+        //cout << "cost_joint2: " << cost_jnt2 << ",";
         fg[0] += _w_jnt * CppAD::pow(vars[_joint3_start + i] - _mpc_trackTraj.AnglesList[i].joint3, 2); // joint3 error
         cost_jnt3 =  _w_jnt * CppAD::pow(vars[_joint3_start + i] - _mpc_trackTraj.AnglesList[i].joint3, 2); // joint3 error
-        cout << "cost_joint3: " << cost_jnt3 << ",";
+        //cout << "cost_joint3: " << cost_jnt3 << ",";
         fg[0] += _w_jnt * CppAD::pow(vars[_joint4_start + i] - _mpc_trackTraj.AnglesList[i].joint4, 2); // joint4 error
         cost_jnt4 =  _w_jnt * CppAD::pow(vars[_joint4_start + i] - _mpc_trackTraj.AnglesList[i].joint4, 2); // joint4 error
-        cout << "cost_joint4: " << cost_jnt4 << ",";
+        //cout << "cost_joint4: " << cost_jnt4 << ",";
 
         fg[0] += _w_jnt * CppAD::pow(vars[_joint5_start + i] - _mpc_trackTraj.AnglesList[i].joint5, 2); // joint5 error
         cost_jnt5 =  _w_jnt * CppAD::pow(vars[_joint5_start + i] - _mpc_trackTraj.AnglesList[i].joint5, 2); // joint5 error
-        cout << "cost_joint5: " << cost_jnt5 << ",";
+        //cout << "cost_joint5: " << cost_jnt5 << ",";
 
         fg[0] += _w_jnt * CppAD::pow(vars[_joint6_start + i] - _mpc_trackTraj.AnglesList[i].joint6, 2); // joint6 error
         cost_jnt6 =  _w_jnt * CppAD::pow(vars[_joint6_start + i] - _mpc_trackTraj.AnglesList[i].joint6, 2); // joint6 error
-        cout << "cost_joint6: " << cost_jnt6 << std::endl;
+        //cout << "cost_joint6: " << cost_jnt6 << std::endl;
         ////std::cout << "here is got ? debug5" << std::endl;
 
         //debug 计算障碍物误差
         //debug 先不考虑避障
         Dvector pedestrian_predpos(3);
-        pedestrian_predpos[0] = _init_sphere[0][0];
-        pedestrian_predpos[1] = _init_sphere[0][1] + i * _dt * _pedestrian_vel;
+        pedestrian_predpos[0] = _init_sphere[0][0] + i * _dt * _pedestrian_vel_x;
+        pedestrian_predpos[1] = _init_sphere[0][1] + i * _dt * _pedestrian_vel_y;
         pedestrian_predpos[2] = _init_sphere[0][2];
         // std::cout << "pedestrian_predpos: " << pedestrian_predpos[0] << "," << pedestrian_predpos[1] <<
         //     "," << pedestrian_predpos[2] << std::endl;
@@ -1841,12 +1845,12 @@ void FG_eval::operator()(ADvector& fg, const ADvector& vars)
             fg[0] += _w_base_collision * barried_func_base_(distance_lf_);
 
             ////AD<double> distance_lb_ = CppAD::sqrt(CppAD::pow(_init_sphere[3][0] - pedestrian_predpos[0], 2) + CppAD::pow(_init_sphere[3][1] - pedestrian_predpos[1], 2));
-            cout << "distance_lf_: " << distance_lf_ << ",";
+            //cout << "distance_lf_: " << distance_lf_ << ",";
             //_init_spere[2] -> base_right_front_sphere
             AD<double> distance_rf_ = CppAD::sqrt(CppAD::pow(_init_sphere[2][0] - pedestrian_predpos[0], 2) + CppAD::pow(_init_sphere[2][1] - pedestrian_predpos[1], 2));
             fg[0] += _w_base_collision * barried_func_base_(distance_rf_);
             ////AD<double> distance_rb_ = CppAD::sqrt(CppAD::pow(_init_sphere[4][0] - pedestrian_predpos[0], 2) + CppAD::pow(_init_sphere[4][1] - pedestrian_predpos[1], 2));
-            cout << "distance_rf_: " << distance_rf_ << ",";
+            //cout << "distance_rf_: " << distance_rf_ << ",";
             //_init_spere[3] -> base_left_rear_sphere
             AD<double> distance_lr_ = CppAD::sqrt(CppAD::pow(_init_sphere[3][0] - pedestrian_predpos[0], 2) + CppAD::pow(_init_sphere[3][1] - pedestrian_predpos[1], 2));
             fg[0] += _w_base_collision * barried_func_base_(distance_lr_);
@@ -1857,29 +1861,29 @@ void FG_eval::operator()(ADvector& fg, const ADvector& vars)
             //_init_sphere[5] -> arm_shoulder_sphere
             AD<double> distance_shoulder_ = CppAD::sqrt(CppAD::pow(_init_sphere[5][0] - pedestrian_predpos[0], 2) + CppAD::pow(_init_sphere[5][1] - pedestrian_predpos[1], 2));
             fg[0] += _w_shoulder_collision * barried_func_arm_(distance_shoulder_);
-            cout << "distance_shoulder_: " << distance_shoulder_ << ",";
+            //cout << "distance_shoulder_: " << distance_shoulder_ << ",";
 
             //_init_sphere[6] -> arm_elbow_sphere
             AD<double> distance_elbow_ = CppAD::sqrt(CppAD::pow(_init_sphere[6][0] - pedestrian_predpos[0], 2) + CppAD::pow(_init_sphere[6][1] - pedestrian_predpos[1], 2));
             fg[0] += _w_elbow_collision * barried_func_arm_(distance_elbow_);
-            cout << "distance_elbow_: " << distance_elbow_ << ",";
+            //cout << "distance_elbow_: " << distance_elbow_ << ",";
 
             //_init_sphere[7] -> arm_wrist_sphere
             AD<double> distance_wrist_ = CppAD::sqrt(CppAD::pow(_init_sphere[7][0] - pedestrian_predpos[0], 2) + CppAD::pow(_init_sphere[7][1] - pedestrian_predpos[1], 2));
             fg[0] += _w_wrist_collision * barried_func_arm_(distance_wrist_);
-            cout << "distance_wrist_: " << distance_wrist_ << ",";
+            //cout << "distance_wrist_: " << distance_wrist_ << ",";
 
             //_init_sphere[8] -> arm_gripper_sphere
             AD<double> distance_gripper_ = CppAD::sqrt(CppAD::pow(_init_sphere[8][0] - pedestrian_predpos[0], 2) + CppAD::pow(_init_sphere[8][1] - pedestrian_predpos[1], 2));
             fg[0] += _w_gripper_collision * barried_func_arm_(distance_gripper_);
-            cout << "distance_gripper_: " << distance_gripper_ << std::endl;
+            //cout << "distance_gripper_: " << distance_gripper_ << std::endl;
 
-            cout << "cost_base_lf: " << barried_func_base_(distance_lf_) << "," <<
-                "cost_base_rf: " << barried_func_base_(distance_rf_) << "," <<
-                "cost_shoulder: " << barried_func_arm_(distance_shoulder_) << "," <<
-                "cost_elbow: " << barried_func_arm_(distance_elbow_) << "," <<
-                "cost_wrist: " << barried_func_arm_(distance_wrist_) << "," <<
-                "cost_gripper: " << barried_func_arm_(distance_gripper_) << std::endl;
+            // cout << "cost_base_lf: " << barried_func_base_(distance_lf_) << "," <<
+            //     "cost_base_rf: " << barried_func_base_(distance_rf_) << "," <<
+            //     "cost_shoulder: " << barried_func_arm_(distance_shoulder_) << "," <<
+            //     "cost_elbow: " << barried_func_arm_(distance_elbow_) << "," <<
+            //     "cost_wrist: " << barried_func_arm_(distance_wrist_) << "," <<
+            //     "cost_gripper: " << barried_func_arm_(distance_gripper_) << std::endl;
         }
         else
         {
@@ -2052,6 +2056,8 @@ void FG_eval::operator()(ADvector& fg, const ADvector& vars)
         casadi_tool_pose(arg_tool_pose, res_tool_pose_);
 
         cout << "ee_pos: " << res_tool_pose_[12] << "," << res_tool_pose_[13] << "," << res_tool_pose_[14] << endl;
+        cout << "ref_ee_pos: " << EE_X << "," << EE_Y << "," << EE_Z << endl;
+        cout << "ee_ww: " << _w_vector_terminal[i] << endl;
 
         fg[0] += _w_vector_terminal[i] * (CppAD::pow(res_tool_pose_[12] - EE_X, 2) + CppAD::pow(res_tool_pose_[13] - EE_Y, 2)
                                             + CppAD::pow(res_tool_pose_[14] - EE_Z, 2));
@@ -2070,26 +2076,26 @@ void FG_eval::operator()(ADvector& fg, const ADvector& vars)
     //diff -> get the angle-acc & jerk
     for (int i = 0; i < _mpc_steps - 1; i++) {
         fg[0] += _w_vel * CppAD::pow(vars[_x_start + i + 1] - vars[_x_start + i], 2);
-        cout << "vel_x_cost: " << _w_vel * CppAD::pow(vars[_x_start + i + 1] - vars[_x_start + i], 2) << ",";
+        //cout << "vel_x_cost: " << _w_vel * CppAD::pow(vars[_x_start + i + 1] - vars[_x_start + i], 2) << ",";
 
         fg[0] += _w_vel * CppAD::pow(vars[_y_start + i + 1] - vars[_y_start + i], 2);
-        cout << "vel_y_cost: " << _w_vel * CppAD::pow(vars[_y_start + i + 1] - vars[_y_start + i], 2) << ",";
+        //cout << "vel_y_cost: " << _w_vel * CppAD::pow(vars[_y_start + i + 1] - vars[_y_start + i], 2) << ",";
 
         fg[0] += _w_angvel * CppAD::pow(vars[_theta_start + i + 1] - vars[_theta_start + i], 2);
-        cout << "angvel_cost: " << _w_angvel * CppAD::pow(vars[_theta_start + i + 1] - vars[_theta_start + i], 2) << ",";
+        //cout << "angvel_cost: " << _w_angvel * CppAD::pow(vars[_theta_start + i + 1] - vars[_theta_start + i], 2) << ",";
 
         fg[0] += _w_jntvel * CppAD::pow(vars[_joint1_start + i + 1] - vars[_joint1_start + i], 2);
-        cout << "jntvel1_cost: " << _w_jntvel * CppAD::pow(vars[_joint1_start + i + 1] - vars[_joint1_start + i], 2) << ",";
+        //cout << "jntvel1_cost: " << _w_jntvel * CppAD::pow(vars[_joint1_start + i + 1] - vars[_joint1_start + i], 2) << ",";
         fg[0] += 0.01 *_w_jntvel * CppAD::pow(vars[_joint2_start + i + 1] - vars[_joint2_start + i], 2);
-        cout << "jntvel2_cost: " << _w_jntvel * CppAD::pow(vars[_joint2_start + i + 1] - vars[_joint2_start + i], 2) << ",";
+        //cout << "jntvel2_cost: " << _w_jntvel * CppAD::pow(vars[_joint2_start + i + 1] - vars[_joint2_start + i], 2) << ",";
         fg[0] += _w_jntvel * CppAD::pow(vars[_joint3_start + i + 1] - vars[_joint3_start + i], 2);
-        cout << "jntvel3_cost: " << _w_jntvel * CppAD::pow(vars[_joint3_start + i + 1] - vars[_joint3_start + i], 2) << ",";
+        //cout << "jntvel3_cost: " << _w_jntvel * CppAD::pow(vars[_joint3_start + i + 1] - vars[_joint3_start + i], 2) << ",";
         fg[0] += _w_jntvel * CppAD::pow(vars[_joint4_start + i + 1] - vars[_joint4_start + i], 2);
-        cout << "jntvel4_cost: " << _w_jntvel * CppAD::pow(vars[_joint4_start + i + 1] - vars[_joint4_start + i], 2) << ",";
+        //cout << "jntvel4_cost: " << _w_jntvel * CppAD::pow(vars[_joint4_start + i + 1] - vars[_joint4_start + i], 2) << ",";
         fg[0] += _w_jntvel * CppAD::pow(vars[_joint5_start + i + 1] - vars[_joint5_start + i], 2);
-        cout << "jntvel5_cost: " << _w_jntvel * CppAD::pow(vars[_joint5_start + i + 1] - vars[_joint5_start + i], 2) << ",";
+        //cout << "jntvel5_cost: " << _w_jntvel * CppAD::pow(vars[_joint5_start + i + 1] - vars[_joint5_start + i], 2) << ",";
         fg[0] += _w_jntvel * CppAD::pow(vars[_joint6_start + i + 1] - vars[_joint6_start + i], 2);
-        cout << "jntvel6_cost: " << _w_jntvel * CppAD::pow(vars[_joint6_start + i + 1] - vars[_joint6_start + i], 2) << std::endl;
+        //cout << "jntvel6_cost: " << _w_jntvel * CppAD::pow(vars[_joint6_start + i + 1] - vars[_joint6_start + i], 2) << std::endl;
         ;
     }
 

@@ -7,7 +7,7 @@
 template<typename T>
 using joints_velocity = std::vector<T>;
 
-std::vector<joints_velocity<double>> Velocity_Solution(50, joints_velocity<double>(10, 0.0)); //9 joints + 行人的速度
+std::vector<joints_velocity<double>> Velocity_Solution(50, joints_velocity<double>(11, 0.0)); //9 joints + 行人的xy速度
 bool update_velocity_solution = false;
 std::mutex update_mutex;
 
@@ -102,7 +102,7 @@ int main(int argc, char **argv)
         // //和放在开头执行没有区别
         //debug
         {
-            std::vector<joints_velocity<double>> temp_solutions(50, std::vector<double>(10, 0.0));
+            std::vector<joints_velocity<double>> temp_solutions(50, std::vector<double>(11, 0.0));
             std::vector<joints_velocity<double>> temp_;
             temp_ = mpc_node.controlLoop(track_continue_flag);
 

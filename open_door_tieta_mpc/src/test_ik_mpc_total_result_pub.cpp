@@ -46,7 +46,7 @@ int main(int argc, char **argv){
     }
     fs.close();
 
-    std::string file_in1 = "/home/diamondlee/VKConTieta_ws/src/open_door_tieta_mpc/positon_results/ik_position_20240312_171853/ik_theta_URjoints_positions.csv";
+    std::string file_in1 = "/home/diamondlee/VKConTieta_ws/src/open_door_tieta_mpc/positon_results/ik_position_20240314_205658/ik_theta_URjoints_positions.csv";
     std::ifstream fs1;
     fs1.open(file_in1);
     if (!fs1.is_open())
@@ -79,7 +79,7 @@ int main(int argc, char **argv){
     assert(positions_vector_thetaUR.size() == positions_vector_xy.size());
 
     ros::Publisher position_pub = nh.advertise<std_msgs::Float64MultiArray>("csv_ikmpc_pos", 1);
-    ros::Rate loop_rate(10);
+    ros::Rate loop_rate(30);
 
     int start = 0;
 

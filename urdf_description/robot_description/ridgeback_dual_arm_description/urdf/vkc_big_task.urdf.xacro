@@ -70,12 +70,28 @@
       </geometry>
     </collision>
   </link>
-  <joint name="dynamic_pedestrian_joint" type="prismatic">
+  <!-- <joint name="dynamic_pedestrian_joint" type="prismatic">
     <parent link="world"/>
     <child link="dynamic_pedestrian"/>
     <origin xyz="-0.1 4.5 1.5" rpy="0 0 0" />
     <axis xyz="0 1 0"/>
     <limit effort="20" velocity="0.5" lower="-6" upper="6"/>
+  </joint> -->
+  <joint name="dynamic_pedestrian_joint_y" type="prismatic">
+    <parent link="dynamic_pedestrian_world_x"/>
+    <child link="dynamic_pedestrian"/>
+    <origin xyz="0.0 0.0 1.5" rpy="0 0 0" />
+    <axis xyz="0 1 0"/>
+    <limit effort="20" velocity="0.3" lower="-8" upper="0.5"/>
+  </joint>
+
+  <link name ="dynamic_pedestrian_world_x"/>
+  <joint name="dynamic_pedestrian_joint_x" type="prismatic">
+    <parent link="world"/>
+    <child link="dynamic_pedestrian_world_x"/>
+    <origin xyz="-0.1 4.5 0.0" rpy="0 0 0" />
+    <axis xyz="1 0 0"/>
+    <limit effort="20" velocity="0.3" lower="-3" upper="2"/>
   </joint>
   <!-- pervious is 0.6 -->
   <!-- ridgeback robot end -->

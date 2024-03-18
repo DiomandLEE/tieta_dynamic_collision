@@ -113,12 +113,12 @@ private:
     //碰撞安全阈值
     double _base_threshold, _shoulder_threshold, _elbow_threshold, _wrist_threshold, _gripper_threshold;
     //动态障碍物阈值
-    double _pedestrian_threshold, _pedestrian_vel;
-    //对于EE的姿态限制
+    double _pedestrian_threshold, _pedestrian_vel_x, _pedestrian_vel_y;
+    // 对于EE的姿态限制
     double _tool_x,_tool_y,_tool_z,_tool_roll,_tool_pitch,_tool_yaw;
 
     double _w_distx, _w_disty, _w_etheta, _w_vel,_w_angvel, _w_acc, _w_angacc,
-            _w_jnt, _w_jntvel, _w_jntacc,
+            _w_jnt, _w_jnt2, _w_jntvel, _w_jntacc,
             _w_base_collision,_w_shoulder_collision, _w_elbow_collision, _w_wrist_collision, _w_gripper_collision, _w_hard_EE_tool,
             _bound_value, _angel_upper, _angel_lower;
 

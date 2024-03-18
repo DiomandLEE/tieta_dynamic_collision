@@ -240,7 +240,7 @@ int main(int argc, char *argv[]) {
                                 << joint_positions[9] << "," << joint_positions[10] << "," << joint_positions[11] << std::endl;
 
                     door_position_num++;
-                    num_ = 0;
+                    num_ = 1;
                 }
             }
             joint_msg.position = joint_positions; //这个代码块我觉得挺妙的
