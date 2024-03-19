@@ -30,8 +30,8 @@ int main(int argc, char **argv)
     ros::Subscriber position_sub = nh.subscribe("csv_ikmpc_pos", 1, positionCallback);
     ros::Rate loop_rate(pub_rate);
 
-    std::vector<double> joint_positions = {0.103956,0.953408,0.396687,1.84723,-0.0777131,-0.976665,0.77764,1.5597,-1.60804, 0.0, /*-0.1*/1.0, -5.5};
-    current_positions = {0.103956,0.953408,0.396687,1.84723,-0.0777131,-0.976665,0.77764,1.5597,-1.60804, 0.0, /*-0.1*/1.0, -5.5};
+    std::vector<double> joint_positions = {0.103956,0.953408,0.396687,1.84723,-0.0777131,-0.976665,0.77764,1.5597,-1.60804, 0.0, /*-0.1*/1.2, -6.3};
+    current_positions = {0.103956,0.953408,0.396687,1.84723,-0.0777131,-0.976665,0.77764,1.5597,-1.60804, 0.0, /*-0.1*/1.2, -6.3};
     std::vector<std::string> joint_names = {"base_y_base_x", "base_theta_base_y", "base_link_base_theta", "right_arm_shoulder_pan_joint",
                                             "right_arm_shoulder_lift_joint", "right_arm_elbow_joint", "right_arm_wrist_1_joint",
                                             "right_arm_wrist_2_joint", "right_arm_wrist_3_joint", "closet_bottom_right_door_joint",

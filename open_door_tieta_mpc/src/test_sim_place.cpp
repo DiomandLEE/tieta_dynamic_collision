@@ -179,7 +179,8 @@ int main(int argc, char *argv[]) {
     // }
     //把这里做成param的参数，给到tieta的初始位置
     //std::vector<double> joint_positions = {-1.2,2.4,-5.99132e-10,1.57,-0.8678,-2.2043,-0.0347,1.6315,-4.37875e-11, -1.0};
-    std::vector<double> joint_positions = {0.103956,0.953408,0.396687,1.84723,-0.0777131,-0.976665,0.77764,1.5597,-1.60804, 0.0, /*-0.1*/1.0, -5.5};
+    std::vector<double> joint_positions = {0.103956,0.953408,0.396687,1.84723,-0.0777131,-0.976665,0.77764,1.5597,-1.60804, 0.0, /*-0.1*/1.2, -6.3};
+                                                                //1.0，-5.5 //-1.0，-2.5 //-0.5, -2.0 //-0.75,-6.0 //-1.2,-3.2 //1.2, -6.3
     // std::vector<std::string> joint_names = {"base_y_base_x", "base_theta_base_y", "base_link_base_theta", "right_arm_shoulder_pan_joint",
     //                                         "right_arm_shoulder_lift_joint", "right_arm_elbow_joint", "right_arm_wrist_1_joint",
     //                                         "right_arm_wrist_2_joint", "right_arm_wrist_3_joint", "dynamic_pedestrian_joint"};
@@ -268,7 +269,7 @@ int main(int argc, char *argv[]) {
                 {
                     //door_velocity_num++;
                     door_position_num++;
-                    num_ = 0;
+                    num_ = 1;
                 }
             }
             joint_msg.position = joint_positions; //这个代码块我觉得挺妙的

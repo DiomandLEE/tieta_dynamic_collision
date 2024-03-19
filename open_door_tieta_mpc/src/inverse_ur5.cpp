@@ -56,7 +56,13 @@ std::vector<double> parseDoorTrajCsv(ros::NodeHandle nh)
 
 std::vector<std::vector<double>> parseMPCresultCsv(ros::NodeHandle nh)
 {
-    std::string file_in1 = "/home/diamondlee/VKConTieta_ws/src/open_door_tieta_mpc/positon_results/mpc_position_20240312_170736/mpc_all_joints_positions.csv";
+    //!mpc_0312_170736
+    //!mpc_0319_160600
+    //!mpc_0319_174902
+    //!mpc_0319_181831
+    //!mpc_0319_185509
+    //!mpc_0319_193553
+    std::string file_in1 = "/home/diamondlee/VKConTieta_ws/src/open_door_tieta_mpc/positon_results/mpc_position_20240319_193553/mpc_all_joints_positions.csv";
     std::ifstream fs1;
     fs1.open(file_in1);
     if (!fs1.is_open())
@@ -255,6 +261,7 @@ int main(int argc, char** argv) {
     */
     int num_count = 0;
     KDL::JntArray q_init_(7);
+    //theta+6joints
     q_init_.data << 0.396687, 1.84723, -0.0777131, -0.976665, 0.77764, 1.5597, -1.60804;
     for (int num_res_ = 0; num_res_ < mpc_result_vector.size(); num_res_++)
     {
@@ -273,7 +280,7 @@ int main(int argc, char** argv) {
         //READ 计算base_theta在world系下的位置
         for(unsigned int i = 0; i < q_base_xy.data.size(); i++)
         {
-            q_base_xy(i) = mpc_result_vector[num_res_][i]; //todo这里要换成csv中的joint_door
+            q_base_xy(i) = mpc_result_vector[num_res_][i];
         }
 
         KDL::ChainFkSolverPos_recursive fk_solver_base_(kdl_chain_base);
@@ -285,7 +292,19 @@ int main(int argc, char** argv) {
         for (unsigned int i = 0; i < kdl_chain_vkc.getNrOfJoints(); i++) {
             jointpositions(i) = q_init_(i);
         }
-        jointpositions(0) = jointpositions(0) + 0.0013;
+        //!mpc_0312_170736
+        //观察csv文件一共多少行，看看需要旋转多少度，平均一下
+        // jointpositions(0) = jointpositions(0) + 0.0013;
+        //!mpc_0319_160600
+        // jointpositions(0) = jointpositions(0) - 0.0010;
+        //!mpc_0319_174902
+        //jointpositions(0) = jointpositions(0) + 0.004;
+        //!mpc_0319_181831
+        //jointpositions(0) = jointpositions(0) - 0.0015;
+        //!mpc_0319_185509
+        //jointpositions(0) = jointpositions(0) + 0.004;
+        //!mpc_0319_193553
+        jointpositions(0) = jointpositions(0) - 0.004;
         KDL::JntArray last_jntpos = jointpositions;
 
 

@@ -30,7 +30,7 @@ int main(int argc, char **argv)
     ros::Subscriber position_sub = nh.subscribe("csv_test_pos", 1, positionCallback);
     ros::Rate loop_rate(pub_rate);
 
-    std::vector<double> joint_positions = {-1.2, 2.4, -5.99132e-10, 1.57, -0.8678, -2.2043, -0.0347, 1.6315, -4.37875e-11, 0.8, -1.5};
+    std::vector<double> joint_positions = {-1.2, 2.4, -5.99132e-10, 1.57, -0.8678, -2.2043, -0.0347, 1.6315, -4.37875e-11, 0.8, -8.2};
     current_positions = joint_positions;
     std::vector<std::string> joint_names = {"base_y_base_x", "base_theta_base_y", "base_link_base_theta", "right_arm_shoulder_pan_joint",
                                             "right_arm_shoulder_lift_joint", "right_arm_elbow_joint", "right_arm_wrist_1_joint",

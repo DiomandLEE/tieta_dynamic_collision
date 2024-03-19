@@ -18,7 +18,7 @@ int main(int argc, char **argv){
     ros::init(argc, argv, "test_csv_pub_node");
     ros::NodeHandle nh;
 
-    std::string file_in = "/home/diamondlee/VKConTieta_ws/src/tieta_mpc_sim_demo/position_results/mpc_position_20240318_195452/mpc_all_joints_positions.csv";
+    std::string file_in = "/home/diamondlee/VKConTieta_ws/src/tieta_mpc_sim_demo/position_results/mpc_position_20240318_191047/mpc_all_joints_positions.csv";
     std::ifstream fs;
     fs.open(file_in);
     if (!fs.is_open())
@@ -52,7 +52,7 @@ int main(int argc, char **argv){
         //ROS_INFO("Publishing: %s", position_msg.data[0].c_str());
         //ROS_INFO("Publishing: %s", position_msg.data[1].c_str());
     }
-    //0318_173803
+    //!0318_173803
     // int tuned_ = 1;
     // for (int i = (positions_vector.size() - 130); i < positions_vector.size(); i++)
     // {
@@ -61,7 +61,7 @@ int main(int argc, char **argv){
     //     positions_vector[i][2] = positions_vector[i][2] + tuned_ * 0.0008615;
     //     tuned_++;
     // }
-    //0318_182603
+    //!0318_182603 都是从左到右，水平
     // int tuned_ = 1;
     // for (int i = (positions_vector.size() - 300); i < positions_vector.size(); i++)
     // {
@@ -73,9 +73,39 @@ int main(int argc, char **argv){
     //0318_192922
     //无需修改
     //但是发布频率从30提高到40
-    //0318_195452
+    //!0318_195452
     //无需修改
     //但是发布频率从30提高到35
+    //!0319_103832
+    //但是发布频率回到30
+    // int tuned_ = 1;
+    // for (int i = (positions_vector.size() - 300); i < positions_vector.size(); i++)
+    // {
+    //     //positions_vector[i][0] = positions_vector[i][0] - tuned_ * 0.00025;
+    //     positions_vector[i][1] = positions_vector[i][1] - tuned_ * 0.00012668;
+    //     //positions_vector[i][2] = positions_vector[i][2] + tuned_ * 0.0008615;
+    //     tuned_++;
+    // }
+    //!0319_105509
+    // int tuned_ = 1;
+    // for (int i = (positions_vector.size() - 300); i < positions_vector.size(); i++)
+    // {
+    //     //positions_vector[i][0] = positions_vector[i][0] - tuned_ * 0.00025;
+    //     positions_vector[i][1] = positions_vector[i][1] - tuned_ * 0.000028;
+    //     //positions_vector[i][2] = positions_vector[i][2] + tuned_ * 0.0008615;
+    //     tuned_++;
+    // }
+    //频率由30调到为25
+    //!0319_115105
+    // int tuned_ = 1;
+    // for (int i = (positions_vector.size() - 500); i < positions_vector.size(); i++)
+    // {
+    //     //positions_vector[i][0] = positions_vector[i][0] - tuned_ * 0.00025;
+    //     positions_vector[i][1] = positions_vector[i][1] - tuned_ * 0.00006828;
+    //     //positions_vector[i][2] = positions_vector[i][2] + tuned_ * 0.0008615;
+    //     tuned_++;
+    // }
+    //频率由30调到为20
 
     // for (std::vector<std::vector<double>>::iterator iter = positions_vector.begin(); iter!=positions_vector.end();iter++)
     // {
@@ -84,7 +114,7 @@ int main(int argc, char **argv){
     // }
 
     ros::Publisher position_pub = nh.advertise<std_msgs::Float64MultiArray>("csv_test_pos", 1);
-    ros::Rate loop_rate(35);
+    ros::Rate loop_rate(20);
 
     int start = 0;
 

@@ -18,7 +18,13 @@ int main(int argc, char **argv){
     ros::init(argc, argv, "ikmpc_csv_pub_node");
     ros::NodeHandle nh;
 
-    std::string file_in = "/home/diamondlee/VKConTieta_ws/src/open_door_tieta_mpc/positon_results/mpc_position_20240312_170736/mpc_all_joints_positions.csv";
+    //!mpc_0312_170736
+    //!mpc_0319_160600
+    //!mpc_0319_174902
+    //!mpc_0319_181831
+    //!mpc_0319_185509
+    //!mpc_0319_193553
+    std::string file_in = "/home/diamondlee/VKConTieta_ws/src/open_door_tieta_mpc/positon_results/mpc_position_20240319_193553/mpc_all_joints_positions.csv";
     std::ifstream fs;
     fs.open(file_in);
     if (!fs.is_open())
@@ -46,7 +52,13 @@ int main(int argc, char **argv){
     }
     fs.close();
 
-    std::string file_in1 = "/home/diamondlee/VKConTieta_ws/src/open_door_tieta_mpc/positon_results/ik_position_20240314_205658/ik_theta_URjoints_positions.csv";
+    //!ik_0314_205658
+    //!ik_0319_162937
+    //!ik_0319_175302
+    //!ik_0319_182501
+    //!ik_0319_185742
+    //!ik_0319_195550
+    std::string file_in1 = "/home/diamondlee/VKConTieta_ws/src/open_door_tieta_mpc/positon_results/ik_position_20240319_195550/ik_theta_URjoints_positions.csv";
     std::ifstream fs1;
     fs1.open(file_in1);
     if (!fs1.is_open())
@@ -76,10 +88,12 @@ int main(int argc, char **argv){
     //     std::cout << (*iter)[0] << "," << (*iter)[1] << "," << (*iter)[2] << "," << (*iter)[3] << ","
     //         << (*iter)[4] << "," << (*iter)[5] << "," << (*iter)[6] << "," << (*iter)[7] << "," << (*iter)[8] << std::endl;
     // }
+    std::cout << "positions_vector_thetaUR.size() = " << positions_vector_thetaUR.size() << std::endl;
+    std::cout << "positions_vector_xy.size() = " << positions_vector_xy.size() << std::endl;
     assert(positions_vector_thetaUR.size() == positions_vector_xy.size());
 
     ros::Publisher position_pub = nh.advertise<std_msgs::Float64MultiArray>("csv_ikmpc_pos", 1);
-    ros::Rate loop_rate(30);
+    ros::Rate loop_rate(10);
 
     int start = 0;
 
