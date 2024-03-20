@@ -173,6 +173,9 @@ add_executable(csv_ikmpc_pub_node src/test_ik_mpc_total_result_pub.cpp)
 add_executable(csv_ikmpc_sub_node src/test_ik_mpc_total_result_sub.cpp)
 target_link_libraries(csv_ikmpc_pub_node ${catkin_LIBRARIES})
 target_link_libraries(csv_ikmpc_sub_node ${catkin_LIBRARIES})
+
+add_executable(calculate_distance_ik src/calculate_distance.cpp)
+target_link_libraries(calculate_distance_ik ${catkin_LIBRARIES} ${orocos_kdl_INCLUDE_DIRS} ${Eigen3_LIBRARIES})
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
 ## target back to the shorter version for ease of user use

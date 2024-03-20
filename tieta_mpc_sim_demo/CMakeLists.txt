@@ -168,6 +168,8 @@ target_link_libraries(csv_test_pub_node ${catkin_LIBRARIES})
 target_link_libraries(csv_test_sub_node ${catkin_LIBRARIES})
 target_link_libraries(new_test_pub_node ${catkin_LIBRARIES})
 
+add_executable(calculate_distance src/calculate_distance.cpp)
+target_link_libraries(calculate_distance ${catkin_LIBRARIES} ${orocos_kdl_INCLUDE_DIRS} ${Eigen3_LIBRARIES})
 # # Rename C++ executable without prefix
 # # The above recommended prefix causes long target names, the following renames the
 # # target back to the shorter version for ease of user use

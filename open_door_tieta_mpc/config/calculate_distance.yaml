@@ -1,0 +1,9 @@
+mpc_file_time: 0318_173803
+ik_file_time: 0318_173803
+start_direction: horizontal_left
+
+base_threshold: 0.6
+shoulder_threshold: 0.18
+elbow_threshold: 0.18
+wrist_threshold: 0.18
+gripper_threshold: 0.18

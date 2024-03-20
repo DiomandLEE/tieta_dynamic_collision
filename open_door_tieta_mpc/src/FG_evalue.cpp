@@ -2061,7 +2061,7 @@ void FG_eval::operator()(ADvector& fg, const ADvector& vars)
                                 (-closet_right_proj_start_point[1] + res_rr_[1]) * closet_right_normal[1] + (-closet_right_proj_start_point[2] + res_rr_[2]) * closet_right_normal[2];
             fg[0] += proj_func_closet_(proj_closet_right_rr - 0.58 - _base_threshold) * barried_normal_dist_(dist_closet_right_rr - _base_threshold);
 
-            //!还有一个front
+            //!还有一个front //这里都打错了是front_normal，就不改了，对结果没啥影响，因为本身离柜子不动的门就挺远的，惩罚不到 //没打错，尴尬，还好没改，￣□￣｜｜
             //front left front
             auto dist_closet_front_lf = (-closet_point[0] + res_lf_[0]) * closet_front_normal[0] +
                                 (-closet_point[1] + res_lf_[1]) * closet_front_normal[1] + (-closet_point[2] + res_lf_[2]) * closet_front_normal[2];

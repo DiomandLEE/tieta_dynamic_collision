@@ -18,7 +18,7 @@ int main(int argc, char **argv){
     ros::init(argc, argv, "test_csv_pub_node");
     ros::NodeHandle nh;
 
-    std::string file_in = "/home/diamondlee/VKConTieta_ws/src/tieta_mpc_sim_demo/position_results/mpc_position_20240318_191047/mpc_all_joints_positions.csv";
+    std::string file_in = "/home/diamondlee/VKConTieta_ws/src/tieta_mpc_sim_demo/position_results/mpc_position_20240319_115105/mpc_all_joints_positions.csv";
     std::ifstream fs;
     fs.open(file_in);
     if (!fs.is_open())
