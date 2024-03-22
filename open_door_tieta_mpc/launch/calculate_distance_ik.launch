@@ -1,0 +1,9 @@
+<launch>
+
+    <node name="calculate_distance_ik" pkg="open_door_tieta_mpc" type="calculate_distance_ik" output="screen" >
+        <!--rosparam file="$(find mpc_ros)/params/mpc_local_square_params.yaml" command="load" /-->
+        <rosparam file="$(find open_door_tieta_mpc)/config/calculate_distance.yaml" command="load" />
+        <!--rosparam file="$(find mpc_ros)//params/mpc_local_epitrochoid_params.yaml" command="load" /-->
+    </node>
+
+</launch>

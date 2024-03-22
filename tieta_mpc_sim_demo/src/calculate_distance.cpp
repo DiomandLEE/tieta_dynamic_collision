@@ -62,6 +62,8 @@ int main(int argc, char **argv) {
         while (std::getline(iss, val, ',')) {
             row.push_back(std::stod(val));
         }
+        row[9] = row[9] -0.1;
+        row[10] = row[10] + 4.5;
         mpc_results.push_back(row);
     }
     file_in.close();

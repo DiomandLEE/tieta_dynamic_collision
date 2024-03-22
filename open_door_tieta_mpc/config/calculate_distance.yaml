@@ -1,9 +1,27 @@
-mpc_file_time: 0318_173803
-ik_file_time: 0318_173803
-start_direction: horizontal_left
+mpc_file_time: 0321_120158
+#ik_file_time: 0321_114706
+start_direction: right_down2left_up
 
-base_threshold: 0.6
-shoulder_threshold: 0.18
-elbow_threshold: 0.18
-wrist_threshold: 0.18
-gripper_threshold: 0.18
+base_threshold: 0.5
+shoulder_threshold: 0.15
+elbow_threshold: 0.15
+wrist_threshold: 0.15
+gripper_threshold: 0.13
+
+    #mpc_0312_170736 右上到左下 效果不好 1
+    #mpc_0319_160600 左下到右上 get 2
+    #mpc_0319_174902 水平从左往右 get 3
+    #mpc_0319_181831 水平从右往左 get 4
+    #mpc_0319_185509 左下到右上 效果不好 5
+    #mpc_0319_193553 右上到左下 get 6
+    #mpc_0321_114338 左上到右下 get 7
+    #mpc_0321_120158 右下到左上 get 8
+
+    #ik_0314_205658 1
+    #ik_0319_162937 2
+    #ik_0319_175302 3
+    #ik_0319_182501 4
+    #ik_0319_185742 5
+    #ik_0319_195550 6
+    #ik_0321_114706 7
+    #ik_0321_120331 8

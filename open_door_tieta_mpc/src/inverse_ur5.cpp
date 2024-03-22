@@ -62,7 +62,9 @@ std::vector<std::vector<double>> parseMPCresultCsv(ros::NodeHandle nh)
     //!mpc_0319_181831
     //!mpc_0319_185509
     //!mpc_0319_193553
-    std::string file_in1 = "/home/diamondlee/VKConTieta_ws/src/open_door_tieta_mpc/positon_results/mpc_position_20240319_193553/mpc_all_joints_positions.csv";
+    //!mpc_0321_114338
+    //!mpc_0321——120158
+    std::string file_in1 = "/home/diamondlee/VKConTieta_ws/src/open_door_tieta_mpc/positon_results/mpc_position_20240321_120158/mpc_all_joints_positions.csv";
     std::ifstream fs1;
     fs1.open(file_in1);
     if (!fs1.is_open())
@@ -304,7 +306,9 @@ int main(int argc, char** argv) {
         //!mpc_0319_185509
         //jointpositions(0) = jointpositions(0) + 0.004;
         //!mpc_0319_193553
-        jointpositions(0) = jointpositions(0) - 0.004;
+        //jointpositions(0) = jointpositions(0) - 0.004;
+        //!mpc_0321_114338
+        //!mpc_0321_120158
         KDL::JntArray last_jntpos = jointpositions;
 
 

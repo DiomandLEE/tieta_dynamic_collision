@@ -18,13 +18,15 @@ int main(int argc, char **argv){
     ros::init(argc, argv, "ikmpc_csv_pub_node");
     ros::NodeHandle nh;
 
-    //!mpc_0312_170736
-    //!mpc_0319_160600
-    //!mpc_0319_174902
-    //!mpc_0319_181831
-    //!mpc_0319_185509
-    //!mpc_0319_193553
-    std::string file_in = "/home/diamondlee/VKConTieta_ws/src/open_door_tieta_mpc/positon_results/mpc_position_20240319_193553/mpc_all_joints_positions.csv";
+    //!mpc_0312_170736 右上到左下 效果不好
+    //!mpc_0319_160600 左下到右上 get
+    //!mpc_0319_174902 水平从左往右 get
+    //!mpc_0319_181831 水平从右往左 get
+    //!mpc_0319_185509 左下到右上 效果不好
+    //!mpc_0319_193553 右上到左下 get
+    //!mpc_0321_114338 左上到右下 get
+    //!mpc_0321_120158 右下到左上 get
+    std::string file_in = "/home/diamondlee/VKConTieta_ws/src/open_door_tieta_mpc/positon_results/mpc_position_20240321_120158/mpc_all_joints_positions.csv";
     std::ifstream fs;
     fs.open(file_in);
     if (!fs.is_open())
@@ -58,7 +60,9 @@ int main(int argc, char **argv){
     //!ik_0319_182501
     //!ik_0319_185742
     //!ik_0319_195550
-    std::string file_in1 = "/home/diamondlee/VKConTieta_ws/src/open_door_tieta_mpc/positon_results/ik_position_20240319_195550/ik_theta_URjoints_positions.csv";
+    //!ik_0321_114706
+    //!ik_0321_120331
+    std::string file_in1 = "/home/diamondlee/VKConTieta_ws/src/open_door_tieta_mpc/positon_results/ik_position_20240321_120331/ik_theta_URjoints_positions.csv";
     std::ifstream fs1;
     fs1.open(file_in1);
     if (!fs1.is_open())

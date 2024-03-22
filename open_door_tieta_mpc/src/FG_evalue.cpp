@@ -2114,6 +2114,8 @@ void FG_eval::operator()(ADvector& fg, const ADvector& vars)
             Eigen::Matrix4d new_door2door = Eigen::Matrix4d::Identity();
             new_door2door.block<3,3>(0,0) = new_door2door_rotate;
             new_door2door.block<3,1>(0,3) = new_door_trans;
+            //DEBUG todo 当然可以要求机器人必须在门前面，（如果是在🚪的正前方的话，靠投影来判断）
+            //TODO 此外，对于法向量，是需要两个端点相减的，或者不考虑旋转矩阵的平移，因为向量不是固定的，就表示一个方向
 
             //door到world的T
             //Eigen::Vector3d door_trans(4.4555, 0.0905, 0.0653); //4.4555; 0.0905; 0.06535 closet_bottom_right_door_link
@@ -2130,6 +2132,8 @@ void FG_eval::operator()(ADvector& fg, const ADvector& vars)
             door2world.block<3, 1>(0, 3) = door_link_origin;
 
             //DEBUG 计算new_door到world的T,以及door的法向量在world系下的坐标，以及door底边顶点在world系下的坐标，以及door底边的向量，以及门扳手handle在world系下的坐标
+            //DEBUG so many问题，用平移+旋转得到的坐标系，得到的转换矩阵，是Bfrmae上的坐标转换到Aframe上的坐标转换
+            //DEBUG 在计算投影的时候，需要除以投到向量的模
             Eigen::Matrix4d new_door2world = door2world * new_door2door;
 
             Eigen::Vector3d door_normal_world = (new_door2world * door_init_normal).block<3, 1>(0, 0);

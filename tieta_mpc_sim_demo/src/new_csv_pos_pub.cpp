@@ -18,7 +18,7 @@ int main(int argc, char **argv){
     ros::init(argc, argv, "test_csv_pub_node");
     ros::NodeHandle nh;
 
-    std::string file_in = "/home/diamondlee/VKConTieta_ws/src/tieta_mpc_sim_demo/position_results/mpc_position_20240319_115105/mpc_all_joints_positions.csv";
+    std::string file_in = "/home/diamondlee/VKConTieta_ws/src/tieta_mpc_sim_demo/position_results/mpc_position_20240318_182603/mpc_all_joints_positions.csv";
     std::ifstream fs;
     fs.open(file_in);
     if (!fs.is_open())
@@ -61,22 +61,22 @@ int main(int argc, char **argv){
     //     positions_vector[i][2] = positions_vector[i][2] + tuned_ * 0.0008615;
     //     tuned_++;
     // }
-    //!0318_182603 都是从左到右，水平
-    // int tuned_ = 1;
-    // for (int i = (positions_vector.size() - 300); i < positions_vector.size(); i++)
-    // {
-    //     positions_vector[i][0] = positions_vector[i][0] - tuned_ * 0.00025;
-    //     positions_vector[i][1] = positions_vector[i][1] - tuned_ * 0.00040333;
-    //     //positions_vector[i][2] = positions_vector[i][2] + tuned_ * 0.0008615;
-    //     tuned_++;
-    // }
-    //0318_192922
+    //!0318_182603 都是从左到右，水平 //选这个，上一个离handle太远了
+    int tuned_ = 1;
+    for (int i = (positions_vector.size() - 300); i < positions_vector.size(); i++)
+    {
+        positions_vector[i][0] = positions_vector[i][0] - tuned_ * 0.00025;
+        positions_vector[i][1] = positions_vector[i][1] - tuned_ * 0.00040333;
+        //positions_vector[i][2] = positions_vector[i][2] + tuned_ * 0.0008615;
+        tuned_++;
+    }
+    //!0318_192922 //水平，从右到左
     //无需修改
     //但是发布频率从30提高到40
-    //!0318_195452
+    //!0318_195452 //左上到右下
     //无需修改
     //但是发布频率从30提高到35
-    //!0319_103832
+    //!0319_103832 //右下到左上
     //但是发布频率回到30
     // int tuned_ = 1;
     // for (int i = (positions_vector.size() - 300); i < positions_vector.size(); i++)
@@ -86,7 +86,7 @@ int main(int argc, char **argv){
     //     //positions_vector[i][2] = positions_vector[i][2] + tuned_ * 0.0008615;
     //     tuned_++;
     // }
-    //!0319_105509
+    //!0319_105509 //右上到左下
     // int tuned_ = 1;
     // for (int i = (positions_vector.size() - 300); i < positions_vector.size(); i++)
     // {
@@ -96,7 +96,7 @@ int main(int argc, char **argv){
     //     tuned_++;
     // }
     //频率由30调到为25
-    //!0319_115105
+    //!0319_115105 //左下到右上
     // int tuned_ = 1;
     // for (int i = (positions_vector.size() - 500); i < positions_vector.size(); i++)
     // {

@@ -1,0 +1,9 @@
+<launch>
+
+    <node name="calculate_distance" pkg="tieta_mpc_sim_demo" type="calculate_distance" output="screen" >
+        <!--rosparam file="$(find mpc_ros)/params/mpc_local_square_params.yaml" command="load" /-->
+        <rosparam file="$(find tieta_mpc_sim_demo)/config/calculate_distance.yaml" command="load" />
+        <!--rosparam file="$(find mpc_ros)//params/mpc_local_epitrochoid_params.yaml" command="load" /-->
+    </node>
+
+</launch>

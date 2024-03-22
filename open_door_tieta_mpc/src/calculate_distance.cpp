@@ -32,6 +32,11 @@ double calculate_project(KDL::Frame frame_ , Eigen::Vector3d door_bottom_)
 {
     double proj_new_door_ = (-door_link_origin[0] + frame_.p.x()) * door_bottom_[0] +
                                 (-door_link_origin[1] + frame_.p.y()) * door_bottom_[1] + (-door_link_origin[2] + frame_.p.z()) * door_bottom_[2];
+    //proj_new_door的模
+    double mod_door_bottom_ = std::sqrt(std::pow(door_bottom_[0], 2)) +
+                                                std::pow(door_bottom_[1], 2) +
+                                                    std::pow(door_bottom_[2], 2);
+    proj_new_door_ = proj_new_door_ / mod_door_bottom_;
     return proj_new_door_;
 }
 
@@ -80,7 +85,7 @@ int main(int argc, char **argv) {
     std::string start_direction = "right_up";
 
     nh.param<std::string>("/calculate_distance_ik/mpc_file_time", mpc_file_time, "");
-    nh.param<std::string>("/calculate_distance_ik/ik_file_time", ik_file_time, "");
+    nh.param<std::string>("/calculate_distance_ik/ik_file_time", ik_file_time, "0321_120331");
     nh.param<std::string>("/calculate_distance_ik/start_direction", start_direction, "");
 
     std::string finaldata_file = finaldata_folder + mpc_file_time + mpc_file_suffix;
@@ -189,7 +194,7 @@ int main(int argc, char **argv) {
     }
 
     KDL::Chain chain_door_bottom;
-    std::string tip_link_door_bottom = "door_left_bottom";
+    std::string tip_link_door_bottom = "door_lfet_bottom";
     if(!kdl_tree.getChain(base_link, tip_link_door_bottom, chain_door_bottom))
     {
         ROS_ERROR("Failed to get KDL chain world-to-door_bottom!");
@@ -215,6 +220,10 @@ int main(int argc, char **argv) {
     KDL::JntArray joint_positions_arm_base(chain_arm_base.getNrOfJoints());
     KDL::JntArray joint_positions_handle(chain_handle.getNrOfJoints());
     KDL::JntArray joint_positions_door_bottom(chain_door_bottom.getNrOfJoints());
+    std::cout << "arm_base_joints_size: " << joint_positions_arm_base.data.size() << std::endl;
+    std::cout << "handle_joints_size: " << joint_positions_handle.data.size() << std::endl;
+    std::cout << "door_bottom_joints_size: " << joint_positions_door_bottom.data.size() << std::endl;
+    // << 0 << std::endl;
 
     // 读取第一个CSV文件的数据并存储在向量中
     std::ifstream file_in_mpc(finaldata_file);
@@ -227,6 +236,12 @@ int main(int argc, char **argv) {
         while (std::getline(iss, val, ',')) {
             row.push_back(std::stod(val));
         }
+        // std::cout << "row: " << row.size() << std::endl;
+        // //data_mpc.push_back(row);
+        // std::cout << row[10] << std::endl;
+        // std::cout << row[11] << std::endl;
+        row[3] = row[3] -0.1;
+        row[4] = row[4] + 4.5;
         data_mpc.push_back(row);
     }
     file_in_mpc.close();
@@ -262,6 +277,14 @@ int main(int argc, char **argv) {
         std::vector<double> remainingRow(data_mpc[i].begin() + 2, data_mpc[i].end());
         FinalData[i].insert(FinalData[i].end(), remainingRow.begin(), remainingRow.end());
     }
+    std::cout << "FinalData size: " << FinalData.size() << std::endl;
+    std::cout << "FinalData[0] size: " << FinalData[0].size() << std::endl;
+    std::cout << FinalData[0][0] << "," << FinalData[0][1]
+                << "," << FinalData[0][2] << "," << FinalData[0][3]
+            << "," << FinalData[0][4] << "," << FinalData[0][5]
+                            << "," << FinalData[0][6] << "," << FinalData[0][7]
+                                            << "," << FinalData[0][8] << "," << FinalData[0][9]
+                                            << "," << FinalData[0][10] << "," << FinalData[0][11] << std::endl;
 
     for(auto finaldata : FinalData)
     {
@@ -273,6 +296,7 @@ int main(int argc, char **argv) {
         frame_base.p[2] = 0.0;
 
         file_ped << calculate_ped_distance(frame_base, finaldata[10], finaldata[11]) << ",";
+        // << 1 << std::endl;
 
         //shoulder
         for(unsigned int i=0; i < joint_positions_shoulder.data.size(); i++)
@@ -284,6 +308,7 @@ int main(int argc, char **argv) {
         fk_solver_shoulder.JntToCart(joint_positions_shoulder, frame_shoulder);
 
         file_ped << calculate_ped_distance(frame_shoulder, finaldata[10], finaldata[11]) << ",";
+        // << 2 << std::endl;
 
 
         for(unsigned int i=0; i < joint_positions_elbow.data.size(); i++)
@@ -295,6 +320,7 @@ int main(int argc, char **argv) {
         //elbow
 
         file_ped << calculate_ped_distance(frame_elbow, finaldata[10], finaldata[11]) << ",";
+        // << 3 << std::endl;
 
 
         for(unsigned int i=0; i < joint_positions_wrist.data.size(); i++)
@@ -305,6 +331,7 @@ int main(int argc, char **argv) {
         fk_solver_wrist.JntToCart(joint_positions_wrist, frame_wrist);
         //
         file_ped << calculate_ped_distance(frame_wrist, finaldata[10], finaldata[11]) << ",";
+        // << 4 << std::endl;
 
         for(unsigned int i=0; i < joint_positions_gripper.data.size(); i++)
         {
@@ -314,6 +341,7 @@ int main(int argc, char **argv) {
         fk_solver_gripper.JntToCart(joint_positions_gripper, frame_gripper);
 
         file_ped << calculate_ped_distance(frame_gripper, finaldata[10], finaldata[11]) << std::endl;
+        // << 4 << std::endl;
 
         //READ 计算到handle的距离
         for(unsigned int i=0; i < joint_positions_handle.data.size(); i++)
@@ -323,6 +351,8 @@ int main(int argc, char **argv) {
         KDL::Frame frame_handle;
         fk_solver_handle.JntToCart(joint_positions_handle, frame_handle);
 
+        // << 5 << std::endl;
+
         for(unsigned int i=0; i < joint_positions_arm_base.data.size(); i++)
         {
             joint_positions_arm_base.data[i] = finaldata[i];
@@ -331,19 +361,21 @@ int main(int argc, char **argv) {
         fk_solver_arm_base.JntToCart(joint_positions_arm_base, frame_arm_base);
 
         file_handle << calculate_door_handle(frame_arm_base, frame_handle) << std::endl;
+        // << 6 << std::endl;
 
         //READ 计算到door的距离
         //首先，计算门的法向量
         double door_angle = finaldata[9];
         Eigen::AngleAxisd rotation_(door_angle, door_axis);
         Eigen::Matrix3d door2new_door = rotation_.toRotationMatrix();
-        Eigen::Matrix3d new_door2door_rotate = door2new_door.transpose(); // 转置也可以，因为正交矩阵，转置和逆等同。
+        //Eigen::Matrix3d new_door2door_rotate = door2new_door.transpose(); // 转置也可以，因为正交矩阵，转置和逆等同。
         // 平移向量是
         Eigen::Vector3d new_door_trans = Eigen::Vector3d::Zero();
         // 构造齐次矩阵
         Eigen::Matrix4d new_door2door = Eigen::Matrix4d::Identity();
-        new_door2door.block<3, 3>(0, 0) = new_door2door_rotate;
+        new_door2door.block<3, 3>(0, 0) = door2new_door;
         new_door2door.block<3, 1>(0, 3) = new_door_trans;
+
 
         double angle = M_PI; // 绕z轴旋转180度，即π弧度
         Eigen::Matrix3d door2world_rotate;
@@ -356,12 +388,24 @@ int main(int argc, char **argv) {
         door2world.block<3, 3>(0, 0) = door2world_rotate;
         door2world.block<3, 1>(0, 3) = door_link_origin;
 
+        //!当然可以要求机器人必须在门前面，（如果是在🚪的正前方的话，靠投影来判断）
+        //!此外，对于法向量，是需要两个端点相减的，或者不考虑旋转矩阵的平移，因为向量不是固定的，就表示一个方向
+        Eigen::Matrix4d door2world_for_normal = Eigen::Matrix4d::Identity();
+        door2world_for_normal.block<3, 3>(0, 0) = door2world_rotate;
+        // 平移向量是全0
+        door2world_for_normal.block<3, 1>(0, 3) = Eigen::Vector3d::Zero();
+
         Eigen::Matrix4d new_door2world = door2world * new_door2door;
-        Eigen::Vector3d door_normal_world = (new_door2world * door_init_normal).block<3, 1>(0, 0);
+        Eigen::Matrix4d new_door2world_for_normal = door2world_for_normal * new_door2door;
+        Eigen::Vector3d door_normal_world = (new_door2world_for_normal * door_init_normal).block<3, 1>(0, 0);
         Eigen::Vector3d door_bottom_tip_point_world = (new_door2world * door_bottom_tip_point).block<3, 1>(0, 0);
+        // std::cout << "door_normal_world" << door_normal_world << std::endl;
+        // std::cout << "door_bottom_tip_point_world" << door_bottom_tip_point_world << std::endl;
         Eigen::Vector3d door_bottom_ = door_bottom_tip_point_world - door_link_origin;
+        //std::cout << "door_bottom_" << door_bottom_ << std::endl;
 
         //base
+        //std::cout << "base" << calculate_project(frame_base,door_bottom_) << std::endl;
         if(calculate_project(frame_base,door_bottom_) < 0.56 + base_threshold)
             file_door << calculate_normal_dist(frame_base, door_normal_world) << ",";
         else
@@ -392,7 +436,7 @@ int main(int argc, char **argv) {
             file_door << calculate_door_bottom(frame_gripper, door_bottom_tip_point_world) << std::endl;
     }
 
-    std::cout << "New CSV file 'mpc_ik_data.csv' created successfully in the specified folder.\n";
+    // << "New CSV file 'mpc_ik_data.csv' created successfully in the specified folder.\n";
 
     return 0;
 }
