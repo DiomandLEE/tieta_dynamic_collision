@@ -9,7 +9,7 @@ std::mutex mutex;
 
 double pub_rate = 100.0;
 
-std::vector<double> current_positions(10, 0.0);
+std::vector<double> current_positions(12, 0.0);
 
 void positionCallback(const std_msgs::Float64MultiArray::ConstPtr& position_msg){
     //使用Position更新关节的位置
@@ -30,8 +30,8 @@ int main(int argc, char **argv)
     ros::Subscriber position_sub = nh.subscribe("csv_test_pos", 1, positionCallback);
     ros::Rate loop_rate(pub_rate);
 
-    std::vector<double> joint_positions = {0.103956,0.953408,0.396687,1.84723,-0.0777131,-0.976665,0.77764,1.5597,-1.60804,-2.72827e-09, -0.1, 0.0};
-    current_positions = {0.103956, 0.953408, 0.396687, 1.84723, -0.0777131, -0.976665, 0.77764, 1.5597, -1.60804, -2.72827e-09};
+    std::vector<double> joint_positions = {0.103956,0.953408,0.396687,1.84723,-0.0777131,-0.976665,0.77764,1.5597,-1.60804,-2.72827e-09, 1.0, -5.5};
+    current_positions = {0.103956, 0.953408, 0.396687, 1.84723, -0.0777131, -0.976665, 0.77764, 1.5597, -1.60804, -2.72827e-09, 1.0, -5.5};
     std::vector<std::string> joint_names = {"base_y_base_x", "base_theta_base_y", "base_link_base_theta", "right_arm_shoulder_pan_joint",
                                             "right_arm_shoulder_lift_joint", "right_arm_elbow_joint", "right_arm_wrist_1_joint",
                                             "right_arm_wrist_2_joint", "right_arm_wrist_3_joint", "closet_bottom_right_door_joint",

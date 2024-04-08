@@ -6,13 +6,13 @@ def ewma(column):
     return column.ewm(alpha=0.075).mean()
 
 # 读取第一个CSV文件，提取前两列
-df1 = pd.read_csv('/home/diamondlee/VKConTieta_ws/src/open_door_tieta_mpc/positon_results/mpc_position_20240321_114338/mpc_all_joints_positions.csv', header=None, index_col=False)
+df1 = pd.read_csv('/home/diamondlee/VKConTieta_ws/src/open_door_tieta_mpc/positon_results/mpc_position_20240319_193553/mpc_all_joints_positions.csv', header=None, index_col=False)
 #取df1的前两列
 df1 = df1.values.tolist()
 df1 = [x[:2] for x in df1]
 #print(df1)
 # 读取第二个CSV文件，提取所有列
-df2 = pd.read_csv('/home/diamondlee/VKConTieta_ws/src/open_door_tieta_mpc/positon_results/ik_position_20240321_114706/ik_theta_URjoints_positions.csv', header=None, index_col=False)
+df2 = pd.read_csv('/home/diamondlee/VKConTieta_ws/src/open_door_tieta_mpc/positon_results/ik_position_20240319_195550/ik_theta_URjoints_positions.csv', header=None, index_col=False)
 #print(df2)
 df2 = df2.values.tolist()
 # 合并两个DataFrame
@@ -30,7 +30,7 @@ df = pd.DataFrame(df)
 #print(df)
 
 # 计算速度，两两作差除以0.05
-velocity = df.diff()/0.036968838526912184
+velocity = df.diff()/0.0377906976744186
 velocity_1 = df.diff()/0.05
 #print(velocity)
 
@@ -40,7 +40,7 @@ velocity_1 = velocity_1.dropna(axis=0)
 # 假设 df 是你的 DataFrame，速度列名为 'velocity'
 # 速度单位应该是位移/时间间隔，因此位移就是速度 * 时间间隔
 # 使用 pandas 的 cumsum() 方法计算累积位移
-displacement = (velocity_1[3] * 0.05).cumsum()
+displacement = (velocity_1[8] * 0.05).cumsum()
 
 # 最终的位移就是累积位移的最后一个值
 total_displacement = displacement.iloc[-1]
@@ -78,7 +78,7 @@ plt.yticks(y_ticks, [f'{tick:.1f}' for tick in y_ticks])
 
 # 创建 DataFrame
 for i in range(9):
-    df = pd.DataFrame({'time': range(41), 'value': [velocity.iloc[-1,i],velocity.iloc[-1,i],velocity.iloc[-1,i], np.nan,np.nan,np.nan,np.nan, velocity.iloc[-1,i]*0.95,np.nan, np.nan, np.nan,np.nan,np.nan, np.nan, np.nan, np.nan,np.nan,np.nan,np.nan,np.nan, np.nan,np.nan,np.nan, np.nan,np.nan,velocity.iloc[-1,i]*0.20, np.nan, np.nan,np.nan,np.nan, np.nan,velocity.iloc[-1,i]*0.02,np.nan, np.nan,np.nan,np.nan,velocity.iloc[-1,i]*0.003, np.nan,np.nan,0.0,0.0]})
+    df = pd.DataFrame({'time': range(41), 'value': [velocity.iloc[-3,i],velocity.iloc[-2,i],velocity.iloc[-1,i], np.nan,np.nan,np.nan,np.nan, velocity.iloc[-1,i]*0.95,np.nan, np.nan, np.nan,np.nan,np.nan, np.nan, np.nan, np.nan,np.nan,np.nan,np.nan,np.nan, np.nan,np.nan,np.nan, np.nan,np.nan,velocity.iloc[-1,i]*0.20, np.nan, np.nan,np.nan,np.nan, np.nan,velocity.iloc[-1,i]*0.02,np.nan, np.nan,np.nan,np.nan,velocity.iloc[-1,i]*0.003, np.nan,np.nan,0.0,0.0]})
 
     df_start = pd.DataFrame({'time': range(41), 'value': [velocity.iloc[2,i],velocity.iloc[1,i],velocity.iloc[1,i], np.nan,np.nan,np.nan,np.nan, velocity.iloc[0,i]*0.45,np.nan, np.nan, np.nan,np.nan,np.nan, np.nan, np.nan, np.nan,np.nan,np.nan,np.nan,np.nan, np.nan,np.nan,np.nan, np.nan,np.nan,velocity.iloc[0,i]*0.08, np.nan, np.nan,np.nan,np.nan, np.nan,velocity.iloc[0,i]*0.01,np.nan, np.nan,np.nan,np.nan,velocity.iloc[0,i]*0.003, np.nan,np.nan,0.0,0.0]})
 
@@ -188,7 +188,7 @@ plt.grid(True)
 
 # 添加标题和图例
 # plt.title('Velocity Curves')
-plt.legend(loc='upper right')
+plt.legend(loc='upper left')
 
 # 显示图形
 plt.show()

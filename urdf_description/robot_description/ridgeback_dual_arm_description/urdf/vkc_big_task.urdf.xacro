@@ -3,8 +3,8 @@
   <!-- ridgeback robot begin -->
   <xacro:include filename="$(find ridgeback_dual_arm_description)/urdf/ridgeback_dual_arm.urdf.xacro" /> <!-- 内部修改 -->
   <!-- scence urdf living room -->
-  <xacro:include filename="$(find env_description)/livingroom_env/main_fixed.xacro"/> <!-- 外部修改 -->
-
+  <!-- <xacro:include filename="$(find env_description)/livingroom_env/main_fixed.xacro"/> 外部修改 -->
+  <link name = "world"/>
   <!-- Arguments -->
   <xacro:arg name="base_loc_x" default="0.0"/>
   <xacro:arg name="base_loc_y" default="0.0"/>

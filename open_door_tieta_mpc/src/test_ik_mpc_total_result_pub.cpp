@@ -26,7 +26,7 @@ int main(int argc, char **argv){
     //!mpc_0319_193553 右上到左下 get
     //!mpc_0321_114338 左上到右下 get
     //!mpc_0321_120158 右下到左上 get
-    std::string file_in = "/home/diamondlee/VKConTieta_ws/src/open_door_tieta_mpc/positon_results/mpc_position_20240321_120158/mpc_all_joints_positions.csv";
+    std::string file_in = "/home/diamondlee/VKConTieta_ws/src/open_door_tieta_mpc/positon_results/mpc_position_20240312_170736/mpc_all_joints_positions.csv";
     std::ifstream fs;
     fs.open(file_in);
     if (!fs.is_open())
@@ -62,7 +62,7 @@ int main(int argc, char **argv){
     //!ik_0319_195550
     //!ik_0321_114706
     //!ik_0321_120331
-    std::string file_in1 = "/home/diamondlee/VKConTieta_ws/src/open_door_tieta_mpc/positon_results/ik_position_20240321_120331/ik_theta_URjoints_positions.csv";
+    std::string file_in1 = "/home/diamondlee/VKConTieta_ws/src/open_door_tieta_mpc/positon_results/ik_position_20240314_205658/ik_theta_URjoints_positions.csv";
     std::ifstream fs1;
     fs1.open(file_in1);
     if (!fs1.is_open())
@@ -97,7 +97,7 @@ int main(int argc, char **argv){
     assert(positions_vector_thetaUR.size() == positions_vector_xy.size());
 
     ros::Publisher position_pub = nh.advertise<std_msgs::Float64MultiArray>("csv_ikmpc_pos", 1);
-    ros::Rate loop_rate(10);
+    ros::Rate loop_rate(30);
 
     int start = 0;
 

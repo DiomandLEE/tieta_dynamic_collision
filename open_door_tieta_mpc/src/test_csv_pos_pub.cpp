@@ -27,16 +27,17 @@ int main(int argc, char **argv){
         return {};
     }
     std_msgs::Float64MultiArray position_msg;
-    position_msg.data.resize(10);
+    position_msg.data.resize(12);
     std::vector<std::vector<double>> positions_vector;
 
     std::string lineStr;
+    int i = 0; //把时间戳去掉
     while (std::getline(fs, lineStr))
     {
         std::stringstream ss(lineStr);
         std::string item;
         std::vector<double> position_vector;
-        int i = 0; //把时间戳去掉
+
         while (std::getline(ss, item, ','))
         {
             // if(i == 0){
@@ -46,10 +47,14 @@ int main(int argc, char **argv){
             //std::cout << item << std::endl;
             //if(i == 0)
             position_vector.push_back(std::stod(item));
-            i++;
+
         }
         position_vector.erase(position_vector.begin());
         position_vector[9] = -1 * position_vector[9];
+        //read add Pedestrian
+        position_vector.push_back(1.0 + i * -0.1 * 0.056);
+        position_vector.push_back(-5.5 + i * 0.05 * 0.056);
+        i++;
         positions_vector.push_back(position_vector);
         //ROS_INFO("Publishing: %s", position_msg.data[0].c_str());
         //ROS_INFO("Publishing: %s", position_msg.data[1].c_str());
